@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import PandaLogo from "./panda-logo"
+import PandaLogo from "../content/panda-logo"
 import { motion } from "framer-motion"
 
 export default function Footer() {
@@ -56,7 +56,7 @@ export default function Footer() {
             <div className="container px-4 md:px-6">
                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-                        <Link href="/" className="flex items-center gap-2 group">
+                        <Link href="/public" className="flex items-center gap-2 group">
                             <motion.div whileHover={{ rotate: [0, -10, 10, -10, 0] }} transition={{ duration: 0.5 }}>
                                 <PandaLogo className="h-8 w-8 transition-transform duration-300 group-hover:scale-110" />
                             </motion.div>

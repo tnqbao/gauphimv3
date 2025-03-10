@@ -49,7 +49,7 @@ export default function Categories({ categories }: CategoriesProps) {
                     <h2 className="mb-6 text-2xl font-bold flex items-center">
                         <span className="w-1 h-6 bg-green-600 mr-2 rounded-full"></span>
                         <span className="relative">
-              Categories
+              Danh mục
               <motion.span
                   className="absolute -bottom-1 left-0 w-full h-0.5 bg-green-600"
                   initial={{ scaleX: 0 }}

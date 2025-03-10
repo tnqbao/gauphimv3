@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button"
 import PandaLogo from "./panda-logo"
 import { motion, useAnimation } from "framer-motion"
 import { useInView } from "react-intersection-observer"
-import LazyLoadComponent from "./lazy-load-component"
-import LazyImage from "./lazy-image"
+import LazyLoadComponent from "../layout/lazy-load-component"
+import LazyImage from "../layout/lazy-image"
 
 interface Pick {
     title: string
