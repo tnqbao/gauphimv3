@@ -5,7 +5,7 @@ import { Play, Star, Info, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { motion, AnimatePresence } from "framer-motion"
-import LazyImage from "./lazy-image"
+import LazyImage from "../layout/lazy-image"
 
 interface Movie {
     title: string

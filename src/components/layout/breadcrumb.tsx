@@ -15,7 +15,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
         <nav aria-label="Breadcrumb" className="py-3 text-sm">
             <ol className="flex items-center flex-wrap">
                 <li className="flex items-center">
-                    <Link href="/" className="flex items-center text-muted-foreground hover:text-green-600 transition-colors">
+                    <Link href="/public" className="flex items-center text-muted-foreground hover:text-green-600 transition-colors">
                         <Home className="h-4 w-4" />
                         <span className="sr-only">Trang chủ</span>
                     </Link>

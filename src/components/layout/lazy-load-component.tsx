@@ -2,7 +2,7 @@
 
 import { type ReactNode, useEffect, useState } from "react"
 import { useInView } from "react-intersection-observer"
-import PandaLoading from "./panda-loading"
+import PandaLoading from "../content/panda-loading"
 
 interface LazyLoadComponentProps {
     children: ReactNode

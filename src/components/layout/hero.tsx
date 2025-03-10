@@ -123,19 +123,19 @@ export default function Hero() {
                             <Button
                                 className="bg-green-600 hover:bg-green-700 transition-all hover:scale-105"
                             >
-                                <Play className="mr-2 h-4 w-4" /> Watch Now
+                                <Play className="mr-2 h-4 w-4" /> Xem ngay
                             </Button>
                             <Button
                                 variant="outline"
-                                className="text-white border-white hover:bg-white/20 transition-all hover:scale-105"
+                                className="text-black border-white hover:bg-white/20 transition-all hover:scale-105"
                             >
-                                <Plus className="mr-2 h-4 w-4" /> Add to List
+                                <Plus className="mr-2 h-4 w-4" /> Thêm vào danh sách
                             </Button>
                             <Button
                                 variant="outline"
-                                className="text-white border-white hover:bg-white/20 transition-all hover:scale-105 hidden sm:flex"
+                                className="text-black border-white hover:bg-white/20 transition-all hover:scale-105 hidden sm:flex"
                             >
-                                <Info className="mr-2 h-4 w-4" /> More Info
+                                <Info className="mr-2 h-4 w-4" /> Thông tin
                             </Button>
                         </motion.div>
                     </motion.div>

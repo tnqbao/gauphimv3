@@ -35,7 +35,7 @@ export default function NationDropdown({ isMobile = false }: NationDropdownProps
                     {nations.map((nation) => (
                         <Link
                             key={nation.name}
-                            href={`/nation/${nation.slug}`}
+                            href={`/quoc-gia/${nation.slug}`}
                             className="flex items-center rounded-md px-3 py-2 text-sm hover:bg-muted transition-colors"
                         >
                             <span className="mr-2 text-lg">{nation.flag}</span>
@@ -74,7 +74,7 @@ export default function NationDropdown({ isMobile = false }: NationDropdownProps
                         {nations.map((nation) => (
                             <DropdownMenuItem key={nation.name} asChild>
                                 <Link
-                                    href={`/nation/${nation.slug}`}
+                                    href={`/quoc-gia/${nation.slug}`}
                                     className="flex cursor-pointer items-center rounded-md px-3 py-2 text-sm hover:bg-muted transition-colors"
                                 >
                                     <span className="mr-2 text-lg">{nation.flag}</span>

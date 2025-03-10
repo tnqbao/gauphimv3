@@ -8,7 +8,7 @@ import MovieCard from "./movie-card"
 import { cn } from "@/lib/utils"
 import { motion, useAnimation } from "framer-motion"
 import { useInView } from "react-intersection-observer"
-import LazyLoadComponent from "./lazy-load-component"
+import LazyLoadComponent from "../layout/lazy-load-component"
 
 interface Movie {
     title: string

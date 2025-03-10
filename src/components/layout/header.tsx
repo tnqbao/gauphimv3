@@ -6,7 +6,7 @@ import { Search, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-import ThemeToggle from "./theme-toggle"
+import ThemeToggle from "../content/theme-toggle"
 import CategoryDropdown from "./category-dropdown"
 import NationDropdown from "./nation-dropdown"
 import MobileSearch from "./mobile-search"
@@ -84,7 +84,7 @@ export default function Header() {
                     )}
                 >
                     <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:gap-2 lg:gap-3 justify-between">
-                        <NavLink href="/" label="Trang chủ" />
+                        <NavLink href="/public" label="Trang chủ" />
 
                         {/* Desktop: Show dropdowns in the navbar */}
                         <div className="hidden md:block">
@@ -94,9 +94,9 @@ export default function Header() {
                             <NationDropdown />
                         </div>
 
-                        <NavLink href="/phim-bo" label="Phim Bộ" />
-                        <NavLink href="/phim-moi" label="Phim Mới" />
-                        <NavLink href="/danh-sach-yeu-thich" label="Yêu Thích" />
+                        <NavLink href="../phim-bo" label="Phim Bộ" />
+                        <NavLink href="../phim-moi" label="Phim Mới" />
+                        <NavLink href="../danh-sach-yeu-thich" label="Yêu Thích" />
                     </div>
 
                     {/* Mobile: Show dropdowns as expanded menus */}
@@ -138,10 +138,10 @@ export default function Header() {
                             className="border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950 transition-colors hidden lg:flex"
                             asChild
                         >
-                            <Link href="/register">Đăng ký</Link>
+                            <Link href="/auth/register">Đăng ký</Link>
                         </Button>
                         <Button size="sm" className="bg-green-600 hover:bg-green-700 transition-colors" asChild>
-                            <Link href="/login">Đăng nhập</Link>
+                            <Link href="/auth/login">Đăng nhập</Link>
                         </Button>
                     </div>
 

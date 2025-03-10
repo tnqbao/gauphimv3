@@ -3,7 +3,7 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import PandaLogo from "@/components/panda-logo"
+import PandaLogo from "@/components/content/panda-logo"
 
 interface AuthLayoutProps {
     children: ReactNode

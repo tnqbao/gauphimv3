@@ -1,23 +1,23 @@
 import { Suspense, lazy } from "react"
-import Header from "@/components/header"
+import Header from "@/components/layout/header"
 import {
   HeroSkeleton,
   CategorySkeleton,
   MovieSectionSkeleton,
   PandaPicksSkeleton,
   FooterSkeleton,
-} from "@/components/loading-skeletons"
-import BambooDecoration from "@/components/bamboo-decoration"
-import PandaScrollProgress from "@/components/panda-scroll-progress"
-import ThemeEffects from "@/components/theme-effects"
+} from "@/components/layout/loading-skeletons"
+import BambooDecoration from "@/components/content/bamboo-decoration"
+import PandaScrollProgress from "@/components/content/panda-scroll-progress"
+import ThemeEffects from "@/components/content/theme-effects"
 
 // Lazy load components
-const Hero = lazy(() => import("@/components/hero"))
-const Categories = lazy(() => import("@/components/categories"))
-const MovieSection = lazy(() => import("@/components/movie-section"))
-const PandaPicks = lazy(() => import("@/components/panda-picks"))
-const Footer = lazy(() => import("@/components/footer"))
-const FloatingLeaves = lazy(() => import("@/components/floating-leaves"))
+const Hero = lazy(() => import("@/components/layout/hero"))
+const Categories = lazy(() => import("@/components/content/categories"))
+const MovieSection = lazy(() => import("@/components/content/movie-section"))
+const PandaPicks = lazy(() => import("@/components/content/panda-picks"))
+const Footer = lazy(() => import("@/components/layout/footer"))
+const FloatingLeaves = lazy(() => import("@/components/content/floating-leaves"))
 
 // Sample data
 export const categories = [
