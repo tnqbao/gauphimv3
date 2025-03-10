@@ -1,8 +1,9 @@
-import type { NextConfig } from "next";
+import { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  reactStrictMode: true,
+  images: {
+    domains: ["i.imgur.com", "congthanh.vn"], // Thêm domain vào đây
+  },
 };
 
 export default nextConfig;

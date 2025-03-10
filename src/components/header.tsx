@@ -5,25 +5,42 @@ import Link from "next/link"
 import { Search, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import PandaLogo from "./panda-logo"
 import { cn } from "@/lib/utils"
 import ThemeToggle from "./theme-toggle"
 import CategoryDropdown from "./category-dropdown"
 import NationDropdown from "./nation-dropdown"
 import MobileSearch from "./mobile-search"
+import LogoImage from "./logo-image"
+import { usePathname } from "next/navigation"
 
 export default function Header() {
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const pathname = usePathname()
+
+    // Close mobile menu when route changes
+    useEffect(() => {
+        setIsMenuOpen(false)
+    }, [pathname])
 
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 10)
         }
 
+        // Prevent body scroll when menu is open
+        if (isMenuOpen) {
+            document.body.style.overflow = "hidden"
+        } else {
+            document.body.style.overflow = ""
+        }
+
         window.addEventListener("scroll", handleScroll)
-        return () => window.removeEventListener("scroll", handleScroll)
-    }, [])
+        return () => {
+            window.removeEventListener("scroll", handleScroll)
+            document.body.style.overflow = ""
+        }
+    }, [isMenuOpen])
 
     return (
         <header
@@ -34,43 +51,59 @@ export default function Header() {
                     : "bg-transparent border-b border-transparent",
             )}
         >
-            <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-                <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <div className="container flex h-16 items-center justify-between px-3 sm:px-4 md:px-6">
+                <div className="flex items-center gap-1 sm:gap-2">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="md:hidden mr-1"
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        aria-label={isMenuOpen ? "Đóng menu" : "Mở menu"}
+                        aria-expanded={isMenuOpen}
+                    >
                         {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                        <span className="sr-only">Toggle menu</span>
                     </Button>
-                    <Link href="/public" className="flex items-center gap-2 group">
-                        <PandaLogo className="h-8 w-8 transition-transform duration-300 group-hover:scale-110" />
-                        <span className="text-xl font-bold">PandaFlix</span>
-                    </Link>
+                    <LogoImage size={isScrolled ? "small" : "medium"} className="transition-all duration-300" />
                 </div>
 
+                {/* Mobile menu overlay */}
+                {isMenuOpen && (
+                    <div
+                        className="fixed inset-0 bg-black/20 dark:bg-black/50 z-40 md:hidden"
+                        onClick={() => setIsMenuOpen(false)}
+                        aria-hidden="true"
+                    />
+                )}
+
+                {/* Navigation */}
                 <nav
                     className={cn(
-                        "fixed inset-0 top-16 z-50 flex flex-col bg-white dark:bg-gray-900 p-6 transition-transform duration-300 md:static md:flex md:flex-row md:items-center md:gap-6 md:bg-transparent md:p-0 md:translate-x-0",
+                        "fixed inset-0 top-16 z-50 flex flex-col bg-white dark:bg-gray-900 p-4 sm:p-6 transition-all duration-300 md:static md:flex md:flex-row md:items-center md:gap-1 lg:gap-6 md:bg-transparent md:p-0 md:translate-x-0 overflow-y-auto md:overflow-visible",
                         isMenuOpen ? "translate-x-0" : "-translate-x-full",
+                        "max-w-[300px] md:max-w-none w-4/5 md:w-auto",
                     )}
                 >
-                    <NavLink href="#" label="Home" />
+                    <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:gap-2 lg:gap-3 justify-between">
+                        <NavLink href="/" label="Trang chủ" />
 
-                    {/* Desktop: Show dropdowns in the navbar */}
-                    <div className="hidden md:block">
-                        <CategoryDropdown />
-                    </div>
-                    <div className="hidden md:block">
-                        <NationDropdown />
-                    </div>
+                        {/* Desktop: Show dropdowns in the navbar */}
+                        <div className="hidden md:block">
+                            <CategoryDropdown />
+                        </div>
+                        <div className="hidden md:block">
+                            <NationDropdown />
+                        </div>
 
-                    <NavLink href="#" label="TV Shows" />
-                    <NavLink href="#" label="New Releases" />
-                    <NavLink href="#" label="My List" />
+                        <NavLink href="/phim-bo" label="Phim Bộ" />
+                        <NavLink href="/phim-moi" label="Phim Mới" />
+                        <NavLink href="/danh-sach-yeu-thich" label="Yêu Thích" />
+                    </div>
 
                     {/* Mobile: Show dropdowns as expanded menus */}
-                    <div className="md:hidden border-t mt-2 pt-2">
+                    <div className="md:hidden border-t mt-4 pt-4 space-y-4">
                         <CategoryDropdown isMobile />
                     </div>
-                    <div className="md:hidden border-t mt-2 pt-2">
+                    <div className="md:hidden border-t mt-4 pt-4">
                         <NationDropdown isMobile />
                     </div>
 
@@ -80,36 +113,35 @@ export default function Header() {
                             className="flex-1 border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950 transition-colors"
                             asChild
                         >
-                            <Link href="/register">Register</Link>
+                            <Link href="/register">Đăng ký</Link>
                         </Button>
                         <Button className="flex-1 bg-green-600 hover:bg-green-700 transition-colors" asChild>
-                            <Link href="/login">Sign In</Link>
+                            <Link href="/login">Đăng nhập</Link>
                         </Button>
                     </div>
                 </nav>
 
-                <div className="flex items-center gap-4">
-                    <form className="hidden md:block">
-                        <div className="relative">
-                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                type="search"
-                                placeholder="Search movies..."
-                                className="w-[200px] pl-8 md:w-[260px] bg-muted focus:ring-green-500 focus:border-green-500 transition-all"
-                            />
-                        </div>
+                <div className="flex items-center gap-2 sm:gap-4">
+                    <form className="hidden md:block relative">
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                        <Input
+                            type="search"
+                            placeholder="Tìm kiếm phim..."
+                            className="w-[180px] pl-8 lg:w-[260px] bg-muted focus:ring-green-500 focus:border-green-500 transition-all h-9"
+                        />
                     </form>
                     <ThemeToggle />
                     <div className="hidden md:flex items-center gap-2">
                         <Button
                             variant="outline"
-                            className="border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950 transition-colors"
+                            size="sm"
+                            className="border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950 transition-colors hidden lg:flex"
                             asChild
                         >
-                            <Link href="/register">Register</Link>
+                            <Link href="/register">Đăng ký</Link>
                         </Button>
-                        <Button className="bg-green-600 hover:bg-green-700 transition-colors" asChild>
-                            <Link href="/login">Sign In</Link>
+                        <Button size="sm" className="bg-green-600 hover:bg-green-700 transition-colors" asChild>
+                            <Link href="/login">Đăng nhập</Link>
                         </Button>
                     </div>
 
@@ -122,10 +154,17 @@ export default function Header() {
 }
 
 function NavLink({ href, label }: { href: string; label: string }) {
+    const pathname = usePathname()
+    const isActive = pathname === href || pathname.startsWith(`${href}/`)
+
     return (
         <Link
             href={href}
-            className="relative py-3 text-lg font-medium md:text-sm md:py-0 hover:text-green-600 transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-green-600 after:transition-all hover:after:w-full"
+            className={cn(
+                "relative py-2 text-base font-medium md:text-sm md:py-2 hover:text-green-600 transition-colors",
+                "after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-green-600 after:transition-all hover:after:w-full",
+                isActive && "text-green-600 after:w-full",
+            )}
         >
             {label}
         </Link>

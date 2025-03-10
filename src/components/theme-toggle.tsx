@@ -7,7 +7,7 @@ import { Sun, Moon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function ThemeToggle() {
-    const { theme, setTheme } = useTheme()
+    const { resolvedTheme, setTheme } = useTheme()
     const [mounted, setMounted] = useState(false)
     const [isAnimating, setIsAnimating] = useState(false)
 
@@ -20,15 +20,15 @@ export default function ThemeToggle() {
 
     const toggleTheme = () => {
         setIsAnimating(true)
-        setTimeout(() => {
-            setTheme(theme === "dark" ? "light" : "dark")
-        }, 300)
+        const newTheme = resolvedTheme === "dark" ? "light" : "dark"
+        setTheme(newTheme)
+
         setTimeout(() => {
             setIsAnimating(false)
         }, 1000)
     }
 
-    const isDark = theme === "dark"
+    const isDark = resolvedTheme === "dark"
 
     return (
         <div className="relative">
@@ -37,7 +37,7 @@ export default function ThemeToggle() {
                 size="icon"
                 onClick={toggleTheme}
                 className="relative h-9 w-9 rounded-full"
-                aria-label="Toggle theme"
+                aria-label="Chuyển đổi chế độ sáng/tối"
             >
                 <div className="relative z-10">
                     {isDark ? <Sun className="h-5 w-5 text-yellow-300" /> : <Moon className="h-5 w-5 text-slate-700" />}
