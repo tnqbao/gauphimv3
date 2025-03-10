@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link"
-import { ChevronDown, Globe, Flag } from "lucide-react"
+import { ChevronDown, Film, Clapperboard, Laugh, Skull, Rocket, Heart, Users } from "lucide-react"
 import { motion } from "framer-motion"
 import {
     DropdownMenu,
@@ -11,35 +11,33 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 
-export const nations = [
-    { name: "Mỹ", slug: "my", flag: "🇺🇸" },
-    { name: "Hàn Quốc", slug: "han-quoc", flag: "🇰🇷" },
-    { name: "Nhật Bản", slug: "nhat-ban", flag: "🇯🇵" },
-    { name: "Trung Quốc", slug: "trung-quoc", flag: "🇨🇳" },
-    { name: "Ấn Độ", slug: "an-do", flag: "🇮🇳" },
-    { name: "Anh", slug: "anh", flag: "🇬🇧" },
-    { name: "Pháp", slug: "phap", flag: "🇫🇷" },
-    { name: "Thái Lan", slug: "thai-lan", flag: "🇹🇭" },
+export const categories = [
+    { name: "Hành Động", slug: "hanh-dong", icon: <Clapperboard className="mr-2 h-4 w-4" /> },
+    { name: "Hài Hước", slug: "hai-huoc", icon: <Laugh className="mr-2 h-4 w-4" /> },
+    { name: "Tâm Lý", slug: "tam-ly", icon: <Users className="mr-2 h-4 w-4" /> },
+    { name: "Kinh Dị", slug: "kinh-di", icon: <Skull className="mr-2 h-4 w-4" /> },
+    { name: "Viễn Tưởng", slug: "vien-tuong", icon: <Rocket className="mr-2 h-4 w-4" /> },
+    { name: "Tình Cảm", slug: "tinh-cam", icon: <Heart className="mr-2 h-4 w-4" /> },
 ]
 
-interface NationDropdownProps {
+interface CategoryDropdownProps {
     isMobile?: boolean
 }
 
-export default function NationDropdown({ isMobile = false }: NationDropdownProps) {
+export default function CategoryDropdown({ isMobile = false }: CategoryDropdownProps) {
     if (isMobile) {
         return (
             <div className="py-2">
-                <div className="mb-2 text-base font-medium">Quốc Gia</div>
+                <div className="mb-2 text-base font-medium">Thể Loại</div>
                 <div className="grid grid-cols-1 gap-1">
-                    {nations.map((nation) => (
+                    {categories.map((category) => (
                         <Link
-                            key={nation.name}
-                            href={`/nation/${nation.slug}`}
+                            key={category.name}
+                            href={`/category/${category.slug}`}
                             className="flex items-center rounded-md px-3 py-2 text-sm hover:bg-muted transition-colors"
                         >
-                            <span className="mr-2 text-lg">{nation.flag}</span>
-                            {nation.name}
+                            {category.icon}
+                            {category.name}
                         </Link>
                     ))}
                 </div>
@@ -54,7 +52,7 @@ export default function NationDropdown({ isMobile = false }: NationDropdownProps
                     variant="ghost"
                     className="flex items-center gap-1 px-2 py-1.5 text-base font-medium md:text-sm hover:bg-transparent hover:text-green-600 focus:bg-transparent h-9"
                 >
-                    <span>Quốc Gia</span>
+                    <span>Thể Loại</span>
                     <ChevronDown className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />
                 </Button>
             </DropdownMenuTrigger>
@@ -66,32 +64,29 @@ export default function NationDropdown({ isMobile = false }: NationDropdownProps
                     transition={{ duration: 0.2 }}
                 >
                     <div className="flex items-center gap-2 rounded-md bg-green-50 dark:bg-green-900/20 p-3 mb-2">
-                        <Globe className="h-5 w-5 text-green-600" />
-                        <span className="text-sm font-medium">Quốc Gia Phim</span>
+                        <Film className="h-5 w-5 text-green-600" />
+                        <span className="text-sm font-medium">Thể Loại Phim</span>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-1">
-                        {nations.map((nation) => (
-                            <DropdownMenuItem key={nation.name} asChild>
-                                <Link
-                                    href={`/nation/${nation.slug}`}
-                                    className="flex cursor-pointer items-center rounded-md px-3 py-2 text-sm hover:bg-muted transition-colors"
-                                >
-                                    <span className="mr-2 text-lg">{nation.flag}</span>
-                                    {nation.name}
-                                </Link>
-                            </DropdownMenuItem>
-                        ))}
-                    </div>
+                    {categories.map((category) => (
+                        <DropdownMenuItem key={category.name} asChild>
+                            <Link
+                                href={`/category/${category.slug}`}
+                                className="flex cursor-pointer items-center rounded-md px-3 py-2 text-sm hover:bg-muted transition-colors"
+                            >
+                                {category.icon}
+                                {category.name}
+                            </Link>
+                        </DropdownMenuItem>
+                    ))}
 
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
                         <Link
-                            href="/nations"
+                            href="/categories"
                             className="flex cursor-pointer items-center rounded-md px-3 py-2 text-sm font-medium text-green-600 hover:bg-muted transition-colors"
                         >
-                            <Flag className="mr-2 h-4 w-4" />
-                            Xem Tất Cả Quốc Gia
+                            Xem Tất Cả Thể Loại
                         </Link>
                     </DropdownMenuItem>
                 </motion.div>

@@ -1,114 +1,112 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense, lazy } from "react"
+import Header from "@/components/header"
+import {
+  HeroSkeleton,
+  CategorySkeleton,
+  MovieSectionSkeleton,
+  PandaPicksSkeleton,
+  FooterSkeleton,
+} from "@/components/loading-skeletons"
+import BambooDecoration from "@/components/bamboo-decoration"
+import PandaScrollProgress from "@/components/panda-scroll-progress"
+import ThemeEffects from "@/components/theme-effects"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// Lazy load components
+const Hero = lazy(() => import("@/components/hero"))
+const Categories = lazy(() => import("@/components/categories"))
+const MovieSection = lazy(() => import("@/components/movie-section"))
+const PandaPicks = lazy(() => import("@/components/panda-picks"))
+const Footer = lazy(() => import("@/components/footer"))
+const FloatingLeaves = lazy(() => import("@/components/floating-leaves"))
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// Sample data
+export const categories = [
+  { name: "Action", image: "https://congthanh.vn/uploads/images/in-poster-phim-anh-dep-.jpg" },
+  { name: "Comedy", image: "https://congthanh.vn/uploads/images/in-poster-phim-anh-dep-.jpg" },
+  { name: "Drama", image: "https://congthanh.vn/uploads/images/in-poster-phim-anh-dep-.jpg" },
+  { name: "Horror", image: "https://congthanh.vn/uploads/images/in-poster-phim-anh-dep-.jpg" },
+  { name: "Sci-Fi", image: "https://congthanh.vn/uploads/images/in-poster-phim-anh-dep-.jpg" },
+  { name: "Family", image: "https://congthanh.vn/uploads/images/in-poster-phim-anh-dep-.jpg" },
+]
 
-export default function Home() {
+export const trendingMovies = [
+  { title: "Bamboo Warriors", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.5" },
+  { title: "Panda Express", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.9" },
+  { title: "Mountain Secrets", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.2" },
+  { title: "The Last Forest", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.6" },
+  { title: "Black & White", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "9.0" },
+  { title: "Bamboo Tales", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.3" },
+  { title: "Panda Kingdom", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.7" },
+]
+
+export const newReleases = [
+  { title: "Forest Kingdom", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.1" },
+  { title: "Bamboo Tales", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.8" },
+  { title: "Wild Journey", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.4" },
+  { title: "Panda Family", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "9.2" },
+  { title: "Nature's Call", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.5" },
+  { title: "Mountain Adventure", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.6" },
+  { title: "Bamboo Forest", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.9" },
+]
+
+export const pandaPicks = [
+  {
+    title: "Bamboo Chronicles",
+    year: "2022",
+    poster: "/placeholder.svg?height=100&width=70",
+    description: "A heartwarming tale of a panda family's journey through the changing seasons.",
+    rating: "8.7",
+  },
+  {
+    title: "Mountain Legends",
+    year: "2021",
+    poster: "/placeholder.svg?height=100&width=70",
+    description: "Discover the ancient legends of the misty mountains and their mystical guardians.",
+    rating: "8.3",
+  },
+  {
+    title: "Panda's Adventure",
+    year: "2023",
+    poster: "/placeholder.svg?height=100&width=70",
+    description: "Join our hero on an epic adventure to save the bamboo forest from destruction.",
+    rating: "9.1",
+  },
+]
+
+export default function HomePage() {
   return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+      <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
+        <ThemeEffects />
+        <BambooDecoration />
+        <Suspense fallback={null}>
+          <FloatingLeaves />
+        </Suspense>
+        <PandaScrollProgress />
+        <Header />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+        <Suspense fallback={<HeroSkeleton />}>
+          <Hero />
+        </Suspense>
+        <Suspense fallback={<CategorySkeleton />}>
+          <Categories categories={categories} />
+        </Suspense>
+
+        <Suspense fallback={<MovieSectionSkeleton />}>
+          <MovieSection title="Trending Now" movies={trendingMovies} bgColor="bg-white dark:bg-gray-800" />
+        </Suspense>
+
+        <Suspense fallback={<MovieSectionSkeleton />}>
+          <MovieSection title="New Releases" movies={newReleases} bgColor="bg-[#f8f9fa] dark:bg-gray-900" />
+        </Suspense>
+
+        <Suspense fallback={<PandaPicksSkeleton />}>
+          <PandaPicks picks={pandaPicks} />
+        </Suspense>
+
+        <Suspense fallback={<FooterSkeleton />}>
+          <Footer />
+        </Suspense>
+      </div>
+  )
 }
+

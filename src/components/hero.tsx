@@ -48,7 +48,6 @@ export default function Hero() {
         <section className="relative h-[500px] md:h-[600px] w-full overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30 z-10" />
 
-            {/* Panda silhouette overlay */}
             <div className="absolute inset-0 z-[5] opacity-10 pointer-events-none">
                 <svg
                     width="100%"
@@ -121,27 +120,23 @@ export default function Hero() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3, duration: 0.5 }}
                         >
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Button className="bg-green-600 hover:bg-green-700 transition-all">
-                                    <Play className="mr-2 h-4 w-4" /> Watch Now
-                                </Button>
-                            </motion.div>
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Button
-                                    variant="outline"
-                                    className="text-white border-white hover:bg-white/20 transition-all"
-                                >
-                                    <Plus className="mr-2 h-4 w-4" /> Add to List
-                                </Button>
-                            </motion.div>
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Button
-                                    variant="outline"
-                                    className="text-white border-white hover:bg-white/20 transition-all hidden sm:flex"
-                                >
-                                    <Info className="mr-2 h-4 w-4" /> More Info
-                                </Button>
-                            </motion.div>
+                            <Button
+                                className="bg-green-600 hover:bg-green-700 transition-all hover:scale-105"
+                            >
+                                <Play className="mr-2 h-4 w-4" /> Watch Now
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className="text-white border-white hover:bg-white/20 transition-all hover:scale-105"
+                            >
+                                <Plus className="mr-2 h-4 w-4" /> Add to List
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className="text-white border-white hover:bg-white/20 transition-all hover:scale-105 hidden sm:flex"
+                            >
+                                <Info className="mr-2 h-4 w-4" /> More Info
+                            </Button>
                         </motion.div>
                     </motion.div>
                 </AnimatePresence>
@@ -170,3 +165,4 @@ export default function Hero() {
         </section>
     )
 }
+
