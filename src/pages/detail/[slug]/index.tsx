@@ -46,6 +46,7 @@ export default function MoviePage({ movieData }: MoviePageProps) {
                     country={movieData.item.country}
                     actors={movieData.item.actor}
                     episodes={movieData.item.episodes}
+                    isSeries={movieData.item.episodes[0].server_data.length > 1 }
                 />
             </main>
 

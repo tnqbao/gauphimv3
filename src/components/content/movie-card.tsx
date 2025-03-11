@@ -117,7 +117,7 @@ export default function MovieCard({ movie, index }: MovieCardProps) {
                                                 whileHover={{ scale: 1.1 }}
                                                 whileTap={{ scale: 0.9 }}
                                             >
-                                                <Link href={movie.slug ? `/phim/${movie.slug}` : "#"}>
+                                                <Link href={movie.slug ? `../detail/${movie.slug}` : "#"}>
                                                     <Button
                                                         size="sm"
                                                         variant="ghost"
