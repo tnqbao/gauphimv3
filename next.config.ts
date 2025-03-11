@@ -1,8 +1,27 @@
-import { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+const nextConfig = {
   images: {
-    domains: ["i.imgur.com", "congthanh.vn"], // Thêm domain vào đây
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'img.ophim.live',
+        port: '',
+        pathname: '/uploads/movies/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.imgur.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'congthanh.vn',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+    domains: ["img.ophim.live"],
+    minimumCacheTTL: 60,
   },
 };
 

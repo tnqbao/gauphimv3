@@ -1,5 +1,5 @@
-import { Suspense } from "react"
-import { notFound } from "next/navigation"
+import { GetServerSideProps } from "next"
+import Head from "next/head"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import Breadcrumb from "@/components/layout/breadcrumb"
@@ -7,78 +7,52 @@ import MovieGrid from "@/components/content/movie-grid"
 import Pagination from "@/components/layout/pagination"
 import FilterSidebar from "@/components/layout/filter-sidebar"
 import { MovieSectionSkeleton } from "@/components/layout/loading-skeletons"
-
-// Sample movie data
-const movies = [
-    { title: "Chiến Binh Tre", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.5" },
-    { title: "Panda Nhanh Trí", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.9" },
-    { title: "Bí Mật Núi Rừng", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.2" },
-    { title: "Khu Rừng Cuối Cùng", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.6" },
-    { title: "Đen & Trắng", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "9.0" },
-    { title: "Chuyện Tre", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.3" },
-    { title: "Vương Quốc Gấu Trúc", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.7" },
-    { title: "Vương Quốc Rừng Xanh", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.1" },
-    { title: "Hành Trình Hoang Dã", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.4" },
-    { title: "Gia Đình Gấu Trúc", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "9.2" },
-    { title: "Tiếng Gọi Thiên Nhiên", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.5" },
-    { title: "Phiêu Lưu Núi Rừng", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.6" },
-    { title: "Rừng Tre", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.9" },
-    { title: "Biên Niên Sử Tre", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.7" },
-    { title: "Huyền Thoại Núi Rừng", year: "2021", poster: "/placeholder.svg?height=300&width=200", rating: "8.3" },
-]
-
-// List types configuration
-const listTypes = {
-    "phim-le": {
-        title: "Phim Lẻ",
-        description: "Danh sách phim lẻ mới nhất, chất lượng cao",
-        breadcrumb: "Phim Lẻ",
-    },
-    "phim-bo": {
-        title: "Phim Bộ",
-        description: "Danh sách phim bộ đang chiếu và hoàn thành",
-        breadcrumb: "Phim Bộ",
-    },
-    "phim-moi": {
-        title: "Phim Mới",
-        description: "Phim mới cập nhật trong tuần, tháng",
-        breadcrumb: "Phim Mới",
-    },
-    "phim-chieu-rap": {
-        title: "Phim Chiếu Rạp",
-        description: "Những bộ phim đang chiếu và sắp chiếu tại rạp",
-        breadcrumb: "Phim Chiếu Rạp",
-    },
-    "phim-hoat-hinh": {
-        title: "Phim Hoạt Hình",
-        description: "Phim hoạt hình, anime mới nhất",
-        breadcrumb: "Phim Hoạt Hình",
-    },
-    "danh-sach-yeu-thich": {
-        title: "Danh Sách Yêu Thích",
-        description: "Những bộ phim bạn đã đánh dấu yêu thích",
-        breadcrumb: "Yêu Thích",
-    },
-}
+import {fetchMovieByList , Movie} from "@/utils/api"
+import {ListType, listTypes} from "@/utils/types/listMovieType"
 
 interface ListPageProps {
-    params: {
-        slug: string
+    slug: string
+    listType: ListType
+    movies: Movie[]
+    pagination: {
+        currentPage: number
+        totalItems: number
+        totalItemsPerPage: number
     }
 }
 
-export default function ListPage({ params }: ListPageProps) {
-    const { slug } = params
+export const getServerSideProps: GetServerSideProps<ListPageProps> = async ({ params, query }) => {
+    const slug = params?.slug as string
+    const page = query.page ? Number(query.page) : 1
 
-    // Check if the slug is valid
-    if (!listTypes[slug as keyof typeof listTypes]) {
-        notFound()
+    if (!slug || !listTypes[slug]) {
+        return { notFound: true }
     }
 
-    const listType = listTypes[slug as keyof typeof listTypes]
+    const listType = listTypes[slug]
 
+    const { movies, pagination } = await fetchMovieByList(slug, page)
+
+    return {
+        props: {
+            slug,
+            listType,
+            movies,
+            pagination,
+        },
+    }
+}
+
+export default function ListPage({ slug, listType, movies, pagination }: ListPageProps) {
+    const title = listType.title.toString();
+    const totalPages = Math.ceil(pagination.totalItems / pagination.totalItemsPerPage) || 1;
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
+            <Head>
+                <title>{ title } - Xem Phim Online</title>
+                <meta name="description" content={listType.description} />
+            </Head>
+
             <Header />
 
             <main className="flex-1 container px-4 md:px-6 py-4">
@@ -97,11 +71,25 @@ export default function ListPage({ params }: ListPageProps) {
                     </div>
 
                     <div className="md:col-span-3">
-                        <Suspense fallback={<MovieSectionSkeleton />}>
-                            <MovieGrid movies={movies} />
-                        </Suspense>
+                        {movies.length === 0 ? (
+                            <MovieSectionSkeleton />
+                        ) : (
+                            <MovieGrid
+                                movies={movies.map((movie) => ({
+                                    title: movie.name,
+                                    year: movie.year.toString(),
+                                    slug: movie.slug,
+                                    thumb_url: movie.thumb_url,
+                                    poster_url: movie.poster_url,
+                                }))}
+                            />
+                        )}
 
-                        <Pagination currentPage={1} totalPages={10} baseUrl={`/list/${slug}`} />
+                        <Pagination
+                            currentPage={pagination.currentPage}
+                            totalPages={totalPages}
+                            baseUrl={`/list/${slug}`}
+                        />
                     </div>
                 </div>
             </main>
@@ -110,4 +98,3 @@ export default function ListPage({ params }: ListPageProps) {
         </div>
     )
 }
-

@@ -5,12 +5,14 @@ import { motion } from "framer-motion"
 import MovieCard from "./movie-card"
 import { Button } from "@/components/ui/button"
 import { Grid3X3, List } from "lucide-react"
+import Image from "next/image";
 
 interface Movie {
     title: string
     year: string
-    poster: string
+    poster_url: string
     rating?: string
+    thumb_url: string
 }
 
 interface MovieGridProps {
@@ -78,8 +80,10 @@ export default function MovieGrid({ movies, title }: MovieGridProps) {
                             className="flex gap-4 p-3 rounded-lg hover:bg-muted transition-all"
                         >
                             <div className="relative w-[100px] h-[150px] flex-shrink-0 overflow-hidden rounded-md">
-                                <img
-                                    src={movie.poster || "/placeholder.svg"}
+                                <Image
+                                    src={movie.thumb_url
+                                        ? `https://img.ophim.live/uploads/movies/${movie.thumb_url}`
+                                        : "/placeholder.svg"}
                                     alt={movie.title}
                                     className="object-cover w-full h-full"
                                 />

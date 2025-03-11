@@ -1,71 +1,102 @@
 import { Suspense } from "react"
-import { notFound } from "next/navigation"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import Breadcrumb from "@/components/layout/breadcrumb"
 import MovieGrid from "@/components/content/movie-grid"
 import Pagination from "@/components/layout/pagination"
-import { nations } from "@/components/layout/nation-dropdown"
 import { MovieSectionSkeleton } from "@/components/layout/loading-skeletons"
-
-// Sample movie data
-const movies = [
-    { title: "Chiến Binh Tre", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.5" },
-    { title: "Panda Nhanh Trí", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.9" },
-    { title: "Bí Mật Núi Rừng", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.2" },
-    { title: "Khu Rừng Cuối Cùng", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.6" },
-    { title: "Đen & Trắng", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "9.0" },
-    { title: "Chuyện Tre", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.3" },
-    { title: "Vương Quốc Gấu Trúc", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.7" },
-    { title: "Vương Quốc Rừng Xanh", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.1" },
-    { title: "Hành Trình Hoang Dã", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.4" },
-    { title: "Gia Đình Gấu Trúc", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "9.2" },
-    { title: "Tiếng Gọi Thiên Nhiên", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.5" },
-    { title: "Phiêu Lưu Núi Rừng", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.6" },
-    { title: "Rừng Tre", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.9" },
-    { title: "Biên Niên Sử Tre", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.7" },
-    { title: "Huyền Thoại Núi Rừng", year: "2021", poster: "/placeholder.svg?height=300&width=200", rating: "8.3" },
-]
+import { listNation, ListType } from "@/utils/types/listMovieType"
+import { fetchMovieByNation, Movie } from "@/utils/api"
+import { GetServerSideProps } from "next"
 
 interface NationPageProps {
-    params: {
-        slug: string
+    slug: string
+    listType: ListType
+    movies: Movie[]
+    pagination: {
+        currentPage: number
+        totalItems: number
+        totalItemsPerPage: number
     }
 }
 
-export default function NationPage({ params }: NationPageProps) {
-    const { slug } = params
+export const getServerSideProps: GetServerSideProps<NationPageProps> = async ({ params, query }) => {
+    const slug = params?.slug as string
+    const page = query.page ? Number(query.page) : 1
 
-    const nation = nations.find((nat) => nat.slug === slug)
-
-    if (!nation) {
-        notFound()
+    if (!slug || !listNation[slug]) {
+        return { notFound: true }
     }
+
+    const listType = listNation[slug]
+
+    const { movies, pagination } = await fetchMovieByNation(slug, page)
+
+    return {
+        props: {
+            slug,
+            listType,
+            movies,
+            pagination,
+        },
+    }
+}
+
+export default function NationPage({ slug, listType, movies, pagination }: NationPageProps) {
+    const title = listType.title.toString();
+    const totalPages = Math.ceil(pagination.totalItems / pagination.totalItemsPerPage) || 1;
+
+    const flagMap: Record<string, string> = {
+        "trung-quoc": "🇨🇳",
+        "han-quoc": "🇰🇷",
+        "nhat-ban": "🇯🇵",
+        "thai-lan": "🇹🇭",
+        "viet-nam": "🇻🇳",
+        "au-my": "🌎",
+        "anh": "🇬🇧",
+        "phap": "🇫🇷",
+        "duc": "🇩🇪",
+        "nga": "🇷🇺",
+        "uc": "🇦🇺",
+        "brazil": "🇧🇷",
+        "nhieu-quoc-gia": "🌍",
+    }
+
+    const nationFlag = flagMap[slug] || "🏳️"
 
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
             <Header />
 
             <main className="flex-1 container px-4 md:px-6 py-4">
-                <Breadcrumb items={[{ label: "Quốc Gia", href: "/nations" }, { label: nation.name }]} />
+                <Breadcrumb items={[{ label: "Quốc Gia", href: "/nations" }, { label: listType.title }]} />
 
                 <div className="py-4">
                     <h1 className="text-3xl font-bold mb-2 flex items-center">
-                        <span className="mr-2 text-2xl">{nation.flag}</span>
-                        Phim {nation.name}
+                        <span className="mr-2 text-2xl">{nationFlag}</span>
+                        Phim {title}
                     </h1>
-                    <p className="text-muted-foreground">Danh sách phim {nation.name} hay nhất, cập nhật mới nhất</p>
+                    <p className="text-muted-foreground">
+                        Danh sách phim {listType.title} hay nhất, cập nhật mới nhất
+                    </p>
                 </div>
 
                 <Suspense fallback={<MovieSectionSkeleton />}>
-                    <MovieGrid movies={movies} />
+                    <MovieGrid
+                        movies={movies.map((movie) => ({
+                            title: movie.name,
+                            year: movie.year.toString(),
+                            slug: movie.slug,
+                            thumb_url: movie.thumb_url,
+                            poster_url: movie.poster_url,
+                        }))}
+                    />
                 </Suspense>
 
-                <Pagination currentPage={1} totalPages={10} baseUrl={`/nation/${slug}`} />
+                <Pagination currentPage={pagination.currentPage} totalPages={totalPages} baseUrl={`/nation/${slug}`} />
             </main>
 
             <Footer />
         </div>
     )
 }
-

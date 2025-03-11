@@ -28,7 +28,6 @@ export default function Header() {
             setIsScrolled(window.scrollY > 10)
         }
 
-        // Prevent body scroll when menu is open
         if (isMenuOpen) {
             document.body.style.overflow = "hidden"
         } else {
@@ -84,7 +83,7 @@ export default function Header() {
                     )}
                 >
                     <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:gap-2 lg:gap-3 justify-between">
-                        <NavLink href="/public" label="Trang chủ" />
+                        <NavLink href="../" label="Trang chủ" />
 
                         {/* Desktop: Show dropdowns in the navbar */}
                         <div className="hidden md:block">
@@ -94,9 +93,10 @@ export default function Header() {
                             <NationDropdown />
                         </div>
 
-                        <NavLink href="../phim-bo" label="Phim Bộ" />
-                        <NavLink href="../phim-moi" label="Phim Mới" />
-                        <NavLink href="../danh-sach-yeu-thich" label="Yêu Thích" />
+                        <NavLink href="../list/phim-bo" label="Phim Bộ" />
+                        <NavLink href="../list/phim-moi" label="Phim Mới" />
+                        <NavLink href="../list/hoat-hinh" label="Hoạt Hình" />
+                        <NavLink href="../list/danh-sach-yeu-thich" label="Yêu Thích" />
                     </div>
 
                     {/* Mobile: Show dropdowns as expanded menus */}
@@ -113,10 +113,10 @@ export default function Header() {
                             className="flex-1 border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950 transition-colors"
                             asChild
                         >
-                            <Link href="/register">Đăng ký</Link>
+                            <Link href="../auth/register">Đăng ký</Link>
                         </Button>
                         <Button className="flex-1 bg-green-600 hover:bg-green-700 transition-colors" asChild>
-                            <Link href="/login">Đăng nhập</Link>
+                            <Link href="../auth/login">Đăng nhập</Link>
                         </Button>
                     </div>
                 </nav>
@@ -138,10 +138,10 @@ export default function Header() {
                             className="border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950 transition-colors hidden lg:flex"
                             asChild
                         >
-                            <Link href="/auth/register">Đăng ký</Link>
+                            <Link href="../auth/register">Đăng ký</Link>
                         </Button>
                         <Button size="sm" className="bg-green-600 hover:bg-green-700 transition-colors" asChild>
-                            <Link href="/auth/login">Đăng nhập</Link>
+                            <Link href="../auth/login">Đăng nhập</Link>
                         </Button>
                     </div>
 
