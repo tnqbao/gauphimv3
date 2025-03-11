@@ -33,7 +33,7 @@ export default function CategoryDropdown({ isMobile = false }: CategoryDropdownP
                     {categories.map((category) => (
                         <Link
                             key={category.name}
-                            href={`/danh-muc/${category.slug}`}
+                            href={`/category/${category.slug}`}
                             className="flex items-center rounded-md px-3 py-2 text-sm hover:bg-muted transition-colors"
                         >
                             {category.icon}
@@ -71,7 +71,7 @@ export default function CategoryDropdown({ isMobile = false }: CategoryDropdownP
                     {categories.map((category) => (
                         <DropdownMenuItem key={category.name} asChild>
                             <Link
-                                href={`/danh-muc/${category.slug}`}
+                                href={`/category/${category.slug}`}
                                 className="flex cursor-pointer items-center rounded-md px-3 py-2 text-sm hover:bg-muted transition-colors"
                             >
                                 {category.icon}

@@ -7,7 +7,6 @@ import MovieDetail from "@/components/content/movie-detail"
 import { nations } from "@/components/layout/nation-dropdown"
 import { MovieSectionSkeleton } from "@/components/layout/loading-skeletons"
 
-// Sample movie data
 const movieData = {
     title: "Vương Quốc Gấu Trúc",
     originalTitle: "Panda Kingdom",
@@ -83,9 +82,6 @@ interface MoviePageProps {
 
 export default function MoviePage({ params }: MoviePageProps) {
     const { slug } = params
-
-    // In a real app, you would fetch the movie data based on the slug
-    // For this example, we'll just check if the slug matches our sample data
     if (slug !== movieData.slug) {
         notFound()
     }

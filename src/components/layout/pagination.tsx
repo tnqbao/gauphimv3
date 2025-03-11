@@ -12,113 +12,78 @@ interface PaginationProps {
 
 export default function Pagination({ currentPage, totalPages, baseUrl, className }: PaginationProps) {
     const getPageNumbers = () => {
-        const pages = []
-        const maxPagesToShow = 5
+        if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1)
 
-        if (totalPages <= maxPagesToShow) {
-            for (let i = 1; i <= totalPages; i++) {
-                pages.push(i)
-            }
-        } else {
-            pages.push(1)
+        const pages: (number | string)[] = []
+        const maxPageNumbers = 5
+        let startPage = Math.max(1, currentPage - 2)
+        let endPage = Math.min(totalPages, currentPage + 2)
 
-            let start = Math.max(2, currentPage - 1)
-            let end = Math.min(totalPages - 1, currentPage + 1)
-
-            if (currentPage <= 2) {
-                end = 4
-            } else if (currentPage >= totalPages - 1) {
-                start = totalPages - 3
-            }
-
-            if (start > 2) {
-                pages.push("ellipsis-start")
-            }
-
-            for (let i = start; i <= end; i++) {
-                pages.push(i)
-            }
-
-            if (end < totalPages - 1) {
-                pages.push("ellipsis-end")
-            }
-
-            if (totalPages > 1) {
-                pages.push(totalPages)
-            }
+        if (currentPage <= 3) {
+            startPage = 1
+            endPage = Math.min(totalPages, maxPageNumbers)
         }
+
+        if (currentPage > totalPages - 3) {
+            endPage = totalPages
+            startPage = Math.max(1, totalPages - (maxPageNumbers - 1))
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(i)
+        }
+
+        if (startPage > 1) pages.unshift("...")
+        if (endPage < totalPages) pages.push("...")
 
         return pages
     }
 
-    const pageNumbers = getPageNumbers()
-
     return (
-        <div className={cn("flex items-center justify-center gap-1 py-8", className)}>
+        <div className={cn("flex items-center justify-center gap-2 py-6", className)}>
+            {/* Nút Previous */}
             <Button
                 variant="outline"
                 size="icon"
                 className="h-8 w-8 rounded-full"
                 disabled={currentPage === 1}
-                asChild={currentPage !== 1}
+                asChild
             >
-                {currentPage === 1 ? (
-                    <span>
-            <ChevronLeft className="h-4 w-4" />
-            <span className="sr-only">Trang trước</span>
-          </span>
-                ) : (
-                    <Link href={`${baseUrl}/${currentPage - 1}`}>
-                        <ChevronLeft className="h-4 w-4" />
-                        <span className="sr-only">Trang trước</span>
-                    </Link>
-                )}
+                <Link href={`${baseUrl}?page=${currentPage - 1}`}>
+                    <ChevronLeft className="h-4 w-4" />
+                    <span className="sr-only">Trang trước</span>
+                </Link>
             </Button>
 
-            {pageNumbers.map((page, index) => {
-                if (page === "ellipsis-start" || page === "ellipsis-end") {
-                    return (
-                        <span key={`ellipsis-${index}`} className="px-2 text-muted-foreground">
-              ...
-            </span>
-                    )
-                }
-
-                const isCurrentPage = page === currentPage
-                return (
+            {getPageNumbers().map((page, index) =>
+                page === "..." ? (
+                    <span key={`ellipsis-${index}`} className="px-2 text-muted-foreground">...</span>
+                ) : (
                     <Button
                         key={`page-${page}`}
-                        variant={isCurrentPage ? "default" : "outline"}
+                        variant={currentPage === page ? "default" : "outline"}
                         size="icon"
-                        className={cn("h-8 w-8 rounded-full", isCurrentPage && "bg-green-600 hover:bg-green-700 text-white")}
-                        asChild={!isCurrentPage}
-                        aria-current={isCurrentPage ? "page" : undefined}
+                        className={cn("h-8 w-8 rounded-full", currentPage === page && "bg-green-600 text-white")}
+                        asChild={currentPage !== page}
+                        aria-current={currentPage === page ? "page" : undefined}
                     >
-                        {isCurrentPage ? <span>{page}</span> : <Link href={`${baseUrl}/${page}`}>{page}</Link>}
+                        <Link href={`${baseUrl}?page=${page}`}>{page}</Link>
                     </Button>
                 )
-            })}
+            )}
 
             <Button
                 variant="outline"
                 size="icon"
                 className="h-8 w-8 rounded-full"
                 disabled={currentPage === totalPages}
-                asChild={currentPage !== totalPages}
+                asChild
             >
-                {currentPage === totalPages ? (
-                    <span>
-            <ChevronRight className="h-4 w-4" />
-            <span className="sr-only">Trang sau</span>
-          </span>
-                ) : (
-                    <Link href={`${baseUrl}/${currentPage + 1}`}>
-                        <ChevronRight className="h-4 w-4" />
-                        <span className="sr-only">Trang sau</span>
-                    </Link>
-                )}
+                <Link href={`${baseUrl}?page=${currentPage + 1}`}>
+                    <ChevronRight className="h-4 w-4" />
+                    <span className="sr-only">Trang sau</span>
+                </Link>
             </Button>
         </div>
     )
 }
-

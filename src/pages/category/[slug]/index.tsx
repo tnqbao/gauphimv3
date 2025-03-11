@@ -1,69 +1,101 @@
-import { Suspense } from "react"
-import { notFound } from "next/navigation"
+import {GetServerSideProps} from "next"
+import Head from "next/head"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import Breadcrumb from "@/components/layout/breadcrumb"
 import MovieGrid from "@/components/content/movie-grid"
 import Pagination from "@/components/layout/pagination"
-import { categories } from "@/components/layout/category-dropdown"
-import { MovieSectionSkeleton } from "@/components/layout/loading-skeletons"
-
-// Sample movie data
-const movies = [
-    { title: "Chiến Binh Tre", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.5" },
-    { title: "Panda Nhanh Trí", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.9" },
-    { title: "Bí Mật Núi Rừng", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.2" },
-    { title: "Khu Rừng Cuối Cùng", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.6" },
-    { title: "Đen & Trắng", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "9.0" },
-    { title: "Chuyện Tre", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.3" },
-    { title: "Vương Quốc Gấu Trúc", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.7" },
-    { title: "Vương Quốc Rừng Xanh", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.1" },
-    { title: "Hành Trình Hoang Dã", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.4" },
-    { title: "Gia Đình Gấu Trúc", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "9.2" },
-    { title: "Tiếng Gọi Thiên Nhiên", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.5" },
-    { title: "Phiêu Lưu Núi Rừng", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.6" },
-    { title: "Rừng Tre", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.9" },
-    { title: "Biên Niên Sử Tre", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.7" },
-    { title: "Huyền Thoại Núi Rừng", year: "2021", poster: "/placeholder.svg?height=300&width=200", rating: "8.3" },
-]
+import FilterSidebar from "@/components/layout/filter-sidebar"
+import {MovieSectionSkeleton} from "@/components/layout/loading-skeletons"
+import {fetchMovieByCategory, Movie} from "@/utils/api"
+import {ListType, listCategory} from "@/utils/types/listMovieType"
 
 interface CategoryPageProps {
-    params: {
-        slug: string
+    slug: string
+    listType: ListType
+    movies: Movie[]
+    pagination: {
+        currentPage: number
+        totalItems: number
+        totalItemsPerPage: number
     }
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-    const { slug } = params
+export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async ({params, query}) => {
+    const slug = params?.slug as string
+    const page = query.page ? Number(query.page) : 1
 
-    const category = categories.find((cat) => cat.slug === slug)
-
-    if (!category) {
-        notFound()
+    if (!slug || !listCategory[slug]) {
+        return {notFound: true}
     }
 
+    const listType = listCategory[slug]
+
+    const {movies, pagination} = await fetchMovieByCategory(slug, page)
+
+    return {
+        props: {
+            slug,
+            listType,
+            movies,
+            pagination,
+        },
+    }
+}
+
+export default function CategoryPage({slug, listType, movies, pagination}: CategoryPageProps) {
+    const title = listType.title.toString();
+    const totalPages = Math.ceil(pagination.totalItems / pagination.totalItemsPerPage) || 1;
 
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
-            <Header />
+            <Head>
+                <title>{title} - Xem Phim Online</title>
+                <meta name="description" content={listType.description}/>
+            </Head>
+
+            <Header/>
 
             <main className="flex-1 container px-4 md:px-6 py-4">
-                <Breadcrumb items={[{ label: "Thể Loại", href: "/categories" }, { label: category.name }]} />
+                <Breadcrumb items={[{label: "Thể Loại", href: "/categories"}, {label: listType.breadcrumb}]}/>
 
                 <div className="py-4">
-                    <h1 className="text-3xl font-bold mb-2">Phim {category.name}</h1>
-                    <p className="text-muted-foreground">Danh sách phim thể loại {category.name} hay nhất, cập nhật mới nhất</p>
+                    <h1 className="text-3xl font-bold mb-2">{listType.title}</h1>
+                    <p className="text-muted-foreground">{listType.description}</p>
                 </div>
 
-                <Suspense fallback={<MovieSectionSkeleton />}>
-                    <MovieGrid movies={movies} />
-                </Suspense>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="md:col-span-1">
+                        <div className="sticky top-20 bg-background rounded-lg border p-4">
+                            <FilterSidebar/>
+                        </div>
+                    </div>
 
-                <Pagination currentPage={1} totalPages={10} baseUrl={`/category/${slug}`} />
+                    <div className="md:col-span-3">
+                        {movies.length === 0 ? (
+                            <MovieSectionSkeleton/>
+                        ) : (
+                            <MovieGrid
+                                movies={movies.map((movie) => ({
+                                    title: movie.name,
+                                    year: movie.year.toString(),
+                                    slug: movie.slug,
+                                    thumb_url: movie.thumb_url,
+                                    poster_url: movie.poster_url,
+                                }))}
+                            />
+                        )}
+
+                        <Pagination
+                            currentPage={pagination.currentPage}
+                            totalPages={totalPages}
+                            baseUrl={`/category/${slug}`}
+                        />
+                    </div>
+                </div>
             </main>
 
-            <Footer />
+            <Footer/>
         </div>
     )
 }
-
