@@ -30,23 +30,22 @@ export const categories = [
 ]
 
 export const trendingMovies = [
-  { title: "Bamboo Warriors", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.5" },
-  { title: "Panda Express", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.9" },
-  { title: "Mountain Secrets", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.2" },
-  { title: "The Last Forest", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.6" },
-  { title: "Black & White", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "9.0" },
-  { title: "Bamboo Tales", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.3" },
-  { title: "Panda Kingdom", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.7" },
+  { title: "Bamboo Warriors", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.5", poster_url: "https://img.ophim.live/uploads" , thumb_url: "https://img.ophim.live/uploads" },
+  { title: "Panda Express", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.9" ,  poster_url: "https://img.ophim.live/uploads" , thumb_url: "https://img.ophim.live/uploads" },
+  { title: "Mountain Secrets", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.2" ,  poster_url: "https://img.ophim.live/uploads" , thumb_url: "https://img.ophim.live/uploads" },
+  { title: "The Last Forest", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.6" ,  poster_url: "https://img.ophim.live/uploads" , thumb_url: "https://img.ophim.live/uploads" },
+  { title: "Bamboo Tales", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.3"  ,  poster_url: "https://img.ophim.live/uploads" , thumb_url: "https://img.ophim.live/uploads"},
+  { title: "Panda Kingdom", year: "2022", poster: "/placeholder.svg?height=300&width=200", rating: "8.7"  ,  poster_url: "https://img.ophim.live/uploads" , thumb_url: "https://img.ophim.live/uploads"},
 ]
 
 export const newReleases = [
-  { title: "Forest Kingdom", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.1" },
-  { title: "Bamboo Tales", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.8" },
-  { title: "Wild Journey", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.4" },
-  { title: "Panda Family", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "9.2" },
-  { title: "Nature's Call", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.5" },
-  { title: "Mountain Adventure", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.6" },
-  { title: "Bamboo Forest", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.9" },
+  { title: "Forest Kingdom", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.1"  ,  poster_url: "https://img.ophim.live/uploads" , thumb_url: "https://img.ophim.live/uploads"},
+  { title: "Bamboo Tales", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.8"  ,  poster_url: "https://img.ophim.live/uploads" , thumb_url: "https://img.ophim.live/uploads"},
+  { title: "Wild Journey", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.4" ,  poster_url: "https://img.ophim.live/uploads" , thumb_url: "https://img.ophim.live/uploads" },
+  { title: "Panda Family", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "9.2" ,  poster_url: "https://img.ophim.live/uploads" , thumb_url: "https://img.ophim.live/uploads" },
+  { title: "Nature's Call", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "7.5" ,  poster_url: "https://img.ophim.live/uploads" , thumb_url: "https://img.ophim.live/uploads" },
+  { title: "Mountain Adventure", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.6"  ,  poster_url: "https://img.ophim.live/uploads" , thumb_url: "https://img.ophim.live/uploads"},
+  { title: "Bamboo Forest", year: "2023", poster: "/placeholder.svg?height=300&width=200", rating: "8.9" ,  poster_url: "https://img.ophim.live/uploads" , thumb_url: "https://img.ophim.live/uploads" },
 ]
 
 export const pandaPicks = [

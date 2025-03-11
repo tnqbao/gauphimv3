@@ -13,7 +13,8 @@ import LazyLoadComponent from "../layout/lazy-load-component"
 interface Movie {
     title: string
     year: string
-    poster: string
+    poster_url: string
+    thumb_url: string
     rating?: string
 }
 
