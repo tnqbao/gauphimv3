@@ -28,14 +28,15 @@ export default function MoviePage({ movieData }: MoviePageProps) {
 
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
-            <Header />
-
+            <Header/>
+            <title title={movieData.item.name}/>
             <main className="flex-1">
                 <div className="container px-4 md:px-6 py-4">
                 </div>
 
                 <MovieDetail
                     name={movieData.item.name}
+                    slug={movieData.item.slug}
                     origin_name={movieData.item.origin_name}
                     poster_url={movieData.item.poster_url}
                     thumb_url={movieData.item.thumb_url}
@@ -46,11 +47,11 @@ export default function MoviePage({ movieData }: MoviePageProps) {
                     country={movieData.item.country}
                     actors={movieData.item.actor}
                     episodes={movieData.item.episodes}
-                    isSeries={movieData.item.episodes[0].server_data.length > 1 }
+                    isSeries={movieData.item.episodes[0].server_data.length > 1}
                 />
             </main>
 
-            <Footer />
+            <Footer/>
         </div>
     )
 }

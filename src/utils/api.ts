@@ -18,6 +18,7 @@ export interface Movie {
 export interface MovieDetailType extends Movie {
     item: {
         name : string
+        slug: string,
         origin_name: string
         content: string
         type: string

@@ -28,7 +28,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
                     return (
                         <li key={item.label} className="flex items-center">
                             {isLast ? (
-                                <span className="font-medium text-foreground">{item.label}</span>
+                                <span className="font-medium text-muted-foreground">{item.label}</span>
                             ) : (
                                 <>
                                     <Link

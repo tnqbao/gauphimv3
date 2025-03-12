@@ -1,0 +1,208 @@
+"use client"
+
+import { useEffect, useRef, useState } from "react"
+import { AnimatePresence } from "framer-motion"
+import { cn } from "@/lib/utils"
+import VideoControls from "./video-controls"
+import PandaLoadingIndicator from "./panda-loading-indicator"
+import EpisodeList from "@/components/content/episode-list"
+import MovieInfoDisplay from "./movie-info-display"
+import HLSVideoPlayer from "./hls-video-player"
+import type { Episode } from "@/components/content/episode-card"
+
+interface MovieInfo {
+    name: string
+    year: string
+    categories: { name: string; slug: string }[]
+    description: string
+}
+
+interface PandaVideoPlayerProps {
+    title: string
+    poster: string
+    source: string
+    episodes: Episode[]
+    currentEpisode: string
+    movieSlug: string
+    movieInfo: MovieInfo
+}
+
+export default function PandaVideoPlayer({
+                                             title,
+                                             poster,
+                                             source,
+                                             episodes,
+                                             currentEpisode,
+                                             movieSlug,
+                                             movieInfo,
+                                         }: PandaVideoPlayerProps) {
+    const [isEmbedVideo, setIsEmbedVideo] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+    const [showEpisodeList, setShowEpisodeList] = useState(false)
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [isMuted, setIsMuted] = useState(false)
+    const [isFullscreen, setIsFullscreen] = useState(false)
+    const [progress, setProgress] = useState(0)
+    const [duration, setDuration] = useState(0)
+    const [currentTime, setCurrentTime] = useState(0)
+    const [volume, setVolume] = useState(1)
+    const [showControls] = useState(true)
+    const [lightsOff, setLightsOff] = useState(false)
+
+    const playerRef = useRef<HTMLDivElement>(null)
+    const containerRef = useRef<HTMLDivElement>(null)
+    const videoRef = useRef<HTMLVideoElement | null>(null)
+
+    useEffect(() => {
+        setIsEmbedVideo(source.includes("embed") || source.includes("iframe"))
+    }, [source])
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement)
+        }
+
+        document.addEventListener("fullscreenchange", handleFullscreenChange)
+        return () => {
+            document.removeEventListener("fullscreenchange", handleFullscreenChange)
+        }
+    }, [])
+
+    const handleLoadedMetadata = () => {
+        setIsLoading(false)
+        if (videoRef.current) {
+            setDuration(videoRef.current.duration)
+        }
+    }
+
+    const handleTimeUpdate = () => {
+        if (videoRef.current) {
+            setCurrentTime(videoRef.current.currentTime)
+            setProgress((videoRef.current.currentTime / videoRef.current.duration) * 100)
+        }
+    }
+
+    const togglePlay = () => {
+        if (!isEmbedVideo && videoRef.current) {
+            if (isPlaying) {
+                videoRef.current.pause()
+            } else {
+                videoRef.current.play()
+            }
+            setIsPlaying(!isPlaying)
+        }
+    }
+
+    const toggleMute = () => {
+        if (!isEmbedVideo && videoRef.current) {
+            videoRef.current.muted = !isMuted
+            setIsMuted(!isMuted)
+        }
+    }
+
+    const toggleFullscreen = () => {
+        if (!playerRef.current) return
+
+        if (!document.fullscreenElement) {
+            playerRef.current.requestFullscreen().catch((err) => console.error("Fullscreen error:", err))
+        } else {
+            document.exitFullscreen().catch((err) => console.error("Exit fullscreen error:", err))
+        }
+    }
+
+    const handleSeek = (value: number[]) => {
+        if (videoRef.current) {
+            const seekTime = (value[0] / 100) * videoRef.current.duration
+            videoRef.current.currentTime = seekTime
+            setProgress(value[0])
+        }
+    }
+
+    const handleVolumeChange = (value: number[]) => {
+        if (videoRef.current) {
+            videoRef.current.volume = value[0]
+            setVolume(value[0])
+            setIsMuted(value[0] === 0)
+        }
+    }
+
+    const toggleEpisodeList = () => setShowEpisodeList(!showEpisodeList)
+
+    return (
+        <div ref={containerRef} className={cn("transition-colors duration-300", lightsOff ? "bg-black" : "bg-[#0a0a0a]")}>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2">
+                    <div
+                        ref={playerRef}
+                        className="relative w-full aspect-video bg-black rounded-lg overflow-hidden group"
+                    >
+                        {isLoading && <PandaLoadingIndicator />}
+
+                        {isEmbedVideo ? (
+                            <iframe
+                                src={source}
+                                className="w-full h-full border-0"
+                                allowFullScreen
+                                onLoad={() => setIsLoading(false)}
+                            ></iframe>
+                        ) : (
+                            <HLSVideoPlayer
+                                ref={videoRef}
+                                src={source}
+                                poster={`https://img.ophim.live/uploads/movies/${poster}`}
+                                onLoadedMetadata={handleLoadedMetadata}
+                                onTimeUpdate={handleTimeUpdate}
+                                className="w-full h-full object-contain"
+                            />
+                        )}
+
+                        <AnimatePresence>
+                            {showControls && (
+                                <VideoControls
+                                    title={title}
+                                    isPlaying={isPlaying}
+                                    isMuted={isMuted}
+                                    isFullscreen={isFullscreen}
+                                    progress={progress}
+                                    duration={duration}
+                                    currentTime={currentTime}
+                                    volume={volume}
+                                    lightsOff={lightsOff}
+                                    isEmbedVideo={isEmbedVideo}
+                                    currentEpisode={currentEpisode}
+                                    movieSlug={movieSlug}
+                                    episodes={episodes}
+                                    togglePlay={togglePlay}
+                                    toggleMute={toggleMute}
+                                    toggleFullscreen={toggleFullscreen}
+                                    handleSeek={handleSeek}
+                                    handleVolumeChange={handleVolumeChange}
+                                    setLightsOff={setLightsOff}
+                                    toggleEpisodeList={toggleEpisodeList}
+                                />
+                            )}
+                        </AnimatePresence>
+                    </div>
+
+                    <MovieInfoDisplay {...movieInfo} lightsOff={lightsOff} />
+                    <AnimatePresence>
+                        {showEpisodeList && (
+                            <EpisodeList
+                                episodes={episodes}
+                                currentEpisode={currentEpisode}
+                                movieSlug={movieSlug}
+                                isVisible={showEpisodeList}
+                                onClose={toggleEpisodeList}
+                                isMobile={true}
+                            />
+                        )}
+                    </AnimatePresence>
+                </div>
+
+                <div className="lg:col-span-1 hidden lg:block">
+                    <EpisodeList episodes={episodes} currentEpisode={currentEpisode} movieSlug={movieSlug} isVisible />
+                </div>
+            </div>
+        </div>
+    )
+}
