@@ -17,7 +17,7 @@ export default function LogoImage({ className, size = "medium" }: LogoImageProps
     const { width, height } = sizes[size]
 
     return (
-        <Link href="/public" className="flex items-center gap-2 group">
+        <Link href="../" className="flex items-center gap-2 group">
             <div className={cn("relative overflow-hidden rounded-full", className)}>
                 <Image
                     src="https://i.imgur.com/Clt9Lmg.png?height=100&width=100?height=100&width=100"
