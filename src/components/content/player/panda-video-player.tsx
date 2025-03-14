@@ -46,7 +46,6 @@ export default function PandaVideoPlayer({
     const [duration, setDuration] = useState(0)
     const [currentTime, setCurrentTime] = useState(0)
     const [volume, setVolume] = useState(1)
-    const [showControls] = useState(true)
     const [lightsOff, setLightsOff] = useState(false)
 
     const playerRef = useRef<HTMLDivElement>(null)
@@ -127,6 +126,39 @@ export default function PandaVideoPlayer({
     }
 
     const toggleEpisodeList = () => setShowEpisodeList(!showEpisodeList)
+    const [showControls, setShowControls] = useState(true)
+    const controlsTimeout = useRef<NodeJS.Timeout | null>(null)
+
+    const hideControls = () => {
+        setShowControls(false)
+    }
+
+    const resetControlsTimeout = () => {
+        if (controlsTimeout.current) {
+            clearTimeout(controlsTimeout.current)
+        }
+        controlsTimeout.current = setTimeout(hideControls, 3000)
+    }
+
+    const handleMouseMove = () => {
+        setShowControls(true)
+        resetControlsTimeout()
+    }
+
+    const handleVideoPlayPause = () => {
+        if (isPlaying) {
+            resetControlsTimeout()
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener("mousemove", handleMouseMove)
+        document.addEventListener("play", handleVideoPlayPause, true) // Listen to play/pause
+        return () => {
+            document.removeEventListener("mousemove", handleMouseMove)
+            document.removeEventListener("play", handleVideoPlayPause)
+        }
+    }, [])
 
     return (
         <div ref={containerRef} className={cn("transition-colors duration-300", lightsOff ? "bg-black" : "bg-[#0a0a0a]")}>

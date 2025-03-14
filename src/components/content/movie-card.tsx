@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { motion, AnimatePresence } from "framer-motion"
 import LazyImage from "@/components/layout/lazy-image"
 import Link from "next/link"
+import {useRouter} from "next/router";
 
 interface Movie {
     title: string
@@ -25,7 +26,7 @@ interface MovieCardProps {
 export default function MovieCard({ movie, index }: MovieCardProps) {
     const [isHovered, setIsHovered] = useState(false)
     const [isLiked, setIsLiked] = useState(false)
-
+    const router = useRouter()
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -34,9 +35,10 @@ export default function MovieCard({ movie, index }: MovieCardProps) {
             whileHover={{ y: -10 }}
         >
             <Card
-                className="overflow-hidden border-0 bg-transparent shadow-none transition-all duration-300"
+                className="overflow-hidden border-0 bg-transparent shadow-none transition-all duration-300 hover:cursor-pointer"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
+                onClick={() => router.push(`/detail/${movie.slug}`)}
             >
                 <div className="relative aspect-[2/3] overflow-hidden rounded-lg">
                     <LazyImage
