@@ -1,6 +1,7 @@
-"use client"
+import type React from "react"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Search, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,6 +9,21 @@ import { motion, AnimatePresence } from "framer-motion"
 
 export default function MobileSearch() {
     const [isOpen, setIsOpen] = useState(false)
+    const [keyword, setKeyword] = useState("")
+    const router = useRouter()
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault()
+        if (keyword.trim()) {
+            router.push(`/search?keyword=${encodeURIComponent(keyword.trim())}`)
+            setIsOpen(false)
+        }
+    }
+
+    const handleQuickSearch = (term: string) => {
+        router.push(`/search?keyword=${encodeURIComponent(term)}`)
+        setIsOpen(false)
+    }
 
     return (
         <div className="md:hidden">
@@ -31,15 +47,17 @@ export default function MobileSearch() {
                             </Button>
                         </div>
 
-                        <div className="relative">
+                        <form onSubmit={handleSearch} className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                             <Input
                                 type="search"
                                 placeholder="Tìm phim, diễn viên, thể loại..."
                                 className="pl-10 py-6 text-base"
                                 autoFocus
+                                value={keyword}
+                                onChange={(e) => setKeyword(e.target.value)}
                             />
-                        </div>
+                        </form>
 
                         <div className="mt-6">
                             <h3 className="text-sm font-medium text-muted-foreground mb-2">Tìm Kiếm Phổ Biến</h3>
@@ -50,9 +68,7 @@ export default function MobileSearch() {
                                         variant="outline"
                                         size="sm"
                                         className="rounded-full"
-                                        onClick={() => {
-                                            // Handle search
-                                        }}
+                                        onClick={() => handleQuickSearch(term)}
                                     >
                                         {term}
                                     </Button>

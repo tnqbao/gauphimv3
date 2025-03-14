@@ -12,11 +12,11 @@ import {
 import { Button } from "@/components/ui/button"
 
 export const nations = [
-    { name: "Mỹ", slug: "my", flag: "🇺🇸" },
+    { name: "Mỹ", slug: "au-my ", flag: "🇺🇸" },
+    {name: "Việt Nam", slug: "viet-nam", flag: "🇻🇳"},
     { name: "Hàn Quốc", slug: "han-quoc", flag: "🇰🇷" },
     { name: "Nhật Bản", slug: "nhat-ban", flag: "🇯🇵" },
     { name: "Trung Quốc", slug: "trung-quoc", flag: "🇨🇳" },
-    { name: "Ấn Độ", slug: "an-do", flag: "🇮🇳" },
     { name: "Anh", slug: "anh", flag: "🇬🇧" },
     { name: "Pháp", slug: "phap", flag: "🇫🇷" },
     { name: "Thái Lan", slug: "thai-lan", flag: "🇹🇭" },
@@ -52,7 +52,7 @@ export default function NationDropdown({ isMobile = false }: NationDropdownProps
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="ghost"
-                    className="flex items-center gap-1 px-2 py-1.5 text-base font-medium md:text-sm hover:bg-transparent hover:text-green-600 focus:bg-transparent h-9"
+                    className="flex items-center gap-1 px-2 py-1.5 text-base font-bold md:text-sm hover:bg-transparent hover:text-green-600 focus:bg-transparent h-9"
                 >
                     <span>Quốc Gia</span>
                     <ChevronDown className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />

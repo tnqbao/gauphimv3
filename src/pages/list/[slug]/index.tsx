@@ -5,10 +5,11 @@ import Footer from "@/components/layout/footer"
 import Breadcrumb from "@/components/layout/breadcrumb"
 import MovieGrid from "@/components/content/movie-grid"
 import Pagination from "@/components/layout/pagination"
-import FilterSidebar from "@/components/layout/filter-sidebar"
-import { MovieSectionSkeleton } from "@/components/layout/loading-skeletons"
-import {fetchMovieByList , Movie} from "@/utils/api"
-import {ListType, listTypes} from "@/utils/types/listMovieType"
+import { MovieSectionSkeleton } from "@/components/content/loading/loading-skeletons"
+import { fetchMovieByList, Movie } from "@/utils/api"
+import { ListType, listTypes } from "@/utils/types/listMovieType"
+import { useState, useEffect } from "react"
+import ListPageLoading from "@/pages/list/loading/loading";
 
 interface ListPageProps {
     slug: string
@@ -43,14 +44,34 @@ export const getServerSideProps: GetServerSideProps<ListPageProps> = async ({ pa
     }
 }
 
-export default function ListPage({ slug, listType, movies, pagination }: ListPageProps) {
+const ListPage = ({ slug, listType, movies, pagination }: ListPageProps) => {
+    const [loading, setLoading] = useState(true)
     const title = listType.title.toString();
     const totalPages = Math.ceil(pagination.totalItems / pagination.totalItemsPerPage) || 1;
+    useEffect(() => {
+        const timer = setTimeout(() => setLoading(false), 500)
+        return () => clearTimeout(timer)
+    }, [])
+
+
+    if (loading) {
+        return <ListPageLoading />;
+    }
+
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
             <Head>
-                <title>{ title } - Xem Phim Online</title>
-                <meta name="description" content={listType.description} />
+                <title>{`Phim thể loại ${title} - Xem phim miễn phí, chất lượng cao`}</title>
+                <meta name="description" content={`Khám phá các bộ phim thể loại ${title} tại đây. Xem các bộ phim hấp dẫn miễn phí, chất lượng cao.`} />
+                <meta name="keywords" content={`phim ${title}, phim thể loại ${slug}, phim miễn phí, phim chất lượng cao, ${title} phim`} />
+                <meta property="og:title" content={`Phim thể loại ${title} - Xem phim miễn phí, chất lượng cao`} />
+                <meta property="og:description" content={`Khám phá các bộ phim thể loại ${title} tại đây. Xem các bộ phim hấp dẫn miễn phí, chất lượng cao.`} />
+                <meta property="og:image" content={`https://img.ophim.live/uploads/movies/${movies[0].thumb_url}`} />
+                <meta property="og:url" content={`https://gauphim.daudoo.com/list/${slug}`} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={`Phim thể loại ${title} - Xem phim miễn phí, chất lượng cao`} />
+                <meta name="twitter:description" content={`Khám phá các bộ phim thể loại ${title} tại đây. Xem các bộ phim hấp dẫn miễn phí, chất lượng cao.`} />
+                <meta name="twitter:image" content={`https://img.ophim.live/uploads/movies/${movies[0].thumb_url}`} />
             </Head>
 
             <Header />
@@ -64,14 +85,8 @@ export default function ListPage({ slug, listType, movies, pagination }: ListPag
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div className="md:col-span-1">
-                        <div className="sticky top-20 bg-background rounded-lg border p-4">
-                            <FilterSidebar />
-                        </div>
-                    </div>
-
-                    <div className="md:col-span-3">
-                        {movies.length === 0 ? (
+                    <div className="md:col-span-4">
+                        {loading ? (
                             <MovieSectionSkeleton />
                         ) : (
                             <MovieGrid
@@ -98,3 +113,5 @@ export default function ListPage({ slug, listType, movies, pagination }: ListPag
         </div>
     )
 }
+
+export default ListPage;

@@ -50,7 +50,7 @@ export default function CategoryDropdown({ isMobile = false }: CategoryDropdownP
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="ghost"
-                    className="flex items-center gap-1 px-2 py-1.5 text-base font-medium md:text-sm hover:bg-transparent hover:text-green-600 focus:bg-transparent h-9"
+                    className="flex items-center gap-1 px-2 py-1.5 text-base font-bold md:text-sm hover:bg-transparent hover:text-green-600 focus:bg-transparent h-9"
                 >
                     <span>Thể Loại</span>
                     <ChevronDown className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />

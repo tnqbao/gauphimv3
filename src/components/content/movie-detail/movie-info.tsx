@@ -37,7 +37,7 @@ export default function MovieInfo({
             </h1>
             <h2
                 className="text-xl md:text-white text-black mb-4"
-                style={{ textShadow: "2px 2px 5px rgba(0, 0, 0, 0.7)", WebkitTextStroke: "0.3px black" }}
+                style={{ textShadow: "2px 2px 5px rgba(0, 0, 0, 0.7)"}}
             >
                 {originalTitle}
             </h2>
@@ -45,7 +45,7 @@ export default function MovieInfo({
             <div className="flex flex-wrap gap-2 mb-4">
                 {categories.map((category) => (
                     <Link key={category.slug} href={`/category/${category.slug}`}>
-                        <Badge variant="outline" className="hover:bg-muted transition-colors">
+                        <Badge variant="secondary" className="hover:bg-green-600 transition-colors hover:text-white">
                             {category.name}
                         </Badge>
                     </Link>
