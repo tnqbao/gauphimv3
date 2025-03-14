@@ -34,7 +34,7 @@ export default function LazyImage({
     }, [fadeIn])
 
     return (
-        <div ref={ref} className="relative overflow-hidden" style={{height: props.height || "300px"}}>
+        <div ref={ref} className="" style={{height: props.height || "300px"}}>
             {inView ? (
                 <Image
                     src={src || "https://i.imgur.com/sACJNuE.png"}
@@ -45,7 +45,8 @@ export default function LazyImage({
                     className={cn(
                         className,
                         fadeIn && "transition-opacity duration-500",
-                        isLoaded ? "opacity-100" : "opacity-0"
+                        isLoaded ? "opacity-100" : "opacity-0",
+                        "object-cover"
                     )}
                     onLoad={() => setIsLoaded(true)}
                     {...props}

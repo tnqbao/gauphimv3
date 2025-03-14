@@ -1,14 +1,14 @@
-import {GetServerSideProps} from "next"
+import { useState, useEffect } from "react"
+import { GetServerSideProps } from "next"
 import Head from "next/head"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import Breadcrumb from "@/components/layout/breadcrumb"
 import MovieGrid from "@/components/content/movie-grid"
 import Pagination from "@/components/layout/pagination"
-import FilterSidebar from "@/components/layout/filter-sidebar"
-import {MovieSectionSkeleton} from "@/components/layout/loading-skeletons"
-import {fetchMovieByCategory, Movie} from "@/utils/api"
-import {ListType, listCategory} from "@/utils/types/listMovieType"
+import { fetchMovieByCategory, Movie } from "@/utils/api"
+import { ListType, listCategory } from "@/utils/types/listMovieType"
+import CategoryDetailLoading from "./loading"
 
 interface CategoryPageProps {
     slug: string
@@ -21,17 +21,16 @@ interface CategoryPageProps {
     }
 }
 
-export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async ({params, query}) => {
+export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async ({ params, query }) => {
     const slug = params?.slug as string
     const page = query.page ? Number(query.page) : 1
 
     if (!slug || !listCategory[slug]) {
-        return {notFound: true}
+        return { notFound: true }
     }
 
     const listType = listCategory[slug]
-
-    const {movies, pagination} = await fetchMovieByCategory(slug, page)
+    const { movies, pagination } = await fetchMovieByCategory(slug, page)
 
     return {
         props: {
@@ -43,21 +42,32 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
     }
 }
 
-export default function CategoryPage({slug, listType, movies, pagination}: CategoryPageProps) {
-    const title = listType.title.toString();
-    const totalPages = Math.ceil(pagination.totalItems / pagination.totalItemsPerPage) || 1;
+export default function CategoryPage({ slug, listType, movies, pagination }: CategoryPageProps) {
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const timer = setTimeout(() => setLoading(false), 500) // Giả lập delay loading
+        return () => clearTimeout(timer)
+    }, [])
+
+    if (loading) {
+        return <CategoryDetailLoading />
+    }
+
+    const title = listType.title.toString()
+    const totalPages = Math.ceil(pagination.totalItems / pagination.totalItemsPerPage) || 1
 
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
             <Head>
                 <title>{title} - Xem Phim Online</title>
-                <meta name="description" content={listType.description}/>
+                <meta name="description" content={listType.description} />
             </Head>
 
-            <Header/>
+            <Header />
 
             <main className="flex-1 container px-4 md:px-6 py-4">
-                <Breadcrumb items={[{label: "Thể Loại", href: "/categories"}, {label: listType.breadcrumb}]}/>
+                <Breadcrumb items={[{ label: "Thể Loại", href: "/categories" }, { label: listType.breadcrumb }]} />
 
                 <div className="py-4">
                     <h1 className="text-3xl font-bold mb-2">{listType.title}</h1>
@@ -65,37 +75,23 @@ export default function CategoryPage({slug, listType, movies, pagination}: Categ
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div className="md:col-span-1">
-                        <div className="sticky top-20 bg-background rounded-lg border p-4">
-                            <FilterSidebar/>
-                        </div>
-                    </div>
-
-                    <div className="md:col-span-3">
-                        {movies.length === 0 ? (
-                            <MovieSectionSkeleton/>
-                        ) : (
-                            <MovieGrid
-                                movies={movies.map((movie) => ({
-                                    title: movie.name,
-                                    year: movie.year.toString(),
-                                    slug: movie.slug,
-                                    thumb_url: movie.thumb_url,
-                                    poster_url: movie.poster_url,
-                                }))}
-                            />
-                        )}
-
-                        <Pagination
-                            currentPage={pagination.currentPage}
-                            totalPages={totalPages}
-                            baseUrl={`/category/${slug}`}
+                    <div className="md:col-span-4">
+                        <MovieGrid
+                            movies={movies.map((movie) => ({
+                                title: movie.name,
+                                year: movie.year.toString(),
+                                slug: movie.slug,
+                                thumb_url: movie.thumb_url,
+                                poster_url: movie.poster_url,
+                            }))}
                         />
+
+                        <Pagination currentPage={pagination.currentPage} totalPages={totalPages} baseUrl={`/category/${slug}`} />
                     </div>
                 </div>
             </main>
 
-            <Footer/>
+            <Footer />
         </div>
     )
 }

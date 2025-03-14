@@ -88,7 +88,7 @@ export default function MovieDetail({
                         <MovieActors actors={actors} />
 
                         {isSeries && server_data.length > 0 && (
-                            <EpisodeListTabs episodes={server_data} thumb_url={thumb_url} movieSlug={slug} />
+                            <EpisodeListTabs episodes={server_data} thumb_url={poster_url} movieSlug={slug} />
                         )}
                     </div>
                 </div>

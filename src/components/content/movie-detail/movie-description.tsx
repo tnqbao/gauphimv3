@@ -12,15 +12,12 @@ export default function MovieDescription({ description }: MovieDescriptionProps)
                 Nội dung phim
             </h3>
             <p
-                className="text-black"
+                className="text-emerald-50 text-md bg-black/30 bg-opacity-50 p-4 rounded-md"
                 style={{
-                    textShadow: "1px 1px 3px rgba(0, 0, 0, 0.5)",
-                    WebkitTextStroke: "0.3px black",
+                    textShadow: "1px 1px 3px rgba(0, 0, 0, 0.8)",
                 }}
-            >
-                {description}
-            </p>
+                dangerouslySetInnerHTML={{ __html: description }}
+            />
         </div>
     )
 }
-

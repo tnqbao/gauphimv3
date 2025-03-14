@@ -31,7 +31,7 @@ export default function EpisodeCard({ episode, thumb_url, movieSlug }: EpisodeCa
                         src={`https://img.ophim.live/uploads/movies/${thumb_url}` || "/placeholder.svg"}
                         alt={`Tập ${episode.name}: ${episode.filename}`}
                         fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-110"
+                        className=" object-contain transition-transform duration-300 group-hover:scale-110"
                     />
                     <div
                         className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">

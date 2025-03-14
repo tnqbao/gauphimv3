@@ -1,17 +1,15 @@
-import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import Breadcrumb from "@/components/layout/breadcrumb"
 import PandaVideoPlayer from "@/components/content/player/panda-video-player"
-import { MovieSectionSkeleton } from "@/components/layout/loading-skeletons"
-import {fetchMovieBySlug, MovieDetailType} from "@/utils/api"
-import type { GetServerSideProps } from "next"
-
+import { fetchMovieBySlug, MovieDetailType } from "@/utils/api"
+import { GetServerSideProps } from "next"
+import Head from "next/head"
 
 interface MoviePageProps {
     movieData: MovieDetailType | null
-    episodeNumber: string // Keep episodeNumber as string, as it's coming from query
+    episodeNumber: string
 }
 
 export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({ params, query }) => {
@@ -42,49 +40,50 @@ export default function WatchPage({ movieData, episodeNumber }: MoviePageProps) 
     if (episodes.length === 0) {
         notFound()
     }
-    const movieItemData = movieData.item;
+
+    const movieItemData = movieData.item
     const currentEpisode = episodes.find((ep) => ep.name === episodeNumber) || episodes[0]
 
     return (
         <div className="flex min-h-screen flex-col bg-[#0a0a0a] text-white">
-            <title title={`${movieItemData.name} - Tập ${currentEpisode.name}`}/>
-            <Header/>
+            <Head>
+                <title>{`${movieItemData.name} - Tập ${currentEpisode.name}`}</title>
+            </Head>
+            <Header />
             <main className="flex-1">
                 <div className="container px-4 md:px-6 py-4">
                     <Breadcrumb
                         items={[
-                            {label: "Phim", href: "/phim"},
-                            {label: movieItemData.name, href: `/phim/${movieItemData.slug}`},
-                            {label: `Tập ${currentEpisode.name}`},
+                            { label: "Phim", href: "/phim" },
+                            { label: movieItemData.name, href: `/phim/${movieItemData.slug}` },
+                            { label: `Tập ${currentEpisode.name}` },
                         ]}
                     />
                 </div>
 
-                <Suspense fallback={<MovieSectionSkeleton/>}>
-                    <div className="container px-4 md:px-6 py-4">
-                        <h1 className="text-xl md:text-2xl font-bold mb-4">
-                            {movieItemData.name} - Tập {currentEpisode.name}
-                        </h1>
+                <div className="container px-4 md:px-6 py-4">
+                    <h1 className="text-xl md:text-2xl font-bold mb-4">
+                        {movieItemData.name} - Tập {currentEpisode.name}
+                    </h1>
 
-                        <PandaVideoPlayer
-                            title={`${movieItemData.name} - Tập ${currentEpisode.name}`}
-                            poster={movieItemData.thumb_url}
-                            source={currentEpisode.link_m3u8}
-                            episodes={episodes}
-                            currentEpisode={currentEpisode.name}
-                            movieSlug={movieItemData.slug}
-                            movieInfo={{
-                                name: movieItemData.name,
-                                year: movieItemData.year.toString(),
-                                categories: movieItemData.category,
-                                description: movieItemData.content,
-                            }}
-                        />
-                    </div>
-                </Suspense>
+                    <PandaVideoPlayer
+                        title={`${movieItemData.name} - Tập ${currentEpisode.name}`}
+                        poster={movieItemData.thumb_url}
+                        source={currentEpisode.link_m3u8}
+                        episodes={episodes}
+                        currentEpisode={currentEpisode.name}
+                        movieSlug={movieItemData.slug}
+                        movieInfo={{
+                            name: movieItemData.name,
+                            year: movieItemData.year.toString(),
+                            categories: movieItemData.category,
+                            description: movieItemData.content,
+                        }}
+                    />
+                </div>
             </main>
 
-            <Footer/>
+            <Footer />
         </div>
     )
 }

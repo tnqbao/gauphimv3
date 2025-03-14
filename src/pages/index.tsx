@@ -6,12 +6,11 @@ import {
   MovieSectionSkeleton,
   PandaPicksSkeleton,
   FooterSkeleton,
-} from "@/components/layout/loading-skeletons"
+} from "@/components/content/loading/loading-skeletons"
 import BambooDecoration from "@/components/content/bamboo-decoration"
 import PandaScrollProgress from "@/components/content/panda-scroll-progress"
 import ThemeEffects from "@/components/content/theme-effects"
 
-// Lazy load components
 const Hero = lazy(() => import("@/components/layout/hero"))
 const Categories = lazy(() => import("@/components/content/categories"))
 const MovieSection = lazy(() => import("@/components/content/movie-section"))
@@ -19,7 +18,6 @@ const PandaPicks = lazy(() => import("@/components/content/panda-picks"))
 const Footer = lazy(() => import("@/components/layout/footer"))
 const FloatingLeaves = lazy(() => import("@/components/content/floating-leaves"))
 
-// Sample data
 export const categories = [
   { name: "Action", image: "https://congthanh.vn/uploads/images/in-poster-phim-anh-dep-.jpg" },
   { name: "Comedy", image: "https://congthanh.vn/uploads/images/in-poster-phim-anh-dep-.jpg" },

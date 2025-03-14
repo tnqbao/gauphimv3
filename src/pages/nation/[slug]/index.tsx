@@ -1,10 +1,9 @@
-import { Suspense } from "react"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import Breadcrumb from "@/components/layout/breadcrumb"
 import MovieGrid from "@/components/content/movie-grid"
 import Pagination from "@/components/layout/pagination"
-import { MovieSectionSkeleton } from "@/components/layout/loading-skeletons"
+import { MovieSectionSkeleton } from "@/components/content/loading/loading-skeletons"
 import { listNation, ListType } from "@/utils/types/listMovieType"
 import { fetchMovieByNation, Movie } from "@/utils/api"
 import { GetServerSideProps } from "next"
@@ -64,6 +63,8 @@ export default function NationPage({ slug, listType, movies, pagination }: Natio
 
     const nationFlag = flagMap[slug] || "🏳️"
 
+    const isLoading = !movies.length;
+
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
             <Header />
@@ -81,7 +82,9 @@ export default function NationPage({ slug, listType, movies, pagination }: Natio
                     </p>
                 </div>
 
-                <Suspense fallback={<MovieSectionSkeleton />}>
+                {isLoading ? (
+                    <MovieSectionSkeleton />
+                ) : (
                     <MovieGrid
                         movies={movies.map((movie) => ({
                             title: movie.name,
@@ -91,7 +94,7 @@ export default function NationPage({ slug, listType, movies, pagination }: Natio
                             poster_url: movie.poster_url,
                         }))}
                     />
-                </Suspense>
+                )}
 
                 <Pagination currentPage={pagination.currentPage} totalPages={totalPages} baseUrl={`/nation/${slug}`} />
             </main>
