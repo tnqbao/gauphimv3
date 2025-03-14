@@ -8,8 +8,10 @@ export default function MovieActors({ actors }: MovieActorsProps) {
     return (
         <div className="mb-6">
             <h3
-                className="text-lg md:text-xl font-bold mb-3 flex items-center text-green-800"
-                style={{ textShadow: "3px 3px 6px rgba(255, 255, 255, 0.8)" }}
+                className="text-lg md:text-xl font-bold mb-3 flex items-center md:text-yellow-200 text-black"
+                style={{
+                    textShadow: "1px 1px 3px rgba(0, 0, 0, 0.5)",
+                }}
             >
                 <User className="mr-2 h-5 w-5 text-green-600" /> Diễn viên
             </h3>

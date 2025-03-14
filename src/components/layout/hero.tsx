@@ -9,25 +9,25 @@ import { motion, AnimatePresence } from "framer-motion"
 
 const featuredMovies = [
     {
-        title: "Bamboo Adventure",
+        title: "Khi Cuộc Đời Cho Bạn Quả Quýt",
         description:
-            "Follow the journey of a young panda as he discovers the secrets of the bamboo forest and makes new friends along the way.",
-        image: "/placeholder.svg?height=500&width=1200",
-        badge: "New Release",
+            "Ở Jeju, câu chuyện về một cô nàng nhiệt huyết và chàng trai kiên cường trên đảo nảy nở thành câu chuyện trọn đời đầy thăng trầm, minh chứng tình yêu vẫn trường tồn theo thời gian.",
+        image: `https://img.ophim.live/uploads/movies/khi-cuoc-doi-cho-ban-qua-quyt-poster.jpg`,
+        badge: "Phim Hay",
     },
     {
-        title: "Panda Kingdom",
+        title: "Cơ Quan Kỳ Môn",
         description:
-            "In a magical kingdom where pandas rule, one small cub must learn to become a leader and save his people from a growing threat.",
-        image: "/placeholder.svg?height=500&width=1200",
-        badge: "Trending",
+            "Mặc Tâm cùng sư huynh và sư muội bước vào lăng mộ Quỷ Cốc, nơi cuộc tranh giành báu vật giữa Tề và Sở đẩy họ vào nguy hiểm tột cùng. Giữa những âm mưu và thử thách chết người, họ phải giải mã những bí ẩn cổ xưa để bảo vệ hòa bình, viết nên câu chuyện về trí tuệ, lòng dũng cảm và những bí mật khủng khiếp.",
+        image: "https://img.ophim.live/uploads/movies/co-quan-ky-mon-poster.jpg",
+        badge: "Xu Hướng",
     },
     {
-        title: "Black & White",
+        title: "Mục Thần Ký",
         description:
-            "A heartwarming story about friendship between two pandas from different worlds, showing that differences can bring us together.",
-        image: "/placeholder.svg?height=500&width=1200",
-        badge: "Featured",
+            "Tần Mục, một giáo chủ Thiên Ma giáo, từ thân thể phàm trần trở thành Nhân Hoàng, vượt qua chiến tranh và phát hiện sức mạnh Ma Thần. Anh dùng đạo pháp thần thông thay đổi vận mệnh, cải cách quốc gia, viết nên câu chuyện về sức mạnh và số phận.",
+        image: "https://img.ophim.live/uploads/movies/muc-than-ky-poster.jpg",
+        badge: "Phim Hay",
     },
 ]
 
@@ -126,14 +126,12 @@ export default function Hero() {
                                 <Play className="mr-2 h-4 w-4" /> Xem ngay
                             </Button>
                             <Button
-                                variant="outline"
-                                className="text-black border-white hover:bg-white/20 transition-all hover:scale-105"
+                                className="text-black border-white hover:bg-white/20 transition-all hover:scale-105 bg-white/50 hover:text-white"
                             >
                                 <Plus className="mr-2 h-4 w-4" /> Thêm vào danh sách
                             </Button>
                             <Button
-                                variant="outline"
-                                className="text-black border-white hover:bg-white/20 transition-all hover:scale-105 hidden sm:flex"
+                                className="text-black border-white hover:bg-white/20 transition-all hover:scale-105 bg-white/50 hover:text-white"
                             >
                                 <Info className="mr-2 h-4 w-4" /> Thông tin
                             </Button>

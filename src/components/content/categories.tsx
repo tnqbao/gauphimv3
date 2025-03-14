@@ -9,6 +9,7 @@ import { useInView } from "react-intersection-observer"
 interface Category {
     name: string
     image: string
+    slug: string
 }
 
 interface CategoriesProps {
@@ -75,7 +76,7 @@ export default function Categories({ categories }: CategoriesProps) {
                             whileHover={{ scale: 1.05, y: -5 }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            <Link href="#" className="group relative overflow-hidden rounded-lg bg-black block h-full">
+                            <Link href={`../category/${category.slug}`} className="group relative overflow-hidden rounded-lg bg-black block h-full">
                                 <Image
                                     src={category.image || "/placeholder.svg"}
                                     alt={category.name + index}

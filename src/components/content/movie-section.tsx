@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { motion, useAnimation } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import LazyLoadComponent from "../layout/lazy-load-component"
+import slug from "@/pages/list/[slug]";
 
 interface Movie {
     title: string
@@ -16,12 +17,14 @@ interface Movie {
     poster_url: string
     thumb_url: string
     rating?: string
+    slug?: string
 }
 
 interface MovieSectionProps {
     title: string
     movies: Movie[]
     bgColor?: string
+    slug?: string
 }
 
 export default function MovieSection({ title, movies, bgColor = "bg-white" }: MovieSectionProps) {
@@ -46,7 +49,6 @@ export default function MovieSection({ title, movies, bgColor = "bg-white" }: Mo
         }
     }
 
-    // Bamboo decoration for section
     const BambooDecoration = () => (
         <div className="absolute -top-4 left-0 w-full overflow-hidden h-8 pointer-events-none">
             <div className="flex justify-between">
@@ -120,8 +122,8 @@ export default function MovieSection({ title, movies, bgColor = "bg-white" }: Mo
                                     </Button>
                                 </motion.div>
                             </div>
-                            <Link href="#" className="text-sm font-medium text-green-600 hover:underline">
-                                View All
+                            <Link href={`../list/${slug}`} className="text-sm font-medium text-green-600 hover:underline">
+                                Xem Tất Cả
                             </Link>
                         </div>
                     </motion.div>

@@ -8,6 +8,8 @@ import {searchMovies} from "@/utils/api"
 import EmptySearchResults from "@/components/layout/search/empty-search-results"
 import {GetServerSideProps} from "next"
 import Head from "next/head"
+import {useEffect, useState} from "react";
+import CategoryDetailLoading from "@/pages/category/loading/loading";
 
 interface SearchPageProps {
     searchParams: {
@@ -31,7 +33,6 @@ interface SearchPageProps {
 export const getServerSideProps: GetServerSideProps = async ({query}) => {
     const keyword = query.keyword?.toString() || ""
     const page = query.page ? Number.parseInt(query.page as string) : 1
-
     const {movies, pagination} = await searchMovies(keyword, page)
 
     return {
@@ -46,7 +47,17 @@ export const getServerSideProps: GetServerSideProps = async ({query}) => {
 export default function SearchPage({searchParams, movies, pagination}: SearchPageProps) {
     const keyword = searchParams.keyword || ""
     const totalResults = pagination.totalItems;
+    const [loading, setLoading] = useState(true)
 
+    useEffect(() => {
+        const timer = setTimeout(() => setLoading(false), 500)
+        return () => clearTimeout(timer)
+    }, [])
+
+
+    if (loading) {
+        return <CategoryDetailLoading />
+    }
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
             <Head>

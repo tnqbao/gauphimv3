@@ -86,6 +86,7 @@ export default function MovieGrid({ movies, title }: MovieGridProps) {
                                         : "/placeholder.svg"}
                                     alt={movie.title}
                                     className="object-cover w-full h-full"
+                                    layout="fill"
                                 />
                             </div>
                             <div className="flex flex-col justify-center">

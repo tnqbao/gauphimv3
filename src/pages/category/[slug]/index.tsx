@@ -8,7 +8,7 @@ import MovieGrid from "@/components/content/movie-grid"
 import Pagination from "@/components/layout/pagination"
 import { fetchMovieByCategory, Movie } from "@/utils/api"
 import { ListType, listCategory } from "@/utils/types/listMovieType"
-import CategoryDetailLoading from "./loading"
+import CategoryDetailLoading from "../loading/loading"
 
 interface CategoryPageProps {
     slug: string
@@ -46,7 +46,7 @@ export default function CategoryPage({ slug, listType, movies, pagination }: Cat
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 500) // Giả lập delay loading
+        const timer = setTimeout(() => setLoading(false), 500)
         return () => clearTimeout(timer)
     }, [])
 
@@ -60,8 +60,17 @@ export default function CategoryPage({ slug, listType, movies, pagination }: Cat
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
             <Head>
-                <title>{title} - Xem Phim Online</title>
-                <meta name="description" content={listType.description} />
+                <title>{`Phim thể loại ${title} - Xem phim miễn phí, chất lượng cao`}</title>
+                <meta name="description" content={`Khám phá phim thể loại ${title} tại đây. Xem các bộ phim hấp dẫn thuộc thể loại ${title} miễn phí, chất lượng cao.`} />
+                <meta name="keywords" content={`phim ${title}, phim thể loại ${slug}, phim miễn phí, phim chất lượng cao, thể loại ${title} phim`} />
+                <meta property="og:title" content={`Phim thể loại ${title} - Xem phim miễn phí, chất lượng cao`} />
+                <meta property="og:description" content={`Khám phá phim thể loại ${title} tại đây. Xem các bộ phim hấp dẫn thuộc thể loại ${title} miễn phí, chất lượng cao.`} />
+                <meta property="og:image" content={`https://img.ophim.live/uploads/movies/${movies[0].thumb_url}`} />
+                <meta property="og:url" content={`https://gauphim.daudoo.com/category/${slug}`} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={`Phim thể loại ${title} - Xem phim miễn phí, chất lượng cao`} />
+                <meta name="twitter:description" content={`Khám phá phim thể loại ${title} tại đây. Xem các bộ phim hấp dẫn thuộc thể loại ${title} miễn phí, chất lượng cao.`} />
+                <meta name="twitter:image" content={`https://img.ophim.live/uploads/movies/${movies[0].thumb_url}`} />
             </Head>
 
             <Header />
