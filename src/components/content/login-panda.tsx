@@ -13,7 +13,6 @@ export default function LoginPanda({ isPasswordFocused, activeInputId }: LoginPa
     const [eyePosition, setEyePosition] = useState({ x: 0, y: 0 })
     const pandaRef = useRef<HTMLDivElement>(null)
 
-    // Track mouse position
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             if (activeInputId && activeInputId !== "password") return
@@ -35,10 +34,8 @@ export default function LoginPanda({ isPasswordFocused, activeInputId }: LoginPa
         return () => window.removeEventListener("mousemove", handleMouseMove)
     }, [activeInputId])
 
-    // Track input cursor for email field
     useEffect(() => {
         if (activeInputId === "email") {
-            // Simulate eye movement based on typing
             const interval = setInterval(() => {
                 const randomX = Math.random() * 2 - 1
                 setEyePosition({ x: randomX, y: 0 })

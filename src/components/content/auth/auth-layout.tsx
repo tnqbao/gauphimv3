@@ -10,7 +10,6 @@ interface AuthLayoutProps {
 export default function AuthLayout({ children }: AuthLayoutProps) {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-[#f8f9fa] dark:bg-gray-900 p-4 relative transition-colors duration-300">
-            {/* Bamboo decoration */}
             <div className="absolute top-0 left-0 w-full h-20 overflow-hidden">
                 <div className="flex justify-between">
                     {[...Array(20)].map((_, i) => (
@@ -31,7 +30,6 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
                 </div>
             </div>
 
-            {/* Floating leaves */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
                 {[...Array(10)].map((_, i) => (
                     <motion.div

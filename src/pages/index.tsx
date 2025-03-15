@@ -129,11 +129,11 @@ export default function HomePage() {
         </Suspense>
 
         <Suspense fallback={<MovieSectionSkeleton />}>
-          <MovieSection title="Phim Nổi Bật" movies={trendingMovies} bgColor="bg-white dark:bg-gray-800" slug={"phim-noi-bat"}/>
+          <MovieSection title="Phim Nổi Bật" movies={trendingMovies} bgColor="bg-white dark:bg-gray-800" pageSlug={"phim-noi-bat"}/>
         </Suspense>
 
         <Suspense fallback={<MovieSectionSkeleton />}>
-          <MovieSection title="Phim Mới Ra" movies={newReleases} bgColor="bg-[#f8f9fa] dark:bg-gray-900" slug={"phim-moi"}/>
+          <MovieSection title="Phim Mới Ra" movies={newReleases} bgColor="bg-[#f8f9fa] dark:bg-gray-900" pageSlug={"phim-moi"}/>
         </Suspense>
 
         <Suspense fallback={<PandaPicksSkeleton />}>

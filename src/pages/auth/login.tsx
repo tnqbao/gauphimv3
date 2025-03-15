@@ -49,7 +49,7 @@ export default function LoginPage() {
         setError("")
 
         if (!email || !password) {
-            setError("Please fill in all fields")
+            setError("Có vẻ như bạn đã bỏ trống gì đó")
             return
         }
 
@@ -71,8 +71,8 @@ export default function LoginPage() {
         <AuthLayout>
             <Card className="border-green-100 shadow-lg">
                 <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>
-                    <CardDescription className="text-center">Enter your credentials to access your account</CardDescription>
+                    <CardTitle className="text-2xl font-bold text-center">Chào mừng cậu trở lại</CardTitle>
+                    <CardDescription className="text-center">Hãy đăng nhập để tận hưởng những bộ phim hay nhất nhé</CardDescription>
                 </CardHeader>
 
                 <CardContent>
@@ -100,7 +100,7 @@ export default function LoginPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">Mật khẩu</Label>
                             <div className="relative">
                                 <Input
                                     id="password"
@@ -169,16 +169,16 @@ export default function LoginPage() {
                                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                         ></path>
                                     </svg>
-                                    Signing in...
+                                    Đang đăng nhập...
                                 </div>
                             ) : (
-                                "Sign In"
+                                "Đăng nhập"
                             )}
                         </Button>
 
                         <div className="text-center text-sm">
                             <Link href="#" className="text-green-600 hover:underline">
-                                Forgot your password?
+                                Bạn lỡ quên mật khẩu?
                             </Link>
                         </div>
                     </form>

@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils"
 import { motion, useAnimation } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import LazyLoadComponent from "../layout/lazy-load-component"
-import slug from "@/pages/list/[slug]";
 
 interface Movie {
     title: string
@@ -24,10 +23,10 @@ interface MovieSectionProps {
     title: string
     movies: Movie[]
     bgColor?: string
-    slug?: string
+    pageSlug?: string
 }
 
-export default function MovieSection({ title, movies, bgColor = "bg-white" }: MovieSectionProps) {
+export default function MovieSection({ title, movies, bgColor = "bg-white", pageSlug }: MovieSectionProps) {
     const scrollContainerRef = useRef<HTMLDivElement>(null)
     const controls = useAnimation()
     const [ref, inView] = useInView({
@@ -122,7 +121,7 @@ export default function MovieSection({ title, movies, bgColor = "bg-white" }: Mo
                                     </Button>
                                 </motion.div>
                             </div>
-                            <Link href={`../list/${slug}`} className="text-sm font-medium text-green-600 hover:underline">
+                            <Link href={`../list/${pageSlug}`} className="text-sm font-medium text-green-600 hover:underline">
                                 Xem Tất Cả
                             </Link>
                         </div>
