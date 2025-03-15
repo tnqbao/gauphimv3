@@ -60,17 +60,17 @@ export default function RegisterPage() {
         setError("")
 
         if (!name || !email || !password || !confirmPassword) {
-            setError("Please fill in all fields")
+            setError("Có vẻ như bạn đã bỏ trống gì đó")
             return
         }
 
         if (password !== confirmPassword) {
-            setError("Passwords do not match")
+            setError("Mật khẩu bạn nhập có vẻ không khớp")
             return
         }
 
         if (password.length < 8) {
-            setError("Password must be at least 8 characters long")
+            setError("Mật khẩu phải chứa ít nhất 8 ký tự")
             return
         }
 
@@ -103,7 +103,7 @@ export default function RegisterPage() {
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="name">Name</Label>
+                            <Label htmlFor="name">Tên của bạn</Label>
                             <Input
                                 id="name"
                                 ref={nameInputRef}
@@ -139,7 +139,7 @@ export default function RegisterPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">Mật khẩu</Label>
                             <div className="relative">
                                 <Input
                                     id="password"
@@ -169,7 +169,7 @@ export default function RegisterPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="confirmPassword">Confirm Password</Label>
+                            <Label htmlFor="confirmPassword">Nhập lại mật khẩu</Label>
                             <div className="relative">
                                 <Input
                                     id="confirmPassword"
@@ -238,10 +238,10 @@ export default function RegisterPage() {
                                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                         ></path>
                                     </svg>
-                                    Creating account...
+                                    Đang tạo tài khoản...
                                 </div>
                             ) : (
-                                "Register"
+                                "Tạo tài khoản"
                             )}
                         </Button>
                     </form>

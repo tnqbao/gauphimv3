@@ -10,22 +10,21 @@ export default function AuthFormFooter({ mode }: AuthFormFooterProps) {
             <div className="mt-2 text-center text-sm">
                 {mode === "login" ? (
                     <>
-                        Don&apos;t have an account?{" "}
-                        <Link href="/register" className="text-green-600 font-medium hover:underline">
-                            Register
+                         Cậu là người mới ư?{" "}
+                        <Link href="../auth/register" className="text-green-600 font-medium hover:underline">
+                            Đăng ký ngay
                         </Link>
                     </>
                 ) : (
                     <>
-                        Already have an account?{" "}
-                        <Link href="/login" className="text-green-600 font-medium hover:underline">
-                            Sign In
+                        Cậu đã có tài khoản?{" "}
+                        <Link href="../auth/login" className="text-green-600 font-medium hover:underline">
+                            Hãy đăng nhập
                         </Link>
                     </>
                 )}
             </div>
 
-            {/* Bamboo decoration */}
             <div className="mt-6 w-full flex justify-center">
                 <svg width="200" height="10" viewBox="0 0 200 10" className="text-green-600/30">
                     {[...Array(10)].map((_, i) => (

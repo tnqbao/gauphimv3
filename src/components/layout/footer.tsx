@@ -5,11 +5,12 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import PandaLogo from "../content/panda-logo"
 import { motion } from "framer-motion"
+import { useRouter } from "next/router"
 
 export default function Footer() {
+    const router = useRouter()
     return (
         <footer className="border-t bg-white dark:bg-gray-800 dark:border-gray-700 py-6 md:py-8 relative transition-colors duration-300">
-            {/* Bamboo decoration at top */}
             <div className="absolute top-0 left-0 w-full overflow-hidden h-4 pointer-events-none">
                 <div className="flex justify-between">
                     {[...Array(40)].map((_, i) => (
@@ -30,7 +31,6 @@ export default function Footer() {
                 </div>
             </div>
 
-            {/* Panda footprints */}
             <div className="absolute top-8 left-0 w-full h-full overflow-hidden pointer-events-none opacity-10">
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.5 }}>
                     {[10, 25, 40, 55, 70, 85].map((position, i) => (
@@ -78,10 +78,10 @@ export default function Footer() {
                     >
                         <h3 className="mb-3 text-sm font-medium">Navigation</h3>
                         <ul className="grid gap-2 text-sm">
-                            <FooterLink href="#" label="Home" />
-                            <FooterLink href="#" label="Movies" />
-                            <FooterLink href="#" label="TV Shows" />
-                            <FooterLink href="#" label="New Releases" />
+                            <FooterLink href="../" label="Trang Chủ" />
+                            <FooterLink href="../list/phim-moi" label="Phim Mới" />
+                            <FooterLink href="../list/tv-show" label="TV Shows" />
+                            <FooterLink href="../list/phim-bo" label="Phim Bộ" />
                         </ul>
                     </motion.div>
 
@@ -117,6 +117,12 @@ export default function Footer() {
                                 <Button
                                     type="submit"
                                     className="bg-green-600 hover:bg-green-700 transition-colors"
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        const target = e.target as HTMLButtonElement
+                                        const emailInput = target.previousElementSibling as HTMLInputElement
+                                        router.push(`../auth/register?email=${emailInput.value}`)
+                                    }}
                                 >
                                     Subscribe
                                 </Button>

@@ -6,6 +6,7 @@ import { Play, Plus, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { motion, AnimatePresence } from "framer-motion"
+import {useRouter} from "next/router";
 
 const featuredMovies = [
     {
@@ -14,6 +15,7 @@ const featuredMovies = [
             "Ở Jeju, câu chuyện về một cô nàng nhiệt huyết và chàng trai kiên cường trên đảo nảy nở thành câu chuyện trọn đời đầy thăng trầm, minh chứng tình yêu vẫn trường tồn theo thời gian.",
         image: `https://img.ophim.live/uploads/movies/khi-cuoc-doi-cho-ban-qua-quyt-poster.jpg`,
         badge: "Phim Hay",
+        slug : "khi-cuoc-doi-cho-ban-qua-quyt"
     },
     {
         title: "Cơ Quan Kỳ Môn",
@@ -21,6 +23,7 @@ const featuredMovies = [
             "Mặc Tâm cùng sư huynh và sư muội bước vào lăng mộ Quỷ Cốc, nơi cuộc tranh giành báu vật giữa Tề và Sở đẩy họ vào nguy hiểm tột cùng. Giữa những âm mưu và thử thách chết người, họ phải giải mã những bí ẩn cổ xưa để bảo vệ hòa bình, viết nên câu chuyện về trí tuệ, lòng dũng cảm và những bí mật khủng khiếp.",
         image: "https://img.ophim.live/uploads/movies/co-quan-ky-mon-poster.jpg",
         badge: "Xu Hướng",
+        slug: "co-quan-ky-mon"
     },
     {
         title: "Mục Thần Ký",
@@ -28,6 +31,7 @@ const featuredMovies = [
             "Tần Mục, một giáo chủ Thiên Ma giáo, từ thân thể phàm trần trở thành Nhân Hoàng, vượt qua chiến tranh và phát hiện sức mạnh Ma Thần. Anh dùng đạo pháp thần thông thay đổi vận mệnh, cải cách quốc gia, viết nên câu chuyện về sức mạnh và số phận.",
         image: "https://img.ophim.live/uploads/movies/muc-than-ky-poster.jpg",
         badge: "Phim Hay",
+        slug: "muc-than-ky"
     },
 ]
 
@@ -43,7 +47,7 @@ export default function Hero() {
     }, [])
 
     const currentMovie = featuredMovies[currentIndex]
-
+    const router = useRouter();
     return (
         <section className="relative h-[500px] md:h-[600px] w-full overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30 z-10" />
@@ -115,13 +119,14 @@ export default function Hero() {
                         </motion.p>
 
                         <motion.div
-                            className="flex gap-4"
+                            className="flex gap-4 flex-wrap"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3, duration: 0.5 }}
                         >
                             <Button
                                 className="bg-green-600 hover:bg-green-700 transition-all hover:scale-105"
+                                onClick={() => router.push(`../watch/${currentMovie.slug}`)}
                             >
                                 <Play className="mr-2 h-4 w-4" /> Xem ngay
                             </Button>
