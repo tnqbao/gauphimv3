@@ -11,6 +11,7 @@ import { Eye, EyeOff } from "lucide-react"
 import AuthLayout from "@/components/content/auth/auth-layout"
 import PandaWindow from "@/components/content/auth/panda-window"
 import AuthFormFooter from "@/components/content/auth/auth-form-footer"
+import {useRouter} from "next/router";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("")
@@ -20,9 +21,10 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState("")
+    const [keepLogin, setKeepLogin] = useState(false)
     const emailInputRef = useRef<HTMLInputElement>(null)
     const passwordInputRef = useRef<HTMLInputElement>(null)
-
+    const router = useRouter();
     useEffect(() => {
         const handleClick = (e: MouseEvent) => {
             const target = e.target as HTMLElement
@@ -55,9 +57,19 @@ export default function LoginPage() {
 
         try {
             setIsLoading(true)
-            await new Promise((resolve) => setTimeout(resolve, 1500))
+            const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password, keepLogin }),
+            })
 
-            window.location.href = "/"
+            if (!response.ok) {
+                const data = await response.json()
+                throw new Error(data.message)
+            }
+
+            router.push("../");
+
         } catch (err: unknown) {
             if (err instanceof Error) {
                 setError("Invalid email or password")
@@ -127,6 +139,20 @@ export default function LoginPage() {
                                     <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
                                 </Button>
                             </div>
+                        </div>
+
+                        {/* Keep Login checkbox */}
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                id="keepLogin"
+                                checked={keepLogin}
+                                onChange={(e) => setKeepLogin(e.target.checked)}
+                                className="h-4 w-4 text-green-600 focus:ring-green-500"
+                            />
+                            <Label htmlFor="keepLogin" className="text-sm">
+                                Giữ đăng nhập
+                            </Label>
                         </div>
 
                         <AnimatePresence>

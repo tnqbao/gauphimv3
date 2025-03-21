@@ -100,6 +100,7 @@ export default function Header() {
                         </div>
 
                         <NavLink href="../list/phim-bo" label="Phim Bộ" />
+                        <NavLink href="../list/phim-le" label="Phim Lẻ"/>
                         <NavLink href="../list/phim-moi" label="Phim Mới"/>
                         <NavLink href="../list/hoat-hinh" label="Hoạt Hình"/>
                     </div>
