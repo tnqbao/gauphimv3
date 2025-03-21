@@ -68,6 +68,7 @@ export default function MoviePage({ movieData }: MoviePageProps) {
                         year={movieData.item.year}
                         episode_total={movieData.item.episode_total}
                         content={movieData.item.content}
+                        time={movieData.item.time}
                         category={movieData.item.category}
                         country={movieData.item.country}
                         actors={movieData.item.actor}

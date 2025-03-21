@@ -16,6 +16,7 @@ interface MovieDetailProps {
     year: string
     episode_total: string
     content: string
+    time: string
     category: {
         id: string
         name: string
@@ -40,6 +41,7 @@ export default function MovieDetail({
                                         origin_name,
                                         poster_url,
                                         thumb_url,
+                                        time,
                                         year,
                                         episode_total,
                                         content,
@@ -55,7 +57,6 @@ export default function MovieDetail({
 
     return (
         <div className="relative">
-            {/* Blurred background poster */}
             <div className="absolute inset-0 overflow-hidden h-[500px]">
                 <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background z-10" />
                 <Image
@@ -78,7 +79,8 @@ export default function MovieDetail({
                             title={name}
                             originalTitle={origin_name}
                             releaseYear={year}
-                            duration={episode_total}
+                            episode_total={episode_total}
+                            time={isSeries ? time  : time + " phút"}
                             categories={category}
                             country={country}
                         />

@@ -1,12 +1,13 @@
 import Link from "next/link"
-import { Badge } from "@/components/ui/badge"
-import { Calendar, Clock } from "lucide-react"
+import {Badge} from "@/components/ui/badge"
+import {Calendar, Clock} from "lucide-react"
 
 interface MovieInfoProps {
     title: string
     originalTitle: string
     releaseYear: string
-    duration: string
+    time: string
+    episode_total: string
     categories: {
         id: string
         name: string
@@ -23,7 +24,8 @@ export default function MovieInfo({
                                       title,
                                       originalTitle,
                                       releaseYear,
-                                      duration,
+                                      time,
+                                      episode_total,
                                       categories,
                                       country,
                                   }: MovieInfoProps) {
@@ -31,13 +33,13 @@ export default function MovieInfo({
         <>
             <h1
                 className="text-3xl font-bold mb-1 md:text-white text-black"
-                style={{ textShadow: "3px 3px 6px rgba(0, 0, 0, 0.8)", WebkitTextStroke: "0.5px black" }}
+                style={{textShadow: "3px 3px 6px rgba(0, 0, 0, 0.8)", WebkitTextStroke: "0.5px black"}}
             >
                 {title}
             </h1>
             <h2
                 className="text-xl md:text-white text-black mb-4"
-                style={{ textShadow: "2px 2px 5px rgba(0, 0, 0, 0.7)"}}
+                style={{textShadow: "2px 2px 5px rgba(0, 0, 0, 0.7)"}}
             >
                 {originalTitle}
             </h2>
@@ -61,8 +63,20 @@ export default function MovieInfo({
                   WebkitTextStroke: "0.1px white",
               }}
           >
-            Đánh giá
+            Số tập
           </span>
+                    <div className="flex items-center">
+                        <Clock className="h-4 w-4 text-muted-foreground mr-1"/>
+                        <span
+                            className="text-sm md:text-white text-black"
+                            style={{
+                                textShadow: "2px 2px 5px rgba(0, 0, 0, 0.7)",
+                                WebkitTextStroke: "0.1px black",
+                            }}
+                        >
+              {episode_total}
+            </span>
+                    </div>
                     <div className="flex items-center">{/* Star rating or other content */}</div>
                 </div>
 
@@ -77,7 +91,7 @@ export default function MovieInfo({
             Thời lượng
           </span>
                     <div className="flex items-center">
-                        <Clock className="h-4 w-4 text-muted-foreground mr-1" />
+                        <Clock className="h-4 w-4 text-muted-foreground mr-1"/>
                         <span
                             className="text-sm md:text-white text-black"
                             style={{
@@ -85,7 +99,7 @@ export default function MovieInfo({
                                 WebkitTextStroke: "0.1px black",
                             }}
                         >
-              {duration}
+              {time}
             </span>
                     </div>
                 </div>
@@ -101,7 +115,7 @@ export default function MovieInfo({
             Năm phát hành
           </span>
                     <div className="flex items-center">
-                        <Calendar className="h-4 w-4 text-muted-foreground mr-1" />
+                        <Calendar className="h-4 w-4 text-muted-foreground mr-1"/>
                         <span
                             className="text-sm md:text-white text-black"
                             style={{

@@ -10,9 +10,10 @@ import { Eye, EyeOff } from "lucide-react"
 import AuthLayout from "@/components/content/auth/auth-layout"
 import PandaWindow from "@/components/content/auth/panda-window"
 import AuthFormFooter from "@/components/content/auth/auth-form-footer"
+import {useRouter} from "next/router";
 
 export default function RegisterPage() {
-    const [name, setName] = useState("")
+    const [fullname, setFullName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
@@ -27,7 +28,7 @@ export default function RegisterPage() {
     const emailInputRef = useRef<HTMLInputElement>(null)
     const passwordInputRef = useRef<HTMLInputElement>(null)
     const confirmPasswordInputRef = useRef<HTMLInputElement>(null)
-
+    const router = useRouter()
     useEffect(() => {
         const handleClick = (e: MouseEvent) => {
             const target = e.target as HTMLElement
@@ -59,7 +60,7 @@ export default function RegisterPage() {
         e.preventDefault()
         setError("")
 
-        if (!name || !email || !password || !confirmPassword) {
+        if (!fullname || !email || !password || !confirmPassword) {
             setError("Có vẻ như bạn đã bỏ trống gì đó")
             return
         }
@@ -76,11 +77,18 @@ export default function RegisterPage() {
 
         try {
             setIsLoading(true)
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1500))
+            const response = await fetch("/api/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name, email, password }),
+            })
+            if (!response.ok) {
+                throw new Error("Registration failed")
+            }
 
-            // For demo purposes, just redirect to home
-            window.location.href = "/"
+            router.push("../auth/login")
         } catch {
             setError("Registration failed. Please try again.")
         } finally {
@@ -109,8 +117,8 @@ export default function RegisterPage() {
                                 ref={nameInputRef}
                                 type="text"
                                 placeholder="Your Name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                value={fullname}
+                                onChange={(e) => setFullName(e.target.value)}
                                 onFocus={() => {
                                     setActiveInputId("name")
                                     setIsPasswordFocused(false)
