@@ -67,8 +67,8 @@ export default function WatchPage({ movieData, episodeNumber }: MoviePageProps) 
                 <div className="container px-4 md:px-6 py-4">
                     <Breadcrumb
                         items={[
-                            { label: "Phim", href: "/phim" },
-                            { label: movieItemData.name, href: `/phim/${movieItemData.slug}` },
+                            { label: "Phim", href: "../list/phim-moi" },
+                            { label: movieItemData.name, href: `/detail/${movieItemData.slug}` },
                             { label: `Tập ${currentEpisode.name}` },
                         ]}
                     />
