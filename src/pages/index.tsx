@@ -10,7 +10,7 @@ import {
 import BambooDecoration from "@/components/content/bamboo-decoration"
 import PandaScrollProgress from "@/components/content/panda-scroll-progress"
 import ThemeEffects from "@/components/content/theme-effects"
-import {userApiInstance} from "@/utils/axios.config";
+import axios from "axios";
 
 const Hero = lazy(() => import("@/components/layout/hero"))
 const Categories = lazy(() => import("@/components/content/categories"))
@@ -44,7 +44,7 @@ export default function HomePage() {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const { data } = await userApiInstance("/api/gauflix/home-page")
+                const { data } = await axios.get("{process.env.NEXT_PUBLIC_SERVERSIDE_API}/api/gauflix/home-page")
 
                 setTrendingMovies(
                     data.featured.map((movie: Movie) => ({
