@@ -10,7 +10,6 @@ import {
 import BambooDecoration from "@/components/content/bamboo-decoration"
 import PandaScrollProgress from "@/components/content/panda-scroll-progress"
 import ThemeEffects from "@/components/content/theme-effects"
-import {userApiInstance} from "@/utils/axios.config";
 import axios from "axios";
 
 const Hero = lazy(() => import("@/components/layout/hero"))
