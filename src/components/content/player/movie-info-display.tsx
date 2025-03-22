@@ -21,7 +21,7 @@ export default function MovieInfoDisplay({  year, categories, description, light
                 </Badge>
                 {categories.map((category) => (
                     <Link key={category.slug} href={`/category/${category.slug}`}>
-                        <Badge variant="outline" className="hover:bg-white/10 transition-colors">
+                        <Badge variant="default" className="hover:bg-white/10 transition-colors">
                             {category.name}
                         </Badge>
                     </Link>
@@ -30,7 +30,10 @@ export default function MovieInfoDisplay({  year, categories, description, light
 
             <div className="mb-6">
                 <h3 className="text-lg font-medium mb-2">Nội dung phim</h3>
-                <p className="text-gray-400">{description}</p>
+                <p
+                    className="text-black md:text-white dark:text-white  text-md bg-black/30 bg-opacity-50 p-4 rounded-md"
+                    dangerouslySetInnerHTML={{__html: description}}
+                />
             </div>
         </div>
     )

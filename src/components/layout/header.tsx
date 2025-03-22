@@ -91,17 +91,16 @@ export default function Header() {
                     )}
                 >
                     <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 lg:space-x-6">
+                        <NavLink href="../list/phim-bo" label="Phim Bộ" />
+                        <NavLink href="../list/phim-le" label="Phim Lẻ"/>
+                        <NavLink href="../list/phim-moi" label="Phim Mới"/>
+                        <NavLink href="../list/hoat-hinh" label="Hoạt Hình"/>
                         <div className="hidden md:block">
                             <CategoryDropdown/>
                         </div>
                         <div className="hidden md:block">
                             <NationDropdown/>
                         </div>
-
-                        <NavLink href="../list/phim-bo" label="Phim Bộ" />
-                        <NavLink href="../list/phim-le" label="Phim Lẻ"/>
-                        <NavLink href="../list/phim-moi" label="Phim Mới"/>
-                        <NavLink href="../list/hoat-hinh" label="Hoạt Hình"/>
                     </div>
 
                     <div className="md:hidden border-t mt-4 pt-4 space-y-4">
