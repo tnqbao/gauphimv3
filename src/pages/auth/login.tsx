@@ -2,7 +2,6 @@ import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -20,7 +19,8 @@ export default function LoginPage() {
     const [activeInputId, setActiveInputId] = useState<string | null>(null)
     const [showPassword, setShowPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState("")
+    const [error, setError] = useState<{ email?: boolean; password?: boolean }>({})
+    const [errorMessage, setErrorMessage] = useState<{ email?: string; password?: string }>({})
     const [keepLogin, setKeepLogin] = useState(false)
     const emailInputRef = useRef<HTMLInputElement>(null)
     const passwordInputRef = useRef<HTMLInputElement>(null)
@@ -48,10 +48,24 @@ export default function LoginPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setError("")
+        setError({})
+        setErrorMessage({})
 
-        if (!email || !password) {
-            setError("Có vẻ như bạn đã bỏ trống gì đó")
+        const newErrors: { email?: boolean; password?: boolean } = {}
+        const newErrorMessages: { email?: string; password?: string } = {}
+
+        if (!email) {
+            newErrors.email = true
+            newErrorMessages.email = "Vui lòng nhập email"
+        }
+        if (!password) {
+            newErrors.password = true
+            newErrorMessages.password = "Vui lòng nhập mật khẩu"
+        }
+
+        if (Object.keys(newErrors).length > 0) {
+            setError(newErrors)
+            setErrorMessage(newErrorMessages)
             return
         }
 
@@ -59,20 +73,22 @@ export default function LoginPage() {
             setIsLoading(true)
             const response = await fetch("/api/auth/login", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify({ email, password, keepLogin }),
-            })
+            });
 
             if (!response.ok) {
                 const data = await response.json()
                 throw new Error(data.message)
             }
 
-            router.push("../");
-
+            router.push("../")
         } catch (err: unknown) {
             if (err instanceof Error) {
-                setError("Invalid email or password")
+                setError({ email: true, password: true })
+                setErrorMessage({ email: "Email hoặc mật khẩu không đúng" })
             }
         } finally {
             setIsLoading(false)
@@ -94,11 +110,11 @@ export default function LoginPage() {
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email">Email/Username</Label>
                             <Input
                                 id="email"
                                 ref={emailInputRef}
-                                type="email"
+                                type="text"
                                 placeholder="panda@example.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -109,6 +125,7 @@ export default function LoginPage() {
                                 className="focus:ring-green-500 focus:border-green-500"
                                 required
                             />
+                            {error.email && <p className="text-red-500 text-sm">{errorMessage.email}</p>}
                         </div>
 
                         <div className="space-y-2">
@@ -138,10 +155,10 @@ export default function LoginPage() {
                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                     <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
                                 </Button>
+                                {error.password && <p className="text-red-500 text-sm">{errorMessage.password}</p>}
                             </div>
                         </div>
 
-                        {/* Keep Login checkbox */}
                         <div className="flex items-center space-x-2">
                             <input
                                 type="checkbox"
@@ -155,18 +172,6 @@ export default function LoginPage() {
                             </Label>
                         </div>
 
-                        <AnimatePresence>
-                            {error && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
-                                    className="text-red-500 text-sm p-2 bg-red-50 rounded-md"
-                                >
-                                    {error}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
 
                         <Button
                             type="submit"

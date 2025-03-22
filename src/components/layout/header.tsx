@@ -90,8 +90,7 @@ export default function Header() {
                         "max-w-[300px] md:max-w-none w-4/5 md:w-auto",
                     )}
                 >
-                    <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 lg:space-x-6">
-                        <NavLink href="../" label="Trang chủ"/>
+                    <div className="flex flex-col space-y-4 lg:flex-row md:space-y-0 md:space-x-4 lg:space-x-6">
                         <div className="hidden md:block">
                             <CategoryDropdown/>
                         </div>
