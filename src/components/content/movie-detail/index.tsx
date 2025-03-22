@@ -57,7 +57,7 @@ export default function MovieDetail({
 
     return (
         <div className="relative">
-            <div className="absolute inset-0 overflow-hidden h-[500px]">
+            <div className="absolute inset-0 overflow-hidden min-h-screen">
                 <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background z-10" />
                 <Image
                     src={`https://img.ophim.live/uploads/movies/${poster_url}` || "/placeholder.svg"}
