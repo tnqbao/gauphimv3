@@ -51,8 +51,8 @@ export default function HomePage() {
                         year: movie.year,
                         slug: movie.slug,
                         rating: "N/A",
-                        poster_url: `https://img.ophim.live/uploads/movies/${movie.slug}-poster.jpg`,
-                        thumb_url: `https://img.ophim.live/uploads/movies/${movie.slug}-thumb.jpg`
+                        poster_url: `${movie.slug}-poster.jpg`,
+                        thumb_url: `${movie.slug}-thumb.jpg`
                     }))
                 )
 
@@ -62,8 +62,8 @@ export default function HomePage() {
                         year: movie.year,
                         slug: movie.slug,
                         rating: "N/A",
-                        poster_url: `https://img.ophim.live/uploads/movies/${movie.slug}-poster.jpg`,
-                        thumb_url: `https://img.ophim.live/uploads/movies/${movie.slug}-thumb.jpg`
+                        poster_url: `${movie.slug}-poster.jpg`,
+                        thumb_url: `${movie.slug}-thumb.jpg`
                     }))
                 )
 
@@ -72,7 +72,7 @@ export default function HomePage() {
                         title: movie.name,
                         description: movie.description,
                         year: "2025",
-                        poster: `https://img.ophim.live/uploads/movies/${movie.slug}-thumb.jpg`,
+                        poster: `${movie.slug}-thumb.jpg`,
                         rating: "8.5",
                     }))
                 )
