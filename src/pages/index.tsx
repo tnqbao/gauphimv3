@@ -44,7 +44,7 @@ export default function HomePage() {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const { data } = await axios.get("{process.env.NEXT_PUBLIC_SERVERSIDE_API}/api/gauflix/home-page")
+                const { data } = await axios.get(`${process.env.NEXT_PUBLIC_SERVERSIDE_API}/api/gauflix/home-page`);
 
                 setTrendingMovies(
                     data.featured.map((movie: Movie) => ({
