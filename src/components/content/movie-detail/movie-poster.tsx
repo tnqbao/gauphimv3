@@ -24,6 +24,7 @@ export default function MoviePoster({ poster, movieSlug }: MoviePosterProps) {
                     fill
                     className="object-cover"
                     priority
+                    unoptimized
                 />
             </div>
 

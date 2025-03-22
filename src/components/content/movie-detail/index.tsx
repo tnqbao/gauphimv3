@@ -65,6 +65,7 @@ export default function MovieDetail({
                     fill
                     className="object-cover blur-sm scale-110 opacity-50"
                     priority
+                    unoptimized
                 />
             </div>
 

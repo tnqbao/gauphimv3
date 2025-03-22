@@ -82,6 +82,7 @@ export default function Categories({ categories }: CategoriesProps) {
                                     alt={category.name + index}
                                     width={200}
                                     height={100}
+                                    unoptimized
                                     className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-110 group-hover:opacity-50"
                                 />
                                 <div className="absolute inset-0 flex items-center justify-center">
