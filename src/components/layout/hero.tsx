@@ -1,56 +1,43 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import {useEffect, useState} from "react"
 import Image from "next/image"
-import { Play, Plus, Info } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { motion, AnimatePresence } from "framer-motion"
+import {Info, Play, Plus} from "lucide-react"
+import {Button} from "@/components/ui/button"
+import {Badge} from "@/components/ui/badge"
+import {AnimatePresence, motion} from "framer-motion"
 import {useRouter} from "next/router";
 
-const featuredMovies = [
-    {
-        title: "Khi Cuộc Đời Cho Bạn Quả Quýt",
-        description:
-            "Ở Jeju, câu chuyện về một cô nàng nhiệt huyết và chàng trai kiên cường trên đảo nảy nở thành câu chuyện trọn đời đầy thăng trầm, minh chứng tình yêu vẫn trường tồn theo thời gian.",
-        image: `https://img.ophim.live/uploads/movies/khi-cuoc-doi-cho-ban-qua-quyt-poster.jpg`,
-        badge: "Phim Hay",
-        slug : "khi-cuoc-doi-cho-ban-qua-quyt"
-    },
-    {
-        title: "Cơ Quan Kỳ Môn",
-        description:
-            "Mặc Tâm cùng sư huynh và sư muội bước vào lăng mộ Quỷ Cốc, nơi cuộc tranh giành báu vật giữa Tề và Sở đẩy họ vào nguy hiểm tột cùng. Giữa những âm mưu và thử thách chết người, họ phải giải mã những bí ẩn cổ xưa để bảo vệ hòa bình, viết nên câu chuyện về trí tuệ, lòng dũng cảm và những bí mật khủng khiếp.",
-        image: "https://img.ophim.live/uploads/movies/co-quan-ky-mon-poster.jpg",
-        badge: "Xu Hướng",
-        slug: "co-quan-ky-mon"
-    },
-    {
-        title: "Mục Thần Ký",
-        description:
-            "Tần Mục, một giáo chủ Thiên Ma giáo, từ thân thể phàm trần trở thành Nhân Hoàng, vượt qua chiến tranh và phát hiện sức mạnh Ma Thần. Anh dùng đạo pháp thần thông thay đổi vận mệnh, cải cách quốc gia, viết nên câu chuyện về sức mạnh và số phận.",
-        image: "https://img.ophim.live/uploads/movies/muc-than-ky-poster.jpg",
-        badge: "Phim Hay",
-        slug: "muc-than-ky"
-    },
-]
 
-export default function Hero() {
+
+interface Pick {
+    title: string
+    year: string
+    poster: string
+    description: string
+    rating: string
+    slug: string
+}
+
+interface PandaPicksProps {
+    picks: Pick[]
+}
+export default function Hero({picks}: PandaPicksProps) {
     const [currentIndex, setCurrentIndex] = useState(0)
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentIndex((prev) => (prev + 1) % featuredMovies.length)
+            setCurrentIndex((prev) => (prev + 1) % picks.length)
         }, 8000)
 
         return () => clearInterval(interval)
     }, [])
 
-    const currentMovie = featuredMovies[currentIndex]
+    const currentMovie = picks[currentIndex]
     const router = useRouter();
     return (
         <section className="relative h-[500px] md:h-[600px] w-full overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30 z-10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30 z-10"/>
 
             <div className="absolute inset-0 z-[5] opacity-10 pointer-events-none">
                 <svg
@@ -70,14 +57,16 @@ export default function Hero() {
             <AnimatePresence mode="wait">
                 <motion.div
                     key={currentIndex}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1 }}
+                    initial={{opacity: 0}}
+                    animate={{opacity: 1}}
+                    exit={{opacity: 0}}
+                    transition={{duration: 1}}
                     className="absolute inset-0"
                 >
                     <Image
-                        src={currentMovie.image || "/placeholder.svg"}
+                        src={currentMovie.slug
+                            ? `https://img.ophim.live/uploads/movies/${currentMovie.slug}-thumbr.jpg`
+                            : "/placeholder.svg"}
                         alt={currentMovie.title}
                         fill
                         className="object-cover"
@@ -90,76 +79,76 @@ export default function Hero() {
             <div className="container relative z-20 flex h-full flex-col items-start justify-center gap-4 px-4 md:px-6">
                 <AnimatePresence mode="wait">
                     <motion.div
-                        key={currentMovie.title}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.5 }}
+                        key={currentMovie.slug}
+                        initial={{opacity: 0, y: 20}}
+                        animate={{opacity: 1, y: 0}}
+                        exit={{opacity: 0, y: -20}}
+                        transition={{duration: 0.5}}
                         className="max-w-[800px]"
                     >
-                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.3, type: "spring" }}>
-                            <Badge className="bg-green-600 hover:bg-green-700 mb-4">{currentMovie.badge}</Badge>
+                        <motion.div initial={{scale: 0}} animate={{scale: 1}} transition={{delay: 0.3, type: "spring"}}>
+                            <Badge className="bg-green-600 hover:bg-green-700 mb-4">{currentMovie.year}</Badge>
                         </motion.div>
 
                         <motion.h1
                             className="text-3xl font-bold text-white md:text-5xl lg:text-6xl mb-4"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1, duration: 0.5 }}
+                            initial={{opacity: 0, y: 20}}
+                            animate={{opacity: 1, y: 0}}
+                            transition={{delay: 0.1, duration: 0.5}}
                         >
                             {currentMovie.title}
                         </motion.h1>
 
                         <motion.p
                             className="max-w-[600px] text-white md:text-xl mb-6"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2, duration: 0.5 }}
+                            initial={{opacity: 0, y: 20}}
+                            animate={{opacity: 1, y: 0}}
+                            transition={{delay: 0.2, duration: 0.5}}
                         >
                             {currentMovie.description}
                         </motion.p>
 
                         <motion.div
                             className="flex gap-4 flex-wrap"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3, duration: 0.5 }}
+                            initial={{opacity: 0, y: 20}}
+                            animate={{opacity: 1, y: 0}}
+                            transition={{delay: 0.3, duration: 0.5}}
                         >
                             <Button
                                 className="bg-green-600 hover:bg-green-700 transition-all hover:scale-105"
                                 onClick={() => router.push(`../watch/${currentMovie.slug}`)}
                             >
-                                <Play className="mr-2 h-4 w-4" /> Xem ngay
+                                <Play className="mr-2 h-4 w-4"/> Xem ngay
                             </Button>
                             <Button
                                 className="text-black border-white hover:bg-white/20 transition-all hover:scale-105 bg-white/50 hover:text-white"
                             >
-                                <Plus className="mr-2 h-4 w-4" /> Thêm vào danh sách
+                                <Plus className="mr-2 h-4 w-4"/> Thêm vào danh sách
                             </Button>
                             <Button
                                 className="text-black border-white hover:bg-white/20 transition-all hover:scale-105 bg-white/50 hover:text-white"
                             >
-                                <Info className="mr-2 h-4 w-4" /> Thông tin
+                                <Info className="mr-2 h-4 w-4"/> Thông tin
                             </Button>
                         </motion.div>
                     </motion.div>
                 </AnimatePresence>
 
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-                    {featuredMovies.map((_, index) => (
+                    {picks.map((_, index) => (
                         <button key={index} className="group relative" onClick={() => setCurrentIndex(index)}>
                             <motion.div
                                 className={`w-2 h-2 rounded-full transition-all ${
                                     index === currentIndex ? "bg-white w-6" : "bg-white/50"
                                 }`}
-                                whileHover={{ scale: 1.5 }}
+                                whileHover={{scale: 1.5}}
                             />
                             {index === currentIndex && (
                                 <motion.div
                                     className="absolute -top-1 -left-1 -right-1 -bottom-1 rounded-full border border-white/50 animate-ping"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
+                                    initial={{opacity: 0}}
+                                    animate={{opacity: 1}}
+                                    transition={{duration: 1, repeat: Number.POSITIVE_INFINITY}}
                                 />
                             )}
                         </button>
