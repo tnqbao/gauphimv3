@@ -71,7 +71,7 @@ export default function HomePage() {
                     data.hero.map((movie: Movie) => ({
                         title: movie.name,
                         description: movie.description,
-                        year: "2025",
+                        year: movie.year,
                         poster: `${movie.slug}-thumb.jpg`,
                         rating: "8.5",
                         slug: movie.slug

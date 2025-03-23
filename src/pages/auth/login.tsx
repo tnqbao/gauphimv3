@@ -11,6 +11,8 @@ import AuthLayout from "@/components/content/auth/auth-layout"
 import PandaWindow from "@/components/content/auth/panda-window"
 import AuthFormFooter from "@/components/content/auth/auth-form-footer"
 import {useRouter} from "next/router";
+import {useDispatch} from "react-redux";
+import {loginSuccess} from "@/store/slices/authSlice";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("")
@@ -25,6 +27,7 @@ export default function LoginPage() {
     const emailInputRef = useRef<HTMLInputElement>(null)
     const passwordInputRef = useRef<HTMLInputElement>(null)
     const router = useRouter();
+    const dispatch = useDispatch();
     useEffect(() => {
         const handleClick = (e: MouseEvent) => {
             const target = e.target as HTMLElement
@@ -83,7 +86,8 @@ export default function LoginPage() {
                 const data = await response.json()
                 throw new Error(data.message)
             }
-
+            const data = await response.json();
+            dispatch(loginSuccess(data.user));
             router.push("../")
         } catch (err: unknown) {
             if (err instanceof Error) {
