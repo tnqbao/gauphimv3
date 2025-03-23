@@ -8,6 +8,7 @@ import { motion, useAnimation } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import LazyLoadComponent from "../layout/lazy-load-component"
 import LazyImage from "../layout/lazy-image"
+import {useRouter} from "next/router";
 
 interface Pick {
     title: string
@@ -15,6 +16,7 @@ interface Pick {
     poster: string
     description: string
     rating: string
+    slug: string
 }
 
 interface PandaPicksProps {
@@ -142,9 +144,9 @@ export default function PandaPicks({ picks }: PandaPicksProps) {
     )
 }
 
-function PickCard({ pick, index }: { pick: Pick; index: number }) {
+function PickCard({ pick }: { pick: Pick; index: number }) {
     const [isHovered, setIsHovered] = useState(false)
-    console.log(index)
+    const router = useRouter()
     return (
         <motion.div
             variants={{
@@ -156,9 +158,9 @@ function PickCard({ pick, index }: { pick: Pick; index: number }) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div className="relative h-24 w-16 flex-shrink-0 overflow-hidden rounded-md">
+            <div className="relative h-24 w-16 flex-shrink-0 overflow-hidden rounded-md" onClick={() => router.push(`../detail/${pick.slug}`)}>
                 <LazyImage
-                    src={pick.poster || "/placeholder.svg"}
+                    src={`https://img.ophim.live/uploads/movies/${pick.poster}`}
                     alt={pick.title}
                     fill
                     className="object-cover transition-transform duration-300"

@@ -95,7 +95,7 @@ export default function HomePage() {
             <Header />
 
             <Suspense fallback={<HeroSkeleton />}>
-                <Hero />
+                <Hero picks={pandaPicks}/>
             </Suspense>
             <Suspense fallback={<CategorySkeleton />}>
                 <Categories categories={categories} />
