@@ -1,9 +1,8 @@
-import type React from "react"
 import {useEffect, useState} from "react"
 import Link from "next/link"
-import {selectAuth} from "@/store/slices/authSlice";
+import { logout, selectAuth} from "@/store/slices/authSlice";
 import {usePathname, useRouter} from "next/navigation"
-import {Menu, Search, User, X} from "lucide-react"
+import { Menu, Search, User, X} from "lucide-react"
 import {cn} from "@/lib/utils"
 import {
     DropdownMenu,
@@ -21,17 +20,19 @@ import MobileSearch from "@/components/layout/search/mobile-search"
 import LogoImage from "./logo-image"
 import CategoryDropdown from "./category-dropdown"
 import NationDropdown from "./nation-dropdown"
-import {useSelector} from "react-redux";
+import { useSelector} from "react-redux";
 
 
 export default function Header() {
+
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [searchKeyword, setSearchKeyword] = useState("")
-    const [isAuthed, setIsAuthed] = useState(false) // New state for authentication
     const pathname = usePathname()
     const router = useRouter()
     const {user_id, fullname} = useSelector(selectAuth);
+    const isAuthed = user_id !== null
+
     useEffect(() => {
         setIsMenuOpen(false)
     }, [pathname])
@@ -96,14 +97,14 @@ export default function Header() {
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator/>
-                <DropdownMenuItem onClick={() => setIsAuthed(false)}>Đăng xuất</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => logout()}>Đăng xuất</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )
 
     const AuthButtons = ({isMobile = false}) => (
         <>
-            {user_id ? (
+            {isAuthed ? (
                 <UserProfileDropdown fullname={fullname}/>
             ) : (
                 <>
@@ -214,12 +215,6 @@ export default function Header() {
                     <div className="hidden md:flex items-center gap-2">
                         <AuthButtons/>
                     </div>
-
-                    {/* For testing purposes - toggle auth state */}
-                    <Button variant="outline" size="sm" className="hidden md:flex"
-                            onClick={() => setIsAuthed(!isAuthed)}>
-                        {isAuthed ? "Đăng xuất" : "Test Login"}
-                    </Button>
 
                     <MobileSearch/>
                 </div>
