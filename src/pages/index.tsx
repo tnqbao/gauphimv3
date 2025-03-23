@@ -74,6 +74,7 @@ export default function HomePage() {
                         year: "2025",
                         poster: `${movie.slug}-thumb.jpg`,
                         rating: "8.5",
+                        slug: movie.slug
                     }))
                 )
             } catch (error) {
