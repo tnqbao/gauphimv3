@@ -1,4 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
+import { logout } from '@/store/slices/authSlice';
+import { store } from '@//store';
 
 const createUserApiInstance = (): AxiosInstance => {
     const instance = axios.create({
@@ -10,9 +12,19 @@ const createUserApiInstance = (): AxiosInstance => {
         timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '10000', 10),
     });
 
-    instance.interceptors.request.use((config) => {
-        return config;
-    });
+    instance.interceptors.response.use(
+        (response) => response,
+        (error) => {
+            if (error.response?.status === 401) {
+                console.warn("⚠ Token hết hạn! Tự động logout...");
+
+                document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+
+                store.dispatch(logout());
+            }
+            return Promise.reject(error);
+        }
+    );
 
     return instance;
 };
@@ -27,24 +39,22 @@ const createMovieApiInstance = (): AxiosInstance => {
     });
 };
 
-
-
 export const userApiInstance = createUserApiInstance();
 export const movieApiInstance = createMovieApiInstance();
 
 movieApiInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-        console.error("API Error:", error.response?.data || error.message)
-        return Promise.reject(error)
-    },
-)
+        console.error("API Error:", error.response?.data || error.message);
+        return Promise.reject(error);
+    }
+);
 
 movieApiInstance.interceptors.request.use(
     (config) => {
-        return config
+        return config;
     },
     (error) => {
-        return Promise.reject(error)
-    },
-)
+        return Promise.reject(error);
+    }
+);

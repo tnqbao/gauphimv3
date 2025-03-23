@@ -1,5 +1,3 @@
-"use client"
-
 import {useEffect, useState} from "react"
 import Image from "next/image"
 import {Info, Play, Plus} from "lucide-react"
@@ -7,8 +5,6 @@ import {Button} from "@/components/ui/button"
 import {Badge} from "@/components/ui/badge"
 import {AnimatePresence, motion} from "framer-motion"
 import {useRouter} from "next/router";
-
-
 
 interface Pick {
     title: string
@@ -22,18 +18,18 @@ interface Pick {
 interface PandaPicksProps {
     picks: Pick[]
 }
+
 export default function Hero({picks}: PandaPicksProps) {
     const [currentIndex, setCurrentIndex] = useState(0)
-
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % picks.length)
         }, 8000)
 
         return () => clearInterval(interval)
-    }, [])
+    }, [picks])
 
-    const currentMovie = picks[currentIndex]
+    const currentMovie = picks.length > 0 ? picks[currentIndex] : null
     const router = useRouter();
     return (
         <section className="relative h-[500px] md:h-[600px] w-full overflow-hidden">
@@ -64,10 +60,10 @@ export default function Hero({picks}: PandaPicksProps) {
                     className="absolute inset-0"
                 >
                     <Image
-                        src={currentMovie.slug
-                            ? `https://img.ophim.live/uploads/movies/${currentMovie.slug}-thumbr.jpg`
+                        src={currentMovie?.slug
+                            ? `https://img.ophim.live/uploads/movies/${currentMovie.slug}-poster.jpg`
                             : "/placeholder.svg"}
-                        alt={currentMovie.title}
+                        alt={currentMovie?.title || "Placeholder"}
                         fill
                         className="object-cover"
                         priority
@@ -78,60 +74,62 @@ export default function Hero({picks}: PandaPicksProps) {
 
             <div className="container relative z-20 flex h-full flex-col items-start justify-center gap-4 px-4 md:px-6">
                 <AnimatePresence mode="wait">
-                    <motion.div
-                        key={currentMovie.slug}
-                        initial={{opacity: 0, y: 20}}
-                        animate={{opacity: 1, y: 0}}
-                        exit={{opacity: 0, y: -20}}
-                        transition={{duration: 0.5}}
-                        className="max-w-[800px]"
-                    >
-                        <motion.div initial={{scale: 0}} animate={{scale: 1}} transition={{delay: 0.3, type: "spring"}}>
-                            <Badge className="bg-green-600 hover:bg-green-700 mb-4">{currentMovie.year}</Badge>
-                        </motion.div>
-
-                        <motion.h1
-                            className="text-3xl font-bold text-white md:text-5xl lg:text-6xl mb-4"
-                            initial={{opacity: 0, y: 20}}
-                            animate={{opacity: 1, y: 0}}
-                            transition={{delay: 0.1, duration: 0.5}}
-                        >
-                            {currentMovie.title}
-                        </motion.h1>
-
-                        <motion.p
-                            className="max-w-[600px] text-white md:text-xl mb-6"
-                            initial={{opacity: 0, y: 20}}
-                            animate={{opacity: 1, y: 0}}
-                            transition={{delay: 0.2, duration: 0.5}}
-                        >
-                            {currentMovie.description}
-                        </motion.p>
-
+                    {currentMovie && (
                         <motion.div
-                            className="flex gap-4 flex-wrap"
+                            key={currentMovie.slug}
                             initial={{opacity: 0, y: 20}}
                             animate={{opacity: 1, y: 0}}
-                            transition={{delay: 0.3, duration: 0.5}}
+                            exit={{opacity: 0, y: -20}}
+                            transition={{duration: 0.5}}
+                            className="max-w-[800px]"
                         >
-                            <Button
-                                className="bg-green-600 hover:bg-green-700 transition-all hover:scale-105"
-                                onClick={() => router.push(`../watch/${currentMovie.slug}`)}
+                            <motion.div initial={{scale: 0}} animate={{scale: 1}} transition={{delay: 0.3, type: "spring"}}>
+                                <Badge className="bg-green-600 hover:bg-green-700 mb-4">{currentMovie.year}</Badge>
+                            </motion.div>
+
+                            <motion.h1
+                                className="text-3xl font-bold text-white md:text-5xl lg:text-6xl mb-4"
+                                initial={{opacity: 0, y: 20}}
+                                animate={{opacity: 1, y: 0}}
+                                transition={{delay: 0.1, duration: 0.5}}
                             >
-                                <Play className="mr-2 h-4 w-4"/> Xem ngay
-                            </Button>
-                            <Button
-                                className="text-black border-white hover:bg-white/20 transition-all hover:scale-105 bg-white/50 hover:text-white"
+                                {currentMovie.title}
+                            </motion.h1>
+
+                            <motion.p
+                                className="max-w-[600px] text-white md:text-xl mb-6"
+                                initial={{opacity: 0, y: 20}}
+                                animate={{opacity: 1, y: 0}}
+                                transition={{delay: 0.2, duration: 0.5}}
                             >
-                                <Plus className="mr-2 h-4 w-4"/> Thêm vào danh sách
-                            </Button>
-                            <Button
-                                className="text-black border-white hover:bg-white/20 transition-all hover:scale-105 bg-white/50 hover:text-white"
+                                {currentMovie.description}
+                            </motion.p>
+
+                            <motion.div
+                                className="flex gap-4 flex-wrap"
+                                initial={{opacity: 0, y: 20}}
+                                animate={{opacity: 1, y: 0}}
+                                transition={{delay: 0.3, duration: 0.5}}
                             >
-                                <Info className="mr-2 h-4 w-4"/> Thông tin
-                            </Button>
+                                <Button
+                                    className="bg-green-600 hover:bg-green-700 transition-all hover:scale-105"
+                                    onClick={() => router.push(`../watch/${currentMovie.slug}`)}
+                                >
+                                    <Play className="mr-2 h-4 w-4"/> Xem ngay
+                                </Button>
+                                <Button
+                                    className="text-black border-white hover:bg-white/20 transition-all hover:scale-105 bg-white/50 hover:text-white"
+                                >
+                                    <Plus className="mr-2 h-4 w-4"/> Thêm vào danh sách
+                                </Button>
+                                <Button
+                                    className="text-black border-white hover:bg-white/20 transition-all hover:scale-105 bg-white/50 hover:text-white"
+                                >
+                                    <Info className="mr-2 h-4 w-4"/> Thông tin
+                                </Button>
+                            </motion.div>
                         </motion.div>
-                    </motion.div>
+                    )}
                 </AnimatePresence>
 
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
@@ -158,4 +156,3 @@ export default function Hero({picks}: PandaPicksProps) {
         </section>
     )
 }
-

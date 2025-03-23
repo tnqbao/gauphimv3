@@ -1,28 +1,37 @@
-"use client"
-
 import type React from "react"
-
-import { useState, useEffect } from "react"
+import {useEffect, useState} from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Search, Menu, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
+import {selectAuth} from "@/store/slices/authSlice";
+import {usePathname, useRouter} from "next/navigation"
+import {Menu, Search, User, X} from "lucide-react"
+import {cn} from "@/lib/utils"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import ThemeToggle from "@/components/content/theme-toggle"
-import CategoryDropdown from "./category-dropdown"
-import NationDropdown from "./nation-dropdown"
+import {Button} from "@/components/ui/button"
+import {Input} from "@/components/ui/input"
 import MobileSearch from "@/components/layout/search/mobile-search"
 import LogoImage from "./logo-image"
-import { usePathname } from "next/navigation"
+import CategoryDropdown from "./category-dropdown"
+import NationDropdown from "./nation-dropdown"
+import {useSelector} from "react-redux";
+
 
 export default function Header() {
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [searchKeyword, setSearchKeyword] = useState("")
+    const [isAuthed, setIsAuthed] = useState(false) // New state for authentication
     const pathname = usePathname()
     const router = useRouter()
-
+    const {user_id, fullname} = useSelector(selectAuth);
     useEffect(() => {
         setIsMenuOpen(false)
     }, [pathname])
@@ -52,6 +61,78 @@ export default function Header() {
         }
     }
 
+    const UserProfileDropdown = ({fullname}: { fullname: string | null }) => (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                        <AvatarImage src="/placeholder.svg" alt="User avatar"/>
+                        <AvatarFallback>
+                            <User className="h-4 w-4"/>
+                        </AvatarFallback>
+                    </Avatar>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                        <p className="text-xs leading-none text-muted-foreground">{fullname}</p>
+                    </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator/>
+                <DropdownMenuItem>
+                    <Link href="../profile" className="w-full">
+                        Hồ sơ
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                    <Link href="../favorites" className="w-full">
+                        Phim yêu thích
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                    <Link href="../history" className="w-full">
+                        Lịch sử xem
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator/>
+                <DropdownMenuItem onClick={() => setIsAuthed(false)}>Đăng xuất</DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
+
+    const AuthButtons = ({isMobile = false}) => (
+        <>
+            {user_id ? (
+                <UserProfileDropdown fullname={fullname}/>
+            ) : (
+                <>
+                    <Button
+                        variant="outline"
+                        className={cn(
+                            "border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950 transition-colors",
+                            isMobile ? "flex-1" : "hidden lg:flex",
+                            !isMobile && "size-sm",
+                        )}
+                        asChild
+                    >
+                        <Link href="../auth/register">Đăng ký</Link>
+                    </Button>
+                    <Button
+                        className={cn(
+                            "bg-green-600 hover:bg-green-700 transition-colors",
+                            isMobile ? "flex-1" : "",
+                            !isMobile && "size-sm",
+                        )}
+                        asChild
+                    >
+                        <Link href="../auth/login">Đăng nhập</Link>
+                    </Button>
+                </>
+            )}
+        </>
+    )
+
     return (
         <header
             className={cn(
@@ -71,9 +152,9 @@ export default function Header() {
                         aria-label={isMenuOpen ? "Đóng menu" : "Mở menu"}
                         aria-expanded={isMenuOpen}
                     >
-                        {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                        {isMenuOpen ? <X className="h-5 w-5"/> : <Menu className="h-5 w-5"/>}
                     </Button>
-                    <LogoImage size={isScrolled ? "small" : "medium"} className="transition-all duration-300" />
+                    <LogoImage size={isScrolled ? "small" : "medium"} className="transition-all duration-300"/>
                 </div>
                 {isMenuOpen && (
                     <div
@@ -91,7 +172,7 @@ export default function Header() {
                     )}
                 >
                     <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 lg:space-x-6">
-                        <NavLink href="../list/phim-bo" label="Phim Bộ" />
+                        <NavLink href="../list/phim-bo" label="Phim Bộ"/>
                         <NavLink href="../list/phim-le" label="Phim Lẻ"/>
                         <NavLink href="../list/phim-moi" label="Phim Mới"/>
                         <NavLink href="../list/hoat-hinh" label="Hoạt Hình"/>
@@ -111,16 +192,7 @@ export default function Header() {
                     </div>
 
                     <div className="mt-6 flex gap-2 md:hidden">
-                        <Button
-                            variant="outline"
-                            className="flex-1 border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950 transition-colors"
-                            asChild
-                        >
-                            <Link href="../auth/register">Đăng ký</Link>
-                        </Button>
-                        <Button className="flex-1 bg-green-600 hover:bg-green-700 transition-colors" asChild>
-                            <Link href="../auth/login">Đăng nhập</Link>
-                        </Button>
+                        <AuthButtons isMobile={true}/>
                     </div>
                 </nav>
 
@@ -136,29 +208,27 @@ export default function Header() {
                             onChange={(e) => setSearchKeyword(e.target.value)}
                         />
                     </form>
-                    <ThemeToggle />
+                    <ThemeToggle/>
+
+                    {/* Desktop auth buttons */}
                     <div className="hidden md:flex items-center gap-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950 transition-colors hidden lg:flex"
-                            asChild
-                        >
-                            <Link href="../auth/register">Đăng ký</Link>
-                        </Button>
-                        <Button size="sm" className="bg-green-600 hover:bg-green-700 transition-colors" asChild>
-                            <Link href="../auth/login">Đăng nhập</Link>
-                        </Button>
+                        <AuthButtons/>
                     </div>
 
-                    <MobileSearch />
+                    {/* For testing purposes - toggle auth state */}
+                    <Button variant="outline" size="sm" className="hidden md:flex"
+                            onClick={() => setIsAuthed(!isAuthed)}>
+                        {isAuthed ? "Đăng xuất" : "Test Login"}
+                    </Button>
+
+                    <MobileSearch/>
                 </div>
             </div>
         </header>
     )
 }
 
-function NavLink({ href, label }: { href: string; label: string }) {
+function NavLink({href, label}: { href: string; label: string }) {
     const pathname = usePathname()
     const isActive = pathname === href || pathname.startsWith(`${href}/`)
 
@@ -185,3 +255,4 @@ function NavLink({ href, label }: { href: string; label: string }) {
         </Link>
     )
 }
+
