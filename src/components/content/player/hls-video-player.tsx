@@ -9,10 +9,13 @@ interface HLSVideoPlayerProps {
     className?: string
     onLoadedMetadata?: () => void
     onTimeUpdate?: () => void
+    onTouchStart: () => void
+    onTouchEnd: () => void
+    onDoubleClick: () => void
 }
 
 const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
-    function HLSVideoPlayerComponent({ src, poster, className, onLoadedMetadata, onTimeUpdate }, ref) {
+    function HLSVideoPlayerComponent({ src, poster, className, onLoadedMetadata, onTimeUpdate, onTouchStart, onTouchEnd, onDoubleClick }, ref) {
         const videoRef = useRef<HTMLVideoElement | null>(null)
 
         useEffect(() => {
@@ -42,6 +45,10 @@ const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
                 poster={poster}
                 onLoadedMetadata={onLoadedMetadata}
                 onTimeUpdate={onTimeUpdate}
+                onTouchStart={() => videoRef.current && onTouchStart()}
+                onTouchEnd={() => videoRef.current && onTouchEnd()}
+                onDoubleClick={() => videoRef.current && onDoubleClick()}
+
             >
                 <source src={src} type="application/x-mpegURL" />
                 Your browser does not support the video tag.

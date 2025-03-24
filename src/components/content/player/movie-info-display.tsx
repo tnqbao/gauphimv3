@@ -14,9 +14,9 @@ interface MovieInfoDisplayProps {
 
 export default function MovieInfoDisplay({  year, categories, description, lightsOff }: MovieInfoDisplayProps) {
     return (
-        <div className={cn("mt-6 transition-colors duration-300", lightsOff ? "bg-black text-gray-300" : "")}>
+        <div className={cn("mt-6 transition-colors duration-300", lightsOff ? "" : "")}>
             <div className="flex flex-wrap gap-2 mb-4">
-                <Badge variant="outline" className="bg-green-600 text-white border-none">
+                <Badge variant="outline" className="bg-green-600 border-none">
                     {year}
                 </Badge>
                 {categories.map((category) => (
@@ -31,7 +31,7 @@ export default function MovieInfoDisplay({  year, categories, description, light
             <div className="mb-6">
                 <h3 className="text-lg font-medium mb-2">Nội dung phim</h3>
                 <p
-                    className="text-black md:text-white dark:text-white  text-md bg-black/30 bg-opacity-50 p-4 rounded-md"
+                    className="text-black dark:text-white  text-md bg-black/30 bg-opacity-50 p-4 rounded-md"
                     dangerouslySetInnerHTML={{__html: description}}
                 />
             </div>

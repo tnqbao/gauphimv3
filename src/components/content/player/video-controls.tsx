@@ -1,7 +1,6 @@
-"use client"
 
 import { motion } from "framer-motion"
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, Lightbulb, ChevronLeft, ChevronRight } from "lucide-react"
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, Lightbulb, ChevronLeft, ChevronRight, PictureInPicture } from "lucide-react"
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -29,6 +28,8 @@ interface VideoControlsProps {
     handleVolumeChange: (value: number[]) => void
     setLightsOff: (value: boolean) => void
     toggleEpisodeList: () => void
+    togglePiP: () => void
+    isPiP: boolean
 }
 
 export default function VideoControls({
@@ -52,8 +53,9 @@ export default function VideoControls({
                                           handleVolumeChange,
                                           setLightsOff,
                                           toggleEpisodeList,
+                                          togglePiP,
+                                            isPiP
                                       }: VideoControlsProps) {
-    // Format time (seconds to MM:SS)
     const formatTime = (time: number) => {
         if (!time || isNaN(time)) return "0:00"
 
@@ -134,6 +136,15 @@ export default function VideoControls({
 
                                 <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleMute}>
                                     {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
+                                </Button>
+
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="text-white hover:bg-white/20"
+                                    onClick={togglePiP}
+                                >
+                                    {isPiP ? <PictureInPicture className="h-5 w-5" /> : <PictureInPicture className="h-5 w-5" />}
                                 </Button>
 
                                 <div className="w-20 hidden sm:block">
