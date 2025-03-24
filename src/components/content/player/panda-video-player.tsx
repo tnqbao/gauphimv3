@@ -1,4 +1,3 @@
-"use client"
 
 import { useEffect, useRef, useState } from "react"
 import { AnimatePresence } from "framer-motion"
@@ -47,6 +46,7 @@ export default function PandaVideoPlayer({
     const [currentTime, setCurrentTime] = useState(0)
     const [volume, setVolume] = useState(1)
     const [lightsOff, setLightsOff] = useState(false)
+    const [isPiP, setIsPiP] = useState(false)
 
     const playerRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
@@ -66,6 +66,7 @@ export default function PandaVideoPlayer({
             document.removeEventListener("fullscreenchange", handleFullscreenChange)
         }
     }, [])
+    const seekAmount = 10
 
     const handleLoadedMetadata = () => {
         setIsLoading(false)
@@ -125,6 +126,35 @@ export default function PandaVideoPlayer({
         }
     }
 
+    const togglePiP = () => {
+        if (videoRef.current && document.pictureInPictureEnabled) {
+            if (!document.pictureInPictureElement) {
+                videoRef.current.requestPictureInPicture()
+                    .catch((err) => console.error("PiP error:", err))
+            } else {
+                document.exitPictureInPicture()
+                    .catch((err) => console.error("Exit PiP error:", err))
+            }
+        } else {
+            console.warn("Picture-in-Picture is not supported on this browser.")
+        }
+    }
+
+
+    useEffect(() => {
+        const handlePiPChange = () => {
+            setIsPiP(document.pictureInPictureElement !== null)
+        }
+
+        document.addEventListener("enterpictureinpicture", handlePiPChange)
+        document.addEventListener("leavepictureinpicture", handlePiPChange)
+
+        return () => {
+            document.removeEventListener("enterpictureinpicture", handlePiPChange)
+            document.removeEventListener("leavepictureinpicture", handlePiPChange)
+        }
+    }, [])
+
     const toggleEpisodeList = () => setShowEpisodeList(!showEpisodeList)
     const [showControls, setShowControls] = useState(true)
     const controlsTimeout = useRef<NodeJS.Timeout | null>(null)
@@ -151,6 +181,33 @@ export default function PandaVideoPlayer({
         }
     }
 
+    const speedMultiplier = 2
+
+    const handleTouchStart = () => {
+        if (!videoRef.current) return
+
+        videoRef.current.playbackRate = speedMultiplier
+    }
+
+    const handleTouchEnd = () => {
+        if (!videoRef.current) return
+
+        videoRef.current.playbackRate = 1
+    }
+
+    const handleDoubleClick = () => {
+        if (!videoRef.current) return
+
+        const clickX = window.innerWidth / 2
+        const screenWidth = window.innerWidth
+
+        if (clickX < screenWidth / 2) {
+            videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - seekAmount) // Tua lùi
+        } else {
+            videoRef.current.currentTime = Math.min(videoRef.current.duration, videoRef.current.currentTime + seekAmount) // Tua nhanh
+        }
+    }
+
     useEffect(() => {
         document.addEventListener("mousemove", handleMouseMove)
         document.addEventListener("play", handleVideoPlayPause, true) // Listen to play/pause
@@ -161,7 +218,7 @@ export default function PandaVideoPlayer({
     }, [])
 
     return (
-        <div ref={containerRef} className={cn("transition-colors duration-300", lightsOff ? "bg-black" : "bg-[#0a0a0a]")}>
+        <div ref={containerRef} className={cn("transition-colors duration-300", lightsOff ? "" : "")}>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
                     <div
@@ -184,6 +241,9 @@ export default function PandaVideoPlayer({
                                 poster={`https://img.ophim.live/uploads/movies/${poster}`}
                                 onLoadedMetadata={handleLoadedMetadata}
                                 onTimeUpdate={handleTimeUpdate}
+                                onTouchStart={handleTouchStart}
+                                onTouchEnd={handleTouchEnd}
+                                onDoubleClick={handleDoubleClick}
                                 className="w-full h-full object-contain"
                             />
                         )}
@@ -211,6 +271,8 @@ export default function PandaVideoPlayer({
                                     handleVolumeChange={handleVolumeChange}
                                     setLightsOff={setLightsOff}
                                     toggleEpisodeList={toggleEpisodeList}
+                                    togglePiP={togglePiP}
+                                    isPiP={isPiP}
                                 />
                             )}
                         </AnimatePresence>
