@@ -77,12 +77,12 @@ export default function RegisterPage() {
 
         try {
             setIsLoading(true)
-            const response = await fetch("/api/register", {
-                method: "POST",
+            const response = await fetch("/api/auth/register", {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ name, email, password }),
+                body: JSON.stringify({ fullname, email, password }),
             })
             if (!response.ok) {
                 throw new Error("Registration failed")
@@ -111,12 +111,12 @@ export default function RegisterPage() {
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="name">Tên của bạn</Label>
+                            <Label htmlFor="fullname">Tên của bạn</Label>
                             <Input
-                                id="name"
+                                id="fullname"
                                 ref={nameInputRef}
                                 type="text"
-                                placeholder="Your Name"
+                                placeholder="Tên của bạn"
                                 value={fullname}
                                 onChange={(e) => setFullName(e.target.value)}
                                 onFocus={() => {

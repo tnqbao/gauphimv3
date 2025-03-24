@@ -2,13 +2,13 @@ import {NextApiRequest, NextApiResponse} from "next";
 import {userApiInstance} from "@/utils/axios.config";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== "POST") {
-        res.setHeader("Allow", ["POST"]);
+    if (req.method !== "PUT") {
+        res.setHeader("Allow", ["PUT"]);
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
     try {
         const {fullname, email, password} = req.body;
-        const response = await userApiInstance.post("api/user/public/register", {
+        const response = await userApiInstance.put("api/user/auth/register", {
             fullname: fullname,
             email: email,
             password: password,
