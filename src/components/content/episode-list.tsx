@@ -31,8 +31,8 @@ export default function EpisodeList({
                 exit={{ opacity: 0, y: 20 }}
                 className="fixed inset-0 z-50 bg-black/90 p-4 lg:hidden overflow-auto"
             >
-                <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-medium">Danh sách tập</h3>
+                <div className="flex justify-between items-center mb-4 ">
+                    <h3 className="text-lg font-medium text-white">Danh sách tập</h3>
                     <Button variant="ghost" size="icon" onClick={onClose}>
                         <ChevronLeft className="h-5 w-5" />
                     </Button>

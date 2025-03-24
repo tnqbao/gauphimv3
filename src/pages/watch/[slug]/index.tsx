@@ -48,7 +48,7 @@ export default function WatchPage({ movieData, episodeNumber }: MoviePageProps) 
 
 
     return (
-        <div className="flex min-h-screen flex-col bg-[#0a0a0a] text-white">
+        <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
             <Head>
                 <title>{`${title} - Tập ${episodeNumber} - Xem phim tại Gấu Flix`}</title>
                 <meta name="description" content={`Xem phim ${title}, Tập ${episodeNumber} tại Gấu Flix. Trải nghiệm phim chất lượng cao, miễn phí, và đầy đủ thông tin về bộ phim.`} />
