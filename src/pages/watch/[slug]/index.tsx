@@ -1,10 +1,10 @@
-import { notFound } from "next/navigation"
+import {notFound} from "next/navigation"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import Breadcrumb from "@/components/layout/breadcrumb"
 import PandaVideoPlayer from "@/components/content/player/panda-video-player"
-import { fetchMovieBySlug, MovieDetailType } from "@/utils/api"
-import { GetServerSideProps } from "next"
+import {fetchMovieBySlug, MovieDetailType} from "@/utils/api"
+import {GetServerSideProps} from "next"
 import Head from "next/head"
 
 interface MoviePageProps {
@@ -12,14 +12,14 @@ interface MoviePageProps {
     episodeNumber: string
 }
 
-export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({ params, query }) => {
+export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({params, query}) => {
     const slug = params?.slug as string
     const episodeNumber = query.ep ? (query.ep as string) : "1";  // Default to string "1"
 
     const movieData = await fetchMovieBySlug(slug)
 
     if (!movieData) {
-        return { notFound: true }
+        return {notFound: true}
     }
 
     return {
@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({ p
     }
 }
 
-export default function WatchPage({ movieData, episodeNumber }: MoviePageProps) {
+export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
     if (!movieData) {
         notFound()
     }
@@ -44,32 +44,75 @@ export default function WatchPage({ movieData, episodeNumber }: MoviePageProps) 
 
     const movieItemData = movieData.item
     const currentEpisode = episodes.find((ep) => ep.name === episodeNumber) || episodes[0]
-    const { name: title, thumb_url, slug } = movieItemData
+    const {name: title, poster_url, slug} = movieItemData
 
 
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
             <Head>
-                <title>{`${title} - Tập ${episodeNumber} - Xem phim tại Gấu Flix`}</title>
-                <meta name="description" content={`Xem phim ${title}, Tập ${episodeNumber} tại Gấu Flix. Trải nghiệm phim chất lượng cao, miễn phí, và đầy đủ thông tin về bộ phim.`} />
-                <meta name="keywords" content={`xem phim ${title}, tập ${episodeNumber}, phim ${slug}, xem phim miễn phí, phim chất lượng cao, Gấu Flix, watch ${title} episode ${episodeNumber}`} />
-                <meta property="og:title" content={`${title} - Tập ${episodeNumber} - Xem phim tại Gấu Flix`} />
-                <meta property="og:description" content={`Xem phim ${title}, Tập ${episodeNumber} tại Gấu Flix. Trải nghiệm phim chất lượng cao, miễn phí, và đầy đủ thông tin về bộ phim.`} />
-                <meta property="og:image" content={`https://img.ophim.live/uploads/movies/${thumb_url}`} />
-                <meta property="og:url" content={`https://gauphim.daudoo.com/watch/${slug}/tap-${episodeNumber}`} />
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={`${title} - Tập ${episodeNumber} - Xem phim tại Gấu Flix`} />
-                <meta name="twitter:description" content={`Xem phim ${title}, Tập ${episodeNumber} tại Gấu Flix. Trải nghiệm phim chất lượng cao, miễn phí, và đầy đủ thông tin về bộ phim.`} />
-                <meta name="twitter:image" content={`https://img.ophim.live/uploads/movies/${thumb_url}`} />
+                <title>{`${title} Tập ${episodeNumber} - Vietsub Full HD | Gấu Flix`}</title>
+                <meta name="description"
+                      content={`Xem ${title} tập ${episodeNumber} Vietsub Full HD miễn phí tại Gấu Flix. Cập nhật nhanh, xem ngay!`}/>
+                <meta name="keywords"
+                      content={`Xem phim ${title} tập ${episodeNumber} Vietsub, Full HD, ${title} ${episodeNumber}, ${title} online miễn phí, Gấu Flix`}/>
+                <meta name="robots" content="index, follow"/>
+                {episodeNumber === "1" && (
+                    <link rel="canonical" href={`https://gauphim.daudoo.com/watch/${slug}`} />
+                )}
+
+                <meta property="og:title" content={`${title} - Tập ${episodeNumber} - Xem phim tại Gấu Flix`}/>
+                <meta property="og:description"
+                      content={`Xem ngay ${title} - Tập ${episodeNumber} trên Gấu Flix. Phim chất lượng cao, hỗ trợ Vietsub, miễn phí 100%!`}/>
+                <meta property="og:type" content="video.episode"/>
+                <meta property="og:image" content={poster_url ? `https://img.ophim.live/uploads/movies/${poster_url}` : "https://i.imgur.com/sACJNuE.png"}/>
+                <meta property="og:image:alt" content={`Poster phim ${title}`}/>
+                <meta property="og:image:width" content="1200"/>
+                <meta property="og:image:height" content="630"/>
+
+                {currentEpisode?.link_m3u8 && (
+                    <>
+                        <meta property="og:video" content={currentEpisode.link_m3u8}/>
+                        <meta property="og:video:type" content="application/x-mpegURL"/>
+                        <meta property="og:video:width" content="1280"/>
+                        <meta property="og:video:height" content="720"/>
+                    </>
+                )}
+                <meta property="og:url" content={`https://gauphim.daudoo.com/watch/${slug}?ep=${episodeNumber}`}/>
+
+                <meta name="twitter:card" content="summary_large_image"/>
+                <meta name="twitter:title" content={`${title} - Tập ${episodeNumber} - Xem phim tại Gấu Flix`}/>
+                <meta name="twitter:description"
+                      content={`Thưởng thức ${title} - Tập ${episodeNumber} với chất lượng Full HD tại Gấu Flix. Xem miễn phí ngay hôm nay!`}/>
+                <meta name="twitter:image" content={`https://img.ophim.live/uploads/movies/${poster_url}`}/>
+
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "VideoObject",
+                        "name": `${title} - Tập ${episodeNumber}`,
+                        "description": `Xem phim ${title} tập ${episodeNumber} Vietsub, Full HD miễn phí tại Gấu Flix.`,
+                        "thumbnailUrl": `https://img.ophim.live/uploads/movies/${poster_url}`,
+                        "contentUrl": currentEpisode.link_m3u8,
+                        "embedUrl": `https://gauphim.daudoo.com/watch/${slug}?ep=${episodeNumber}`,
+                        "publisher": {
+                            "@type": "Organization",
+                            "name": "Gấu Flix",
+                            "logo": {
+                                "@type": "ImageObject",
+                                "url": "https://i.imgur.com/sACJNuE.png"
+                            }
+                        }
+                    })}
+                </script>
             </Head>
-            <Header />
+            <Header/>
             <main className="flex-1">
                 <div className="container px-4 md:px-6 py-4">
                     <Breadcrumb
                         items={[
-                            { label: "Phim", href: "../list/phim-moi" },
-                            { label: movieItemData.name, href: `/detail/${movieItemData.slug}` },
-                            { label: `Tập ${currentEpisode.name}` },
+                            {label: "Phim", href: "../list/phim-moi"},
+                            {label: movieItemData.name, href: `/detail/${movieItemData.slug}`},
+                            {label: `Tập ${currentEpisode.name}`},
                         ]}
                     />
                 </div>
@@ -81,7 +124,7 @@ export default function WatchPage({ movieData, episodeNumber }: MoviePageProps) 
 
                     <PandaVideoPlayer
                         title={`${movieItemData.name} - Tập ${currentEpisode.name}`}
-                        poster={movieItemData.thumb_url}
+                        poster={movieItemData.poster_url}
                         source={currentEpisode.link_m3u8}
                         episodes={episodes}
                         currentEpisode={currentEpisode.name}
@@ -96,7 +139,7 @@ export default function WatchPage({ movieData, episodeNumber }: MoviePageProps) 
                 </div>
             </main>
 
-            <Footer />
+            <Footer/>
         </div>
     )
 }

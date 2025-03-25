@@ -1,4 +1,5 @@
 import { useEffect, useState, Suspense, lazy } from "react"
+import Head from 'next/head'
 import Header from "@/components/layout/header"
 import {
     HeroSkeleton,
@@ -87,26 +88,72 @@ export default function HomePage() {
 
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
-            <ThemeEffects />
-            <BambooDecoration />
-            <Suspense fallback={null}>
-                <FloatingLeaves />
-            </Suspense>
-            <PandaScrollProgress />
-            <Header />
+            <Head>
+                <title>Gấu Phim - Xem Phim Online Full HD, Miễn Phí</title>
+                <meta name="description"
+                      content="Gấu Phim - Website xem phim online miễn phí với chất lượng cao, cập nhật nhanh chóng phim mới, phim hành động, kinh dị, hài hước, chiếu rạp hot nhất."/>
+                <meta name="keywords"
+                      content="xem phim, phim mới, phim hay, phim hành động, phim chiếu rạp, phim kinh dị, phim tình cảm"/>
+                <meta name="robots" content="index, follow"/>
 
-            <Suspense fallback={<HeroSkeleton />}>
+                <meta property="og:title" content="Gấu Phim - Xem Phim Online Full HD, Miễn Phí"/>
+                <meta property="og:description" content="Xem phim online miễn phí, cập nhật phim mới nhanh nhất!"/>
+                <meta property="og:image" content="https://i.imgur.com/sACJNuE.png"/>
+                <meta property="og:type" content="website"/>
+                <meta property="og:url" content="https://gauphim.daudoo.com/"/>
+
+                <meta name="twitter:card" content="summary_large_image"/>
+                <meta name="twitter:title" content="Gấu Phim - Xem Phim Online Chất Lượng Cao"/>
+                <meta name="twitter:description" content="Cập nhật nhanh phim chiếu rạp hot nhất!"/>
+                <meta name="twitter:image" content="https://i.imgur.com/YvZjVti.png"/>
+
+                <link rel="canonical" href="https://gauphim.daudoo.com/"/>
+
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "VideoStreamingService",
+                        "name": "Gấu Phim",
+                        "url": "https://gauphim.daudoo.com/",
+                        "description": "Xem phim online miễn phí với chất lượng cao, phim hành động, kinh dị, tình cảm hấp dẫn nhất.",
+                        "image": "https://i.imgur.com/sACJNuE.png",
+                        "publisher": {
+                            "@type": "Organization",
+                            "name": "Gấu Phim",
+                            "logo": {
+                                "@type": "ImageObject",
+                                "url": "https://i.imgur.com/YvZjVti.png"
+                            }
+                        },
+                        "potentialAction": {
+                            "@type": "SearchAction",
+                            "target": "https://gauphim.daudoo.com/search?q={search_term_string}",
+                            "query-input": "required name=search_term_string"
+                        }
+                    })}
+                </script>
+            </Head>
+            <ThemeEffects/>
+            <BambooDecoration/>
+            <Suspense fallback={null}>
+                <FloatingLeaves/>
+            </Suspense>
+            <PandaScrollProgress/>
+            <Header/>
+
+            <Suspense fallback={<HeroSkeleton/>}>
                 <Hero picks={pandaPicks}/>
             </Suspense>
-            <Suspense fallback={<CategorySkeleton />}>
-                <Categories categories={categories} />
+            <Suspense fallback={<CategorySkeleton/>}>
+                <Categories categories={categories}/>
             </Suspense>
 
-            <Suspense fallback={<MovieSectionSkeleton />}>
-                <MovieSection title="Phim Nổi Bật" movies={trendingMovies} bgColor="bg-white dark:bg-gray-800" pageSlug={"phim-noi-bat"}/>
+            <Suspense fallback={<MovieSectionSkeleton/>}>
+                <MovieSection title="Phim Nổi Bật" movies={trendingMovies} bgColor="bg-white dark:bg-gray-800"
+                              pageSlug={"phim-noi-bat"}/>
             </Suspense>
 
-            <Suspense fallback={<MovieSectionSkeleton />}>
+            <Suspense fallback={<MovieSectionSkeleton/>}>
                 <MovieSection title="Phim Mới Ra" movies={newReleases} bgColor="bg-[#f8f9fa] dark:bg-gray-900" pageSlug={"phim-moi"}/>
             </Suspense>
 
