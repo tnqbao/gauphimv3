@@ -61,23 +61,62 @@ const ListPage = ({ slug, listType, movies, pagination }: ListPageProps) => {
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
             <Head>
-                <title>{`Phim thể loại ${title} - Xem phim miễn phí, chất lượng cao`}</title>
-                <meta name="description" content={`Khám phá các bộ phim thể loại ${title} tại đây. Xem các bộ phim hấp dẫn miễn phí, chất lượng cao.`} />
-                <meta name="keywords" content={`phim ${title}, phim thể loại ${slug}, phim miễn phí, phim chất lượng cao, ${title} phim`} />
-                <meta property="og:title" content={`Phim thể loại ${title} - Xem phim miễn phí, chất lượng cao`} />
-                <meta property="og:description" content={`Khám phá các bộ phim thể loại ${title} tại đây. Xem các bộ phim hấp dẫn miễn phí, chất lượng cao.`} />
-                <meta property="og:image" content={`https://img.ophim.live/uploads/movies/${movies[0].thumb_url}`} />
-                <meta property="og:url" content={`https://gauphim.daudoo.com/list/${slug}`} />
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={`Phim thể loại ${title} - Xem phim miễn phí, chất lượng cao`} />
-                <meta name="twitter:description" content={`Khám phá các bộ phim thể loại ${title} tại đây. Xem các bộ phim hấp dẫn miễn phí, chất lượng cao.`} />
-                <meta name="twitter:image" content={`https://img.ophim.live/uploads/movies/${movies[0].thumb_url}`} />
+                <title>{`${title} - Xem phim Full HD miễn phí | GauPhim`}</title>
+                <meta name="description"
+                      content={`Xem phim ${title} miễn phí với chất lượng cao, cập nhật mới nhất. Thưởng thức phim Full HD Vietsub ngay tại GauPhim!`}/>
+                <meta name="keywords"
+                      content={`phim ${title}, xem phim ${title} miễn phí, ${title} vietsub, phim ${slug}, phim HD`}/>
+                <meta name="robots" content="index, follow"/>
+
+                <meta property="og:title"
+                      content={`Danh sách phim thể loại ${title} - Xem phim miễn phí, chất lượng cao | Gấu Phim`}/>
+                <meta property="og:description"
+                      content={`Danh sách phim thể loại ${title}, cập nhật mới nhất với chất lượng cao, Full HD Vietsub. Xem ngay trên Gấu Phim!`}/>
+                <meta property="og:image"
+                      content={movies?.length ? `https://img.ophim.live/uploads/movies/${movies[0].thumb_url}` : "https://i.imgur.com/sACJNuE.png"}/>
+                <meta property="og:type" content="website"/>
+                <meta property="og:url"
+                      content={`https://gauphim.daudoo.com/list/${slug}?page=${pagination.currentPage}`}/>
+
+                <meta name="twitter:card" content="summary_large_image"/>
+                <meta name="twitter:title" content={`Phim thể loại ${title} - Xem phim miễn phí, chất lượng cao`}/>
+                <meta name="twitter:description"
+                      content={`Danh sách phim thể loại ${title}, cập nhật mới nhất với chất lượng cao, Full HD Vietsub. Xem ngay trên Gấu Phim!`}/>
+                <meta name="twitter:image"
+                      content={movies?.length ? `https://img.ophim.live/uploads/movies/${movies[0].thumb_url}` : "https://i.imgur.com/sACJNuE.png"}/>
+
+                {pagination.currentPage === 1 && (
+                    <link rel="canonical" href={`https://gauphim.daudoo.com/list/${slug}`} />
+                )}
+
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "ItemList",
+                        "name": `Phim thể loại ${title}`,
+                        "url": `https://gauphim.daudoo.com/list/${slug}?page=${pagination.currentPage}`,
+                        "itemListElement": movies?.slice(0, 10).map((movie, index) => ({
+                            "@type": "ListItem",
+                            "position": index + 1,
+                            "item": {
+                                "@type": "Movie",
+                                "name": movie.name,
+                                "url": `https://gauphim.daudoo.com/detail/${movie.slug}`,
+                                "image": `https://img.ophim.live/uploads/movies/${movie.thumb_url}`,
+                                "datePublished": movie.year?.toString() || "2024",
+                                "genre": title,
+                                "description": `Xem phim ${movie.name} miễn phí với chất lượng cao, Full HD Vietsub.`
+                            }
+                        }))
+                    })}
+                </script>
             </Head>
 
-            <Header />
+
+            <Header/>
 
             <main className="flex-1 container px-4 md:px-6 py-4">
-                <Breadcrumb items={[{ label: listType.breadcrumb }]} />
+                <Breadcrumb items={[{label: listType.breadcrumb}]}/>
 
                 <div className="py-4">
                     <h1 className="text-3xl font-bold mb-2">{listType.title}</h1>
@@ -87,7 +126,7 @@ const ListPage = ({ slug, listType, movies, pagination }: ListPageProps) => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div className="md:col-span-4">
                         {loading ? (
-                            <MovieSectionSkeleton />
+                            <MovieSectionSkeleton/>
                         ) : (
                             <MovieGrid
                                 movies={movies.map((movie) => ({

@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://gauphim.daudoo.com
+
+# Sitemaps
+Sitemap: https://gauphim.daudoo.com/sitemap.xml
