@@ -84,7 +84,7 @@ export default function VideoControls({
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="text-white hover:bg-white/20"
+                    className="text-white hover:bg-white/20 hidden sm:flex"
                     onClick={() => setLightsOff(!lightsOff)}
                 >
                     <Lightbulb className={cn("h-5 w-5", lightsOff && "text-yellow-400")} />
@@ -130,8 +130,8 @@ export default function VideoControls({
                     <div className="flex items-center gap-2">
                         {!isEmbedVideo && (
                             <>
-                                <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={togglePlay}>
-                                    {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+                                <Button variant="ghost" size="icon" className="text-white hover:bg-white/20 p-5 sm:p-2 md:p-3" onClick={togglePlay}>
+                                    {isPlaying ? <Pause className="h-3 sm:h-4  md:h-5 w-3 sm:w-4 md:w-5" /> : <Play className="h-5 w-5" />}
                                 </Button>
 
                                 <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleMute}>
@@ -141,7 +141,7 @@ export default function VideoControls({
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="text-white hover:bg-white/20"
+                                    className="text-white hover:bg-white/20 hidden sm:flex"
                                     onClick={togglePiP}
                                 >
                                     {isPiP ? <PictureInPicture className="h-5 w-5" /> : <PictureInPicture className="h-5 w-5" />}
@@ -196,7 +196,7 @@ export default function VideoControls({
                             className="text-white hover:bg-white/20 lg:hidden"
                             onClick={toggleEpisodeList}
                         >
-                            Danh sách tập
+                            Tập
                         </Button>
 
                         <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleFullscreen}>
