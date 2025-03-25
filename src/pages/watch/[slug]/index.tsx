@@ -107,7 +107,7 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
             </Head>
             <Header/>
             <main className="flex-1">
-                <div className="container px-4 md:px-6 py-4">
+                <div className="container px-4 md:px-6 py-4 text-sm sm:text-xl md:text-2xl">
                     <Breadcrumb
                         items={[
                             {label: "Phim", href: "../list/phim-moi"},
@@ -118,7 +118,7 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                 </div>
 
                 <div className="container px-4 md:px-6 py-4">
-                    <h1 className="text-xl md:text-2xl font-bold mb-4">
+                    <h1 className="text-sm sm:text-xl md:text-2xl font-bold mb-4">
                         {movieItemData.name} - Tập {currentEpisode.name}
                     </h1>
 
