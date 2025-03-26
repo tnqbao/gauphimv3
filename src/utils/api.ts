@@ -1,10 +1,11 @@
 import {movieApiInstance} from "@/utils/axios.config";
 import {listCategory, listNation, listTypes} from "@/utils/types/listMovieType";
+import axios from "axios";
 
 export interface Movie {
     id: string
-    name: string
-    origin_name: string
+    title: string
+    origin_name?: string
     slug: string
     year: number
     poster_url: string
@@ -51,6 +52,19 @@ export interface MovieDetailType extends Movie {
 }
 
 
+interface ServerSideListResponse {
+    data : {
+        movies: Movie[]
+        pagination: {
+            totalItems: number
+            totalItemPerPage: number
+            currentPage: number
+        },
+    }
+    message: string,
+    status: number
+}
+
 interface ApiResponse<T> {
     status: boolean
     msg: string
@@ -70,30 +84,34 @@ interface ListResponse {
 }
 
 
+
 async function fetchMovies(
     slug: string,
     page: number,
     list: Record<string, { endpoint: string }>
-): Promise<{ movies: Movie[]; pagination: ListResponse["params"]["pagination"] }> {
+): Promise<{ movies: Movie[]; pagination: ServerSideListResponse["data"]["pagination"] }> {
     try {
         const listType = list[slug];
         if (!listType) {
             throw new Error(`List type ${slug} not found`);
         }
 
-        const response = await movieApiInstance.get<ApiResponse<ListResponse>>(`${listType.endpoint}?page=${page}`);
+        const { data } = await axios.get<ServerSideListResponse>(`${process.env.SERVERSIDE_API}/${listType.endpoint}?page=${page}`);
 
-        if (!response.data.status) {
-            throw new Error(response.data.msg);
+        if (data.status != 200) {
+            throw new Error(data.message);
         }
 
         return {
-            movies: response.data.data.items,
-            pagination: response.data.data.params.pagination,
+            movies: data.data.movies,
+            pagination: data.data.pagination,
         };
     } catch (error) {
         console.error("Error fetching movies:", error);
-        return {movies: [], pagination: {totalItems: 0, totalItemsPerPage: 0, currentPage: 1, totalPages: 1}};
+        return {
+            movies: [],
+            pagination: { totalItems: 0, totalItemPerPage: 0, currentPage: 1 },
+        };
     }
 }
 

@@ -17,7 +17,7 @@ interface CategoryPageProps {
     pagination: {
         currentPage: number
         totalItems: number
-        totalItemsPerPage: number
+        totalItemPerPage: number
     }
 }
 
@@ -58,7 +58,7 @@ export default function CategoryPage({ slug, listType, movies, pagination }: Cat
         ? `https://img.ophim.live/uploads/movies/${movies[0].poster_url}`
         : defaultImage;
     const title = listType.title.toString()
-    const totalPages = Math.ceil(pagination.totalItems / pagination.totalItemsPerPage) || 1
+    const totalPages = Math.ceil(pagination.totalItems / pagination.totalItemPerPage) || 1
 
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
@@ -95,7 +95,7 @@ export default function CategoryPage({ slug, listType, movies, pagination }: Cat
                         "itemListElement": movies.slice(0, 5).map((movie, index) => ({
                             "@type": "Movie",
                             "position": index + 1,
-                            "name": movie.name,
+                            "name": movie.title,
                             "url": `https://gauphim.daudoo.com/detail/${movie.slug}`,
                             "image": movie.poster_url ? `https://img.ophim.live/uploads/movies/${movie.poster_url}` : "https://i.imgur.com/sACJNuE.png",
                             "datePublished": movie.year || "2024",
@@ -120,7 +120,7 @@ export default function CategoryPage({ slug, listType, movies, pagination }: Cat
                     <div className="md:col-span-4">
                         <MovieGrid
                             movies={movies.map((movie) => ({
-                                title: movie.name,
+                                title: movie.title,
                                 year: movie.year.toString(),
                                 slug: movie.slug,
                                 thumb_url: movie.thumb_url,
