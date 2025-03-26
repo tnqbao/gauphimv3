@@ -5,8 +5,8 @@ import MoviePoster from "./movie-poster"
 import MovieInfo from "./movie-info"
 import MovieDescription from "./movie-description"
 import MovieActors from "./movie-actors"
-import EpisodeListTabs from "../episode-list-tabs"
-import type { Episode } from "../episode-card"
+import EpisodeListTabs from "./episode-list-tabs"
+import type {Episode} from "../episode-card"
 
 interface MovieDetailProps {
     name: string
@@ -58,7 +58,7 @@ export default function MovieDetail({
     return (
         <div className="relative">
             <div className="absolute inset-0 overflow-hidden min-h-screen">
-                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background z-10" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background z-10"/>
                 <Image
                     src={`https://img.ophim.live/uploads/movies/${poster_url}` || "/placeholder.svg"}
                     alt={name}
@@ -69,10 +69,10 @@ export default function MovieDetail({
                 />
             </div>
 
-            <div className="container relative z-20 px-4 md:px-6 py-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="container relative z-20 px-4 md:px-6 py-8 md:bg-black/50">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
                     {/* Poster column */}
-                    <MoviePoster poster={thumb_url} movieSlug={slug} />
+                    <MoviePoster poster={thumb_url} movieSlug={slug}/>
 
                     {/* Info column */}
                     <div className="md:col-span-2">
@@ -81,21 +81,23 @@ export default function MovieDetail({
                             originalTitle={origin_name}
                             releaseYear={year}
                             episode_total={episode_total}
-                            time={isSeries ? time  : time + " phút"}
+                            time={isSeries ? time : time + " phút"}
                             categories={category}
                             country={country}
                         />
 
-                        <MovieDescription description={content} />
+                        <MovieDescription description={content}/>
 
-                        <MovieActors actors={actors} />
+                        <MovieActors actors={actors}/>
 
-                        {isSeries && server_data.length > 0 && (
-                            <EpisodeListTabs episodes={server_data} thumb_url={poster_url} movieSlug={slug} />
-                        )}
                     </div>
+
                 </div>
+                {isSeries && server_data.length > 0 && (
+                    <EpisodeListTabs episodes={server_data} thumb_url={poster_url} movieSlug={slug}/>
+                )}
             </div>
+
         </div>
     )
 }

@@ -1,14 +1,14 @@
-import { GetServerSideProps } from "next"
+import {GetServerSideProps} from "next"
 import Head from "next/head"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import Breadcrumb from "@/components/layout/breadcrumb"
 import MovieGrid from "@/components/content/movie-grid"
 import Pagination from "@/components/layout/pagination"
-import { MovieSectionSkeleton } from "@/components/content/loading/loading-skeletons"
-import { fetchMovieByList, Movie } from "@/utils/api"
-import { ListType, listTypes } from "@/utils/types/listMovieType"
-import { useState, useEffect } from "react"
+import {MovieSectionSkeleton} from "@/components/content/loading/loading-skeletons"
+import {fetchMovieByList, Movie} from "@/utils/api"
+import {ListType, listTypes} from "@/utils/types/listMovieType"
+import {useEffect, useState} from "react"
 import ListPageLoading from "@/pages/list/loading/loading";
 
 interface ListPageProps {
@@ -18,21 +18,20 @@ interface ListPageProps {
     pagination: {
         currentPage: number
         totalItems: number
-        totalItemsPerPage: number
+        totalItemPerPage: number
     }
 }
 
-export const getServerSideProps: GetServerSideProps<ListPageProps> = async ({ params, query }) => {
+export const getServerSideProps: GetServerSideProps<ListPageProps> = async ({params, query}) => {
     const slug = params?.slug as string
     const page = query.page ? Number(query.page) : 1
 
     if (!slug || !listTypes[slug]) {
-        return { notFound: true }
+        return {notFound: true}
     }
 
     const listType = listTypes[slug]
-
-    const { movies, pagination } = await fetchMovieByList(slug, page)
+    const {movies, pagination} = await fetchMovieByList(slug, page)
 
     return {
         props: {
@@ -44,10 +43,10 @@ export const getServerSideProps: GetServerSideProps<ListPageProps> = async ({ pa
     }
 }
 
-const ListPage = ({ slug, listType, movies, pagination }: ListPageProps) => {
+const ListPage = ({slug, listType, movies, pagination}: ListPageProps) => {
     const [loading, setLoading] = useState(true)
     const title = listType.title.toString();
-    const totalPages = Math.ceil(pagination.totalItems / pagination.totalItemsPerPage) || 1;
+    const totalPages = Math.ceil(pagination.totalItems / pagination.totalItemPerPage) || 1;
     useEffect(() => {
         const timer = setTimeout(() => setLoading(false), 500)
         return () => clearTimeout(timer)
@@ -55,7 +54,7 @@ const ListPage = ({ slug, listType, movies, pagination }: ListPageProps) => {
 
 
     if (loading) {
-        return <ListPageLoading />;
+        return <ListPageLoading/>;
     }
 
     return (
@@ -86,7 +85,7 @@ const ListPage = ({ slug, listType, movies, pagination }: ListPageProps) => {
                       content={movies?.length ? `https://img.ophim.live/uploads/movies/${movies[0].thumb_url}` : "https://i.imgur.com/sACJNuE.png"}/>
 
                 {pagination.currentPage === 1 && (
-                    <link rel="canonical" href={`https://gauphim.daudoo.com/list/${slug}`} />
+                    <link rel="canonical" href={`https://gauphim.daudoo.com/list/${slug}`}/>
                 )}
 
                 <script type="application/ld+json">
@@ -100,12 +99,12 @@ const ListPage = ({ slug, listType, movies, pagination }: ListPageProps) => {
                             "position": index + 1,
                             "item": {
                                 "@type": "Movie",
-                                "name": movie.name,
+                                "name": movie.title,
                                 "url": `https://gauphim.daudoo.com/detail/${movie.slug}`,
                                 "image": `https://img.ophim.live/uploads/movies/${movie.thumb_url}`,
                                 "datePublished": movie.year?.toString() || "2024",
                                 "genre": title,
-                                "description": `Xem phim ${movie.name} miễn phí với chất lượng cao, Full HD Vietsub.`
+                                "description": `Xem phim ${movie.title} miễn phí với chất lượng cao, Full HD Vietsub.`
                             }
                         }))
                     })}
@@ -130,7 +129,7 @@ const ListPage = ({ slug, listType, movies, pagination }: ListPageProps) => {
                         ) : (
                             <MovieGrid
                                 movies={movies.map((movie) => ({
-                                    title: movie.name,
+                                    title: movie.title,
                                     year: movie.year.toString(),
                                     slug: movie.slug,
                                     thumb_url: movie.thumb_url,
@@ -148,7 +147,7 @@ const ListPage = ({ slug, listType, movies, pagination }: ListPageProps) => {
                 </div>
             </main>
 
-            <Footer />
+            <Footer/>
         </div>
     )
 }

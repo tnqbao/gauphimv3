@@ -33,9 +33,10 @@ export default function EpisodeCard({ episode, thumb_url, movieSlug }: EpisodeCa
                         fill
                         className=" object-contain transition-transform duration-300 group-hover:scale-110"
                         unoptimized
+                        objectFit={"cover"}
                     />
                     <div
-                        className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center ">
                         <Play className="h-8 w-8 text-white"/>
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
@@ -45,7 +46,7 @@ export default function EpisodeCard({ episode, thumb_url, movieSlug }: EpisodeCa
                     </div>
                 </div>
                 <div className="p-2">
-                    <p className="text-sm truncate">{episode.filename}</p>
+                    <p className="text-sm truncate md:text-white">{episode.filename}</p>
                 </div>
             </Link>
         </motion.div>

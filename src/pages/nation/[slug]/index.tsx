@@ -17,7 +17,7 @@ interface NationPageProps {
     pagination: {
         currentPage: number
         totalItems: number
-        totalItemsPerPage: number
+        totalItemPerPage: number
     }
 }
 
@@ -45,7 +45,7 @@ export const getServerSideProps: GetServerSideProps<NationPageProps> = async ({p
 
 export default function NationPage({slug, listType, movies, pagination}: NationPageProps) {
     const title = listType.title.toString();
-    const totalPages = Math.ceil(pagination.totalItems / pagination.totalItemsPerPage) || 1;
+    const totalPages = Math.ceil(pagination.totalItems / pagination.totalItemPerPage) || 1;
 
     const flagMap: Record<string, string> = {
         "trung-quoc": "🇨🇳",
@@ -113,7 +113,7 @@ export default function NationPage({slug, listType, movies, pagination}: NationP
                         "itemListElement": movies.slice(0, 5).map((movie, index) => ({
                             "@type": "Movie",
                             "position": index + 1,
-                            "name": movie.name,
+                            "name": movie.title,
                             "url": `https://gauphim.daudoo.com/detail/${movie.slug}`,
                             "image": movie.poster_url ? `https://img.ophim.live/uploads/movies/${movie.poster_url}` : "https://i.imgur.com/sACJNuE.png",
                             "datePublished": movie.year || "2024",
@@ -139,7 +139,7 @@ export default function NationPage({slug, listType, movies, pagination}: NationP
                 </div>
                 <MovieGrid
                     movies={movies.map((movie) => ({
-                        title: movie.name,
+                        title: movie.title,
                         year: movie.year.toString(),
                         slug: movie.slug,
                         thumb_url: movie.thumb_url,

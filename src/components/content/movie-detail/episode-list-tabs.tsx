@@ -2,7 +2,7 @@ import { useRef } from "react"
 import { Film, ChevronLeft, ChevronRight } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import EpisodeCard, { type Episode } from "./episode-card"
+import EpisodeCard, { type Episode } from "../episode-card"
 import { cn } from "@/lib/utils"
 
 interface EpisodeListTabsProps {
@@ -46,8 +46,8 @@ export default function EpisodeListTabs({ episodes, thumb_url, movieSlug }: Epis
 
     return (
         <div>
-            <h3 className="text-lg font-medium mb-3 flex items-center text-green-800">
-                <Film className="mr-2 h-5 w-5 text-green-600" /> Danh sách tập
+            <h3 className="text-lg font-medium mb-3 flex items-center  text-white">
+                <Film className="mr-2 h-5 w-5 text-black md:text-white dark:text-white" /> Danh sách tập
             </h3>
 
             <Tabs defaultValue="all" className="w-full">
@@ -105,7 +105,7 @@ export default function EpisodeListTabs({ episodes, thumb_url, movieSlug }: Epis
 
                 {groups.map(({ start, end }) => (
                     <TabsContent key={start} value={`group-${start}`} className="mt-0">
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 " >
                             {episodes.slice(start - 1, end).map((ep) => (
                                 <EpisodeCard key={ep.name} episode={ep} thumb_url={thumb_url} movieSlug={movieSlug} />
                             ))}

@@ -30,15 +30,15 @@ export default function MovieInfo({
                                       country,
                                   }: MovieInfoProps) {
     return (
-        <>
+        <div className={"t"}>
             <h1
-                className="text-3xl font-bold mb-1 text-yellow-400"
+                className="text-3xl font-bold mb-1 text-yellow-400 text-center md:text-left"
                 style={{textShadow: "3px 3px 6px rgba(0, 0, 0, 0.8)", WebkitTextStroke: "0.5px black"}}
             >
                 {title}
             </h1>
             <h2
-                className="text-xl md:text-white text-black dark:text-white mb-4"
+                className="text-xl text-white dark:text-white mb-4 text-center md:text-left"
                 style={{textShadow: "2px 2px 5px rgba(0, 0, 0, 0.7)"}}
             >
                 {originalTitle}
@@ -54,17 +54,17 @@ export default function MovieInfo({
                 ))}
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="flex flex-col">
           <span
-              className="text-lg md:text-sm text-black md:text-yellow-400 dark:text-white"
+              className="text-lg md:text-sm md:text-yellow-400 dark:text-white"
           >
             Số tập
           </span>
                     <div className="flex items-center">
                         <Clock className="h-4 w-4 text-muted-foreground mr-1"/>
                         <span
-                            className="text-sm md:text-white text-black"
+                            className="text-sm text-white dark:text-white"
                         >
               {episode_total}
             </span>
@@ -126,7 +126,7 @@ export default function MovieInfo({
                     ))}
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 
