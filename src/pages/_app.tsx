@@ -7,7 +7,7 @@ import AuthProvider from "@/components/provider/auth-provider";
 
 export default function App({Component, pageProps}: AppProps) {
     return (
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
             <Provider store={store}>
             <AuthProvider >
                 <Component {...pageProps} />
