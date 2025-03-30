@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense, lazy } from "react"
+import {useEffect, useState, Suspense, lazy} from "react"
 import Head from 'next/head'
 import Header from "@/components/layout/header"
 import {
@@ -31,21 +31,24 @@ interface Movie {
 export default function HomePage() {
     const [trendingMovies, setTrendingMovies] = useState([])
     const [newReleases, setNewReleases] = useState([])
+    const [singleMovies, setSingleMovies] = useState([])
+    const [series, setSeries] = useState([])
+    const [catoons, setCatoons] = useState([])
     const [pandaPicks, setPandaPicks] = useState([])
 
     const categories = [
-        { name: "Hành Động", image: "https://i.imgur.com/AoTce5E.jpeg", slug: "hanh-dong" },
-        { name: "Hài", image: "https://i.imgur.com/AGaIiRo.jpeg" , slug: "hai-huoc"},
-        { name: "Drama", image: "https://i.imgur.com/nmdPlNK.jpeg", slug: "chinh-kich" },
-        { name: "Kinh Dị", image: "https://i.imgur.com/ChWVQ75.png", slug : "kinh-di" },
-        { name: "Sci-Fi", image: "https://i.imgur.com/ny54LpZ.jpeg", slug: "vien-tuong" },
-        { name: "Gia Đình", image: "https://i.imgur.com/thnZiRO.jpeg" , slug: "gia-dinh"},
+        {name: "Hành Động", image: "https://i.imgur.com/AoTce5E.jpeg", slug: "hanh-dong"},
+        {name: "Hài", image: "https://i.imgur.com/AGaIiRo.jpeg", slug: "hai-huoc"},
+        {name: "Drama", image: "https://i.imgur.com/nmdPlNK.jpeg", slug: "chinh-kich"},
+        {name: "Kinh Dị", image: "https://i.imgur.com/ChWVQ75.png", slug: "kinh-di"},
+        {name: "Sci-Fi", image: "https://i.imgur.com/ny54LpZ.jpeg", slug: "vien-tuong"},
+        {name: "Gia Đình", image: "https://i.imgur.com/thnZiRO.jpeg", slug: "gia-dinh"},
     ]
 
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const { data } = await axios.get("/api/home-page");
+                const {data} = await axios.get("/api/home-page");
                 setTrendingMovies(
                     data.featured.map((movie: Movie) => ({
                         title: movie.name,
@@ -59,6 +62,39 @@ export default function HomePage() {
 
                 setNewReleases(
                     data.release.map((movie: Movie) => ({
+                        title: movie.name,
+                        year: movie.year,
+                        slug: movie.slug,
+                        rating: "N/A",
+                        poster_url: `${movie.slug}-poster.jpg`,
+                        thumb_url: `${movie.slug}-thumb.jpg`
+                    }))
+                )
+
+                setSingleMovies(
+                    data.single.map((movie: Movie) => ({
+                        title: movie.name,
+                        year: movie.year,
+                        slug: movie.slug,
+                        rating: "N/A",
+                        poster_url: `${movie.slug}-poster.jpg`,
+                        thumb_url: `${movie.slug}-thumb.jpg`
+                    }))
+                )
+
+                setSeries(
+                    data.series.map((movie: Movie) => ({
+                        title: movie.name,
+                        year: movie.year,
+                        slug: movie.slug,
+                        rating: "N/A",
+                        poster_url: `${movie.slug}-poster.jpg`,
+                        thumb_url: `${movie.slug}-thumb.jpg`
+                    }))
+                )
+
+                setCatoons(
+                    data.cartoon.map((movie: Movie) => ({
                         title: movie.name,
                         year: movie.year,
                         slug: movie.slug,
@@ -87,7 +123,8 @@ export default function HomePage() {
     }, [])
 
     return (
-        <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
+        <div
+            className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
             <Head>
                 <title>Gấu Phim - Xem Phim Online Full HD, Miễn Phí</title>
                 <meta name="description"
@@ -144,6 +181,7 @@ export default function HomePage() {
             <Suspense fallback={<HeroSkeleton/>}>
                 <Hero picks={pandaPicks}/>
             </Suspense>
+
             <Suspense fallback={<CategorySkeleton/>}>
                 <Categories categories={categories}/>
             </Suspense>
@@ -154,15 +192,32 @@ export default function HomePage() {
             </Suspense>
 
             <Suspense fallback={<MovieSectionSkeleton/>}>
-                <MovieSection title="Phim Mới Ra" movies={newReleases} bgColor="bg-[#f8f9fa] dark:bg-gray-900" pageSlug={"phim-moi"}/>
+                <MovieSection title="Phim Mới Hay Nhất" movies={newReleases} bgColor="bg-[#f8f9fa] dark:bg-gray-900"
+                              pageSlug={"phim-moi"}/>
             </Suspense>
 
-            <Suspense fallback={<PandaPicksSkeleton />}>
-                <PandaPicks picks={pandaPicks} />
+            <Suspense fallback={<MovieSectionSkeleton/>}>
+                <MovieSection title="Phim Lẻ Mới Nhất" movies={singleMovies} bgColor="bg-white dark:bg-gray-800"
+                              pageSlug={"phim-le"}/>
             </Suspense>
 
-            <Suspense fallback={<FooterSkeleton />}>
-                <Footer />
+
+            <Suspense fallback={<MovieSectionSkeleton/>}>
+                <MovieSection title="Phim Bộ Mới Ra" movies={series} bgColor="bg-[#f8f9fa] dark:bg-gray-900"
+                              pageSlug={"phim-bo"}/>
+            </Suspense>
+
+            <Suspense fallback={<MovieSectionSkeleton/>}>
+                <MovieSection title="Hoạt Hình" movies={catoons} bgColor="bg-white dark:bg-gray-800"
+                              pageSlug={"hoat-hinh"}/>
+            </Suspense>
+
+            <Suspense fallback={<PandaPicksSkeleton/>}>
+                <PandaPicks picks={pandaPicks}/>
+            </Suspense>
+
+            <Suspense fallback={<FooterSkeleton/>}>
+                <Footer/>
             </Suspense>
         </div>
     )
