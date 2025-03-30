@@ -11,6 +11,17 @@ export default function Document() {
               }}
           />
           {/* End Google Tag Manager */}
+          {/* Google Analytics */}
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-T94X91W4E0"></script>
+          <script
+              dangerouslySetInnerHTML={{
+                  __html: `window.dataLayer = window.dataLayer || [];
+                     function gtag(){dataLayer.push(arguments);}
+                     gtag('js', new Date());
+                     gtag('config', 'G-T94X91W4E0');`,
+              }}
+          />
+          {/* End Google Analytics */}
       </Head>
       <body className="antialiased">
       {/* Google Tag Manager (noscript) */}
@@ -21,6 +32,7 @@ export default function Document() {
           }}
       />
       {/* End Google Tag Manager (noscript) */}
+
         <Main />
         <NextScript />
       </body>
