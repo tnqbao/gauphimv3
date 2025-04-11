@@ -12,6 +12,7 @@ import BambooDecoration from "@/components/content/bamboo-decoration"
 import PandaScrollProgress from "@/components/content/panda-scroll-progress"
 import ThemeEffects from "@/components/content/theme-effects"
 import axios from "axios";
+import {FirstVisitNotice} from "@/components/layout/notice/first-visited-notice";
 
 const Hero = lazy(() => import("@/components/layout/hero"))
 const Categories = lazy(() => import("@/components/content/categories"))
@@ -188,7 +189,7 @@ export default function HomePage() {
 
             <Suspense fallback={<MovieSectionSkeleton/>}>
                 <MovieSection title="Phim Nổi Bật" movies={trendingMovies} bgColor="bg-white dark:bg-gray-800"
-                              pageSlug={"phim-noi-bat"}/>
+                              pageSlug={"phim-moi"}/>
             </Suspense>
 
             <Suspense fallback={<MovieSectionSkeleton/>}>
@@ -196,15 +197,15 @@ export default function HomePage() {
                               pageSlug={"phim-moi"}/>
             </Suspense>
 
-            <Suspense fallback={<MovieSectionSkeleton/>}>
-                <MovieSection title="Phim Lẻ Mới Nhất" movies={singleMovies} bgColor="bg-white dark:bg-gray-800"
-                              pageSlug={"phim-le"}/>
-            </Suspense>
-
 
             <Suspense fallback={<MovieSectionSkeleton/>}>
                 <MovieSection title="Phim Bộ Mới Ra" movies={series} bgColor="bg-[#f8f9fa] dark:bg-gray-900"
                               pageSlug={"phim-bo"}/>
+            </Suspense>
+
+            <Suspense fallback={<MovieSectionSkeleton/>}>
+                <MovieSection title="Phim Lẻ Mới Nhất" movies={singleMovies} bgColor="bg-white dark:bg-gray-800"
+                              pageSlug={"phim-le"}/>
             </Suspense>
 
             <Suspense fallback={<MovieSectionSkeleton/>}>
@@ -219,6 +220,7 @@ export default function HomePage() {
             <Suspense fallback={<FooterSkeleton/>}>
                 <Footer/>
             </Suspense>
+            <FirstVisitNotice/>
         </div>
     )
 }

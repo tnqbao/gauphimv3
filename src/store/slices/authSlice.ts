@@ -26,8 +26,10 @@ export const checkAuth = createAsyncThunk("auth/checkAuth", async (_, { rejectWi
         }
 
         return rejectWithValue("Invalid user data");
-    } catch (error) {
-        console.error("Auth check failed:", error);
+    } catch
+        // (error)
+    {
+        // console.log("Auth check failed:", error);
         return rejectWithValue("Auth check failed");
     }
 });

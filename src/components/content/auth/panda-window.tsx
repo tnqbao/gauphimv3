@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
+import {useRouter} from "next/router";
 
 interface PandaWindowProps {
     isPasswordFocused: boolean
@@ -11,7 +12,7 @@ export default function PandaWindow({ isPasswordFocused, activeInputId, mode }: 
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
     const [eyePosition, setEyePosition] = useState({ x: 0, y: 0 })
     const pandaRef = useRef<HTMLDivElement>(null)
-
+    const router = useRouter()
     // Track mouse position
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
@@ -89,8 +90,9 @@ export default function PandaWindow({ isPasswordFocused, activeInputId, mode }: 
                 viewBox="0 0 100 100"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="absolute inset-0 w-full h-full"
+                className="absolute inset-0 w-full h-full hover:cursor-pointer"
                 style={{ padding: "12px" }}
+                onClick={() => router.push("../")}
             >
                 {/* Panda head */}
                 <circle cx="50" cy="50" r="40" fill="white" stroke="black" strokeWidth="2" />
