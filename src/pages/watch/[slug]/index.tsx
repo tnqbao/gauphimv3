@@ -57,14 +57,15 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                       content={`Xem phim ${title} tập ${episodeNumber} Vietsub, Full HD, ${title} ${episodeNumber}, ${title} online miễn phí, Gấu Flix`}/>
                 <meta name="robots" content="index, follow"/>
                 {episodeNumber === "1" && (
-                    <link rel="canonical" href={`https://gauphim.daudoo.com/watch/${slug}`} />
+                    <link rel="canonical" href={`https://gauphim.daudoo.com/watch/${slug}`}/>
                 )}
 
                 <meta property="og:title" content={`${title} - Tập ${episodeNumber} - Xem phim tại Gấu Flix`}/>
                 <meta property="og:description"
                       content={`Xem ngay ${title} - Tập ${episodeNumber} trên Gấu Flix. Phim chất lượng cao, hỗ trợ Vietsub, miễn phí 100%!`}/>
                 <meta property="og:type" content="video.episode"/>
-                <meta property="og:image" content={poster_url ? `https://img.ophim.live/uploads/movies/${poster_url}` : "https://i.imgur.com/sACJNuE.png"}/>
+                <meta property="og:image"
+                      content={poster_url ? `https://img.ophim.live/uploads/movies/${poster_url}` : "https://i.imgur.com/sACJNuE.png"}/>
                 <meta property="og:image:alt" content={`Poster phim ${title}`}/>
                 <meta property="og:image:width" content="1200"/>
                 <meta property="og:image:height" content="630"/>
@@ -107,7 +108,7 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
             </Head>
             <Header/>
             <main className="flex-1">
-                <div className="container px-4 md:px-6 py-4 text-sm sm:text-xl md:text-2xl">
+                <div className="container px-0 md:px-4 py-4 text-sm sm:text-xl md:text-2xl">
                     <Breadcrumb
                         items={[
                             {label: "Phim", href: "../list/phim-moi"},
@@ -117,25 +118,29 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                     />
                 </div>
 
-                <div className="container px-4 md:px-6 py-4">
-                    <h1 className="text-sm sm:text-xl md:text-2xl font-bold mb-4">
-                        {movieItemData.name} - Tập {currentEpisode.name}
-                    </h1>
+                <div className="container px-0 md:px-6 py-4">
+                    <div className="px-4 md:px-0">
+                        <h1 className="text-xl md:text-2xl font-bold mb-4">
+                            {movieItemData.name} - Tập {currentEpisode.name}
+                        </h1>
+                    </div>
+                    <div className="relative -mx-4 md:mx-0 md:w-full ">
 
-                    <PandaVideoPlayer
-                        title={`${movieItemData.name} - Tập ${currentEpisode.name}`}
-                        poster={movieItemData.poster_url}
-                        source={currentEpisode.link_m3u8}
-                        episodes={episodes}
-                        currentEpisode={currentEpisode.name}
-                        movieSlug={movieItemData.slug}
-                        movieInfo={{
-                            name: movieItemData.name,
-                            year: movieItemData.year.toString(),
-                            categories: movieItemData.category,
-                            description: movieItemData.content,
-                        }}
-                    />
+                        <PandaVideoPlayer
+                            title={`${movieItemData.name} - Tập ${currentEpisode.name}`}
+                            poster={movieItemData.poster_url}
+                            source={currentEpisode.link_m3u8}
+                            episodes={episodes}
+                            currentEpisode={currentEpisode.name}
+                            movieSlug={movieItemData.slug}
+                            movieInfo={{
+                                name: movieItemData.name,
+                                year: movieItemData.year.toString(),
+                                categories: movieItemData.category,
+                                description: movieItemData.content,
+                            }}
+                        />
+                    </div>
                 </div>
             </main>
 
