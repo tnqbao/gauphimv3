@@ -1,13 +1,12 @@
-
-import { useEffect, useRef, useState } from "react"
-import { AnimatePresence } from "framer-motion"
-import { cn } from "@/lib/utils"
+import {useEffect, useRef, useState} from "react"
+import {AnimatePresence} from "framer-motion"
+import {cn} from "@/lib/utils"
 import VideoControls from "./video-controls"
 import PandaLoadingIndicator from "./panda-loading-indicator"
 import EpisodeList from "@/components/content/episode-list"
 import MovieInfoDisplay from "./movie-info-display"
 import HLSVideoPlayer from "./hls-video-player"
-import type { Episode } from "@/components/content/episode-card"
+import type {Episode} from "@/components/content/episode-card"
 
 interface MovieInfo {
     name: string
@@ -223,9 +222,9 @@ export default function PandaVideoPlayer({
                 <div className="lg:col-span-2">
                     <div
                         ref={playerRef}
-                        className="relative w-full aspect-video bg-black rounded-lg overflow-hidden group"
+                        className="relative w-full h-[66vh] md:h-auto md:aspect-video bg-black rounded-lg overflow-hidden group"
                     >
-                        {isLoading && <PandaLoadingIndicator />}
+                        {isLoading && <PandaLoadingIndicator/>}
 
                         {isEmbedVideo ? (
                             <iframe
@@ -278,7 +277,7 @@ export default function PandaVideoPlayer({
                         </AnimatePresence>
                     </div>
 
-                    <MovieInfoDisplay {...movieInfo} lightsOff={lightsOff} />
+                    <MovieInfoDisplay {...movieInfo} lightsOff={lightsOff}/>
                     <AnimatePresence>
                         {showEpisodeList && (
                             <EpisodeList
@@ -294,7 +293,7 @@ export default function PandaVideoPlayer({
                 </div>
 
                 <div className="lg:col-span-1 hidden lg:block">
-                    <EpisodeList episodes={episodes} currentEpisode={currentEpisode} movieSlug={movieSlug} isVisible />
+                    <EpisodeList episodes={episodes} currentEpisode={currentEpisode} movieSlug={movieSlug} isVisible/>
                 </div>
             </div>
         </div>
