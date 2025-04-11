@@ -108,7 +108,7 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
             </Head>
             <Header/>
             <main className="flex-1">
-                <div className="container px-0 md:px-4 py-4 text-sm sm:text-xl md:text-2xl">
+                <div className="container px-4 md:px-6 py-4 text-sm sm:text-xl md:text-2xl">
                     <Breadcrumb
                         items={[
                             {label: "Phim", href: "../list/phim-moi"},
@@ -124,7 +124,7 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                             {movieItemData.name} - Tập {currentEpisode.name}
                         </h1>
                     </div>
-                    <div className="relative -mx-4 md:mx-0 md:w-full ">
+                    <div className="relative mx-0 md:w-full">
 
                         <PandaVideoPlayer
                             title={`${movieItemData.name} - Tập ${currentEpisode.name}`}
