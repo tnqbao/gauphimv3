@@ -222,7 +222,7 @@ export default function PandaVideoPlayer({
                 <div className="lg:col-span-2">
                     <div
                         ref={playerRef}
-                        className="relative w-full h-[66vh] md:h-auto md:aspect-video bg-black rounded-lg overflow-hidden group"
+                        className="relative w-full h-[50vh] md:h-auto md:aspect-video bg-black md:rounded-lg overflow-hidden group"
                     >
                         {isLoading && <PandaLoadingIndicator/>}
 
