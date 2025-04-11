@@ -1,5 +1,3 @@
-"use client"
-
 import { forwardRef, useEffect, useRef } from "react"
 import Hls from "hls.js"
 
@@ -15,7 +13,10 @@ interface HLSVideoPlayerProps {
 }
 
 const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
-    function HLSVideoPlayerComponent({ src, poster, className, onLoadedMetadata, onTimeUpdate, onTouchStart, onTouchEnd, onDoubleClick }, ref) {
+    function HLSVideoPlayerComponent(
+        { src, poster, className, onLoadedMetadata, onTimeUpdate, onTouchStart, onTouchEnd, onDoubleClick },
+        ref
+    ) {
         const videoRef = useRef<HTMLVideoElement | null>(null)
 
         useEffect(() => {
@@ -34,6 +35,23 @@ const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
             }
         }, [src])
 
+        useEffect(() => {
+            const interval = setInterval(() => {
+                const time = videoRef.current?.currentTime || 0
+                const duration = videoRef.current?.duration || 0
+
+                if (videoRef.current && duration > 633 && time >= 596 && time < 633) {
+                    videoRef.current.currentTime = 633
+                }
+
+                if (videoRef.current && duration < 630.85 && time >= 596) {
+                    videoRef.current.currentTime = duration
+                }
+            }, 500)
+
+            return () => clearInterval(interval)
+        }, [])
+
         return (
             <video
                 ref={(el) => {
@@ -48,7 +66,6 @@ const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
                 onTouchStart={() => videoRef.current && onTouchStart()}
                 onTouchEnd={() => videoRef.current && onTouchEnd()}
                 onDoubleClick={() => videoRef.current && onDoubleClick()}
-
             >
                 <source src={src} type="application/x-mpegURL" />
                 Your browser does not support the video tag.
