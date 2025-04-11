@@ -88,7 +88,7 @@ export default function Hero({picks}: PandaPicksProps) {
                             </motion.div>
 
                             <motion.h1
-                                className="text-3xl font-bold text-white md:text-5xl lg:text-6xl mb-4"
+                                className="text-lg sm:text-3xl font-bold text-white md:text-4xl lg:text-5xl mb-4"
                                 initial={{opacity: 0, y: 20}}
                                 animate={{opacity: 1, y: 0}}
                                 transition={{delay: 0.1, duration: 0.5}}
@@ -97,7 +97,7 @@ export default function Hero({picks}: PandaPicksProps) {
                             </motion.h1>
 
                             <motion.p
-                                className="max-w-[600px] text-white md:text-xl mb-6"
+                                className="max-w-[600px] text-md text-white md:text-xl mb-6"
                                 initial={{opacity: 0, y: 20}}
                                 animate={{opacity: 1, y: 0}}
                                 transition={{delay: 0.2, duration: 0.5}}
@@ -124,6 +124,7 @@ export default function Hero({picks}: PandaPicksProps) {
                                 </Button>
                                 <Button
                                     className="text-black border-white hover:bg-white/20 transition-all hover:scale-105 bg-white/50 hover:text-white"
+                                    onClick={() => router.push(`../detail/${currentMovie.slug}`)}
                                 >
                                     <Info className="mr-2 h-4 w-4"/> Thông tin
                                 </Button>

@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react"
 import Link from "next/link"
-import { logout, selectAuth} from "@/store/slices/authSlice";
+import {logout, selectAuth} from "@/store/slices/authSlice";
 import {usePathname, useRouter} from "next/navigation"
-import { Menu, Search, User, X} from "lucide-react"
+import {Menu, Search, User, X} from "lucide-react"
 import {cn} from "@/lib/utils"
 import {
     DropdownMenu,
@@ -20,7 +20,8 @@ import MobileSearch from "@/components/layout/search/mobile-search"
 import LogoImage from "./logo-image"
 import CategoryDropdown from "./category-dropdown"
 import NationDropdown from "./nation-dropdown"
-import { useSelector} from "react-redux";
+import {useSelector} from "react-redux";
+import axios from "axios";
 
 
 export default function Header() {
@@ -62,6 +63,21 @@ export default function Header() {
         }
     }
 
+    const handleLogout = async () => {
+        const token = localStorage.getItem("auth_token")
+        const response = await axios.post("/api/auth/logout", {
+            header: {
+                Authorization: token
+            }
+        })
+
+        if (response.status == 200) {
+            localStorage.removeItem("auth_token")
+            logout();
+            router.refresh();
+        }
+    }
+
     const UserProfileDropdown = ({fullname}: { fullname: string | null }) => (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -97,7 +113,7 @@ export default function Header() {
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator/>
-                <DropdownMenuItem onClick={() => logout()}>Đăng xuất</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleLogout()}>Đăng xuất</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )
