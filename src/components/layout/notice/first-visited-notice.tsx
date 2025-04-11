@@ -49,11 +49,11 @@ export function FirstVisitNotice() {
                         </div>
 
                         <div className="my-4 space-y-3 text-center relative z-10">
-                            <p className="text-gray-800 dark:text-gray-100 font-medium">
-                                Gấu đang xử lý lại một số bộ phim dính quảng cáo khi tải phim về.
+                            <p className="text-gray-800 dark:text-gray-100 font-medium text-lg">
+                                Chào bạn, Gấu xây dựng trang web này với mục đích học tập và nghiên cứu. <b>Không thu bất kì chi phí nào hay nhận quảng cáo!</b>
                             </p>
-                            <p className="text-gray-700 dark:text-gray-100 font-medium">
-                                Bạn có thể tua qua các đoạn quảng cáo đó để xem phim tiếp nhen, xin lỗi mọi người về sự bất tiện này 🐼
+                            <p className="text-gray-800 dark:text-gray-100 font-bold text-lg">
+                                Gấu chúc các bạn xem phim vui vẻ và có những trải nghiệm tuyệt vời nhất! 😘
                             </p>
                         </div>
 
