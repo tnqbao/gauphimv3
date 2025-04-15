@@ -7,14 +7,14 @@ import {fetchMovieBySlug, MovieDetailType} from "@/utils/api"
 import {GetServerSideProps} from "next"
 import Head from "next/head"
 import axios from "axios";
-// import cookie from "cookie";
+import {parse} from "cookie";
 
 interface MoviePageProps {
     movieData: MovieDetailType | null
     episodeNumber: string
 }
 
-export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({ params, query}) => {
+export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({req, params, query}) => {
     const slug = params?.slug as string
     const episodeNumber = query.ep ? (query.ep as string) : "1";
 
@@ -26,19 +26,28 @@ export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({ p
             notFound: true,
         }
     }
+    const cookies = parse(req.headers.cookie || "");
+    const auth_token = cookies.auth_token
+    if (auth_token) {
         try {
+
             await axios.post(`${process.env.SERVERSIDE_API}/api/gauflix/history`, {
-                    title: movieData.item.name,
-                    slug: movieData.item.slug,
-                    poster_url: movieData.item.poster_url,
-                    movie_episode: episodeNumber,
-                });
+                title: movieData.item.name,
+                slug: movieData.item.slug,
+                poster_url: movieData.item.poster_url,
+                movie_episode: episodeNumber,
+            }, {
+                headers: {
+                    Authorization: `${auth_token}`,
+                },
+            });
         } catch (error) {
             console.error('Failed to update history:', {
                     error
                 }
             );
         }
+    }
     return {
         props: {
             movieData,
