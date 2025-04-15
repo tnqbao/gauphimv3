@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({re
             notFound: true,
         }
     }
-    const cookies = cookie.parse(req.headers.cookie || "");
+    const cookies = req.headers.cookie ? cookie.parse(req.headers.cookie) : {};
     const auth_token = cookies.auth_token;
 
 
