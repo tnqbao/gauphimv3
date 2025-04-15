@@ -30,7 +30,7 @@ export default function NationsPage({ nations }: NationsPageProps) {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 500) // Giả lập delay loading
+        const timer = setTimeout(() => setLoading(false), 500) //
         return () => clearTimeout(timer)
     }, [])
 

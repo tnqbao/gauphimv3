@@ -6,22 +6,50 @@ import PandaVideoPlayer from "@/components/content/player/panda-video-player"
 import {fetchMovieBySlug, MovieDetailType} from "@/utils/api"
 import {GetServerSideProps} from "next"
 import Head from "next/head"
+import axios from "axios";
+import cookie from "cookie";
 
 interface MoviePageProps {
     movieData: MovieDetailType | null
     episodeNumber: string
 }
 
-export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({params, query}) => {
+export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({req, params, query}) => {
     const slug = params?.slug as string
-    const episodeNumber = query.ep ? (query.ep as string) : "1";  // Default to string "1"
+    const episodeNumber = query.ep ? (query.ep as string) : "1";
+
 
     const movieData = await fetchMovieBySlug(slug)
 
     if (!movieData) {
-        return {notFound: true}
+        return {
+            notFound: true,
+        }
     }
+    const cookies = cookie.parse(req.headers.cookie || "");
+    const auth_token = cookies.auth_token;
 
+
+    if (auth_token) {
+        try {
+            await axios.post(`${process.env.SERVERSIDE_API}/api/gauflix/history`, {
+                    title: movieData.item.name,
+                    slug: movieData.item.slug,
+                    poster_url: movieData.item.poster_url,
+                    movie_episode: episodeNumber,
+                },
+                {
+                    headers: {
+                        Authorization: auth_token,
+                    },
+                });
+        } catch (error) {
+            console.error('Failed to update history:', {
+                    error
+                }
+            );
+        }
+    }
     return {
         props: {
             movieData,
@@ -45,8 +73,6 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
     const movieItemData = movieData.item
     const currentEpisode = episodes.find((ep) => ep.name === episodeNumber) || episodes[0]
     const {name: title, poster_url, slug} = movieItemData
-
-
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
             <Head>
@@ -93,6 +119,7 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                         "name": `${title} - Tập ${episodeNumber}`,
                         "description": `Xem phim ${title} tập ${episodeNumber} Vietsub, Full HD miễn phí tại Gấu Flix.`,
                         "thumbnailUrl": `https://img.ophim.live/uploads/movies/${poster_url}`,
+                        "uploadDate": new Date().toISOString(),
                         "contentUrl": currentEpisode.link_m3u8,
                         "embedUrl": `https://gauphim.daudoo.com/watch/${slug}?ep=${episodeNumber}`,
                         "publisher": {

@@ -36,21 +36,25 @@ const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
         }, [src])
 
         useEffect(() => {
+
             const interval = setInterval(() => {
                 const time = videoRef.current?.currentTime || 0
                 const duration = videoRef.current?.duration || 0
+                    if (videoRef.current && duration > 633 && time >= 596 && time < 633) {
+                        videoRef.current.currentTime = 633
+                    }
+                    if (videoRef.current && duration < 633 - 2 && time >= 633) {
+                        videoRef.current.currentTime = duration
+                    }
 
-                if (videoRef.current && duration > 633 && time >= 596 && time < 633) {
-                    videoRef.current.currentTime = 633
-                }
-
-                if (videoRef.current && duration < 630.85 && time >= 596) {
-                    videoRef.current.currentTime = duration
-                }
+                    if (videoRef.current && time >= 2429 && time < 2466) {
+                        videoRef.current.currentTime = 2466
+                    }
             }, 500)
 
             return () => clearInterval(interval)
         }, [])
+
 
         return (
             <video
