@@ -48,7 +48,6 @@ const handleGet = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handleDelete = async (req: NextApiRequest, res: NextApiResponse) => {
-    const {movie_slug} = req.query;
     const cookies = parse(req.headers.cookie || '');
     const token = cookies.auth_token;
     if (!token) {

@@ -33,7 +33,7 @@ function HistoryMovieCard({ movie, index }: { movie: History; index: number }) {
     transition={{ duration: 0.3, delay: index * 0.05 }}
     className="flex flex-col"
     >
-    <Link href={`/phim/${movie.slug}`} className="group">
+    <Link href={`/watch/${movie.slug}`} className="group">
     <div className="relative aspect-[2/3] overflow-hidden rounded-lg mb-2">
     <LazyImage
         src={`https://img.ophim.live/uploads/movies/${imageUrl}`}

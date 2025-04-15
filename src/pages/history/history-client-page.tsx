@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { useRouter } from "next/router"
+import {useEffect, useState} from "react"
+import {useRouter} from "next/router"
 import Breadcrumb from "@/components/layout/breadcrumb"
 import HistoryMovieGrid from "@/components/content/history/history-movie-grid"
 import Pagination from "@/components/layout/pagination"
@@ -9,17 +9,25 @@ import axios from "axios"
 import {History} from "@/utils/types/history";
 
 
-
 const HistoryClientPage: React.FC = () => {
     const router = useRouter()
-    const { page } = router.query
+    const {page} = router.query
     const [movies, setMovies] = useState<History[]>([])
     const [loading, setLoading] = useState(true)
     const [totalPages, setTotalPages] = useState(1)
     const [currentPage, setCurrentPage] = useState(1)
 
     const handlerDeleteButtonClick = async () => {
-        const response = await axios.delete(`/api/history`)
+        try {
+            const response = await axios.delete(`/api/history`)
+            if (response.status != 200) {
+                console.log("Error deleting history")
+            }
+
+            console.log("Deleted")
+        } catch (error) {
+            console.log("Error deleting history")
+        }
     }
     useEffect(() => {
         const fetchHistory = async () => {
@@ -27,11 +35,11 @@ const HistoryClientPage: React.FC = () => {
                 setLoading(true)
                 const current = page ? Number(page) : 1
                 const res = await axios.get(`api/history`, {
-                    params : {
+                    params: {
                         page: current,
                     }
                 })
-                const { history, total_page, current_page } = res.data
+                const {history, total_page, current_page} = res.data
 
                 setMovies(history)
                 setTotalPages(total_page)
@@ -54,8 +62,8 @@ const HistoryClientPage: React.FC = () => {
         <div className="container px-4 py-8 mx-auto">
             <Breadcrumb
                 items={[
-                    { label: "Trang chủ", href: "/" },
-                    { label: "Lịch sử xem", href: "/history" },
+                    {label: "Trang chủ", href: "/"},
+                    {label: "Lịch sử xem", href: "/history"},
                 ]}
             />
 
@@ -64,9 +72,7 @@ const HistoryClientPage: React.FC = () => {
                 {hasHistory && (
                     <button
                         className="px-4 py-2 text-sm font-medium text-white transition-colors bg-red-500 rounded-md hover:bg-red-600"
-                        onClick={() => {
-
-                        }}
+                        onClick={() => handlerDeleteButtonClick}
                     >
                         Xóa lịch sử
                     </button>
@@ -74,16 +80,16 @@ const HistoryClientPage: React.FC = () => {
             </div>
 
             {loading ? (
-                <PandaFamilyLoading />
+                <PandaFamilyLoading/>
             ) : hasHistory ? (
                 <>
-                    <HistoryMovieGrid movies={movies} />
+                    <HistoryMovieGrid movies={movies}/>
                     <div className="mt-8">
-                        <Pagination currentPage={currentPage} totalPages={totalPages} baseUrl="/history" />
+                        <Pagination currentPage={currentPage} totalPages={totalPages} baseUrl="/history"/>
                     </div>
                 </>
             ) : (
-                <HistoryEmptyState />
+                <HistoryEmptyState/>
             )}
         </div>
     )
