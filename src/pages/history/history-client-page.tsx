@@ -25,7 +25,7 @@ const HistoryClientPage: React.FC = () => {
             }
 
             console.log("Deleted")
-        } catch (error) {
+        } catch {
             console.log("Error deleting history")
         }
     }
