@@ -14,7 +14,7 @@ interface MoviePageProps {
     episodeNumber: string
 }
 
-export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({req, params, query}) => {
+export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({ params, query}) => {
     const slug = params?.slug as string
     const episodeNumber = query.ep ? (query.ep as string) : "1";
 
@@ -26,22 +26,12 @@ export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({re
             notFound: true,
         }
     }
-    const cookies = req.headers.cookie ? cookie.parse(req.headers.cookie) : {};
-    const auth_token = cookies.auth_token;
-
-
-    if (auth_token) {
         try {
             await axios.post(`${process.env.SERVERSIDE_API}/api/gauflix/history`, {
                     title: movieData.item.name,
                     slug: movieData.item.slug,
                     poster_url: movieData.item.poster_url,
                     movie_episode: episodeNumber,
-                },
-                {
-                    headers: {
-                        Authorization: auth_token,
-                    },
                 });
         } catch (error) {
             console.error('Failed to update history:', {
@@ -49,7 +39,6 @@ export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({re
                 }
             );
         }
-    }
     return {
         props: {
             movieData,
