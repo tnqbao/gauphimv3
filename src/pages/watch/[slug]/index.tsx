@@ -7,7 +7,7 @@ import {fetchMovieBySlug, MovieDetailType} from "@/utils/api"
 import {GetServerSideProps} from "next"
 import Head from "next/head"
 import axios from "axios";
-import cookie from "cookie";
+// import cookie from "cookie";
 
 interface MoviePageProps {
     movieData: MovieDetailType | null
