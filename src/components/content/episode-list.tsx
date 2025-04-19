@@ -99,7 +99,7 @@ function EpisodeItem({
               Tập {episode.name}
             </span>
                     </div>
-                    <p className="text-xs text-gray-300 truncate">{episode.filename}</p>
+                    <p className="text-xs text-gray-300 truncate">{episode.name}</p>
                 </div>
             </Link>
         </motion.div>
