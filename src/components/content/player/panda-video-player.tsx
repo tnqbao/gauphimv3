@@ -287,13 +287,16 @@ export default function PandaVideoPlayer({
                                 isVisible={showEpisodeList}
                                 onClose={toggleEpisodeList}
                                 isMobile={true}
+                                movieName={movieInfo.name}
                             />
                         )}
                     </AnimatePresence>
                 </div>
 
                 <div className="lg:col-span-1 hidden lg:block">
-                    <EpisodeList episodes={episodes} currentEpisode={currentEpisode} movieSlug={movieSlug} isVisible/>
+                    <EpisodeList episodes={episodes} currentEpisode={currentEpisode} movieSlug={movieSlug} isVisible
+                                 movieName={movieInfo.name}
+                    />
                 </div>
             </div>
         </div>
