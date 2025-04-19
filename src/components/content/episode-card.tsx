@@ -17,9 +17,10 @@ interface EpisodeCardProps {
     episode: Episode;
     thumb_url: string;
     movieSlug: string;
+    movieName?: string;
 }
 
-export default function EpisodeCard({ episode, thumb_url, movieSlug }: EpisodeCardProps) {
+export default function EpisodeCard({ episode, thumb_url, movieSlug, movieName }: EpisodeCardProps) {
     return (
         <motion.div
             whileHover={{ scale: 1.03 }}
@@ -39,14 +40,9 @@ export default function EpisodeCard({ episode, thumb_url, movieSlug }: EpisodeCa
                         className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center ">
                         <Play className="h-8 w-8 text-white"/>
                     </div>
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
-                        <div className="flex justify-between items-center">
-                            <span className="text-white text-sm font-medium">Tập {episode.name}</span>
-                        </div>
-                    </div>
                 </div>
                 <div className="p-2">
-                    <p className="text-sm truncate md:text-white">{episode.filename}</p>
+                    <p className="text-sm truncate md:text-white">Tập {episode.name} - {movieName}</p>
                 </div>
             </Link>
         </motion.div>

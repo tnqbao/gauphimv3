@@ -9,9 +9,10 @@ interface EpisodeListTabsProps {
     episodes: Episode[]
     thumb_url: string
     movieSlug: string
+    movieName?: string
 }
 
-export default function EpisodeListTabs({ episodes, thumb_url, movieSlug }: EpisodeListTabsProps) {
+export default function EpisodeListTabs({ episodes, thumb_url, movieSlug, movieName }: EpisodeListTabsProps) {
     const tabsListRef = useRef<HTMLDivElement>(null)
 
     const scrollTabs = (direction: "left" | "right") => {
@@ -98,7 +99,7 @@ export default function EpisodeListTabs({ episodes, thumb_url, movieSlug }: Epis
                 <TabsContent value="all" className="mt-0">
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
                         {episodes.map((ep) => (
-                            <EpisodeCard key={ep.name} episode={ep} thumb_url={thumb_url} movieSlug={movieSlug} />
+                            <EpisodeCard key={ep.name} episode={ep} thumb_url={thumb_url} movieSlug={movieSlug} movieName={movieName}/>
                         ))}
                     </div>
                 </TabsContent>
@@ -107,7 +108,7 @@ export default function EpisodeListTabs({ episodes, thumb_url, movieSlug }: Epis
                     <TabsContent key={start} value={`group-${start}`} className="mt-0">
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 " >
                             {episodes.slice(start - 1, end).map((ep) => (
-                                <EpisodeCard key={ep.name} episode={ep} thumb_url={thumb_url} movieSlug={movieSlug} />
+                                <EpisodeCard key={ep.name} episode={ep} thumb_url={thumb_url} movieSlug={movieSlug} movieName={movieName} />
                             ))}
                         </div>
                     </TabsContent>
