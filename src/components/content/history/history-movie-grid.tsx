@@ -12,11 +12,9 @@ interface HistoryMovieGridProps {
 
 export default function HistoryMovieGrid({ movies }: HistoryMovieGridProps) {
     // Sort movies by createdAt in ascending order (oldest first)
-    const sortedMovies = [...movies].sort((a, b) => new Date(a.create_at).getTime() - new Date(b.create_at).getTime())
-
     return (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-            {sortedMovies.map((movie, index) => (
+            {movies.map((movie, index) => (
                     <HistoryMovieCard key={movie.slug} movie={movie} index={index} />
 ))}
     </div>
