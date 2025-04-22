@@ -60,6 +60,7 @@ const HistoryClientPage: React.FC = () => {
 
     return (
         <div className="container px-4 py-8 mx-auto">
+            <title> Lịch sử</title>
             <Breadcrumb
                 items={[
                     {label: "Trang chủ", href: "/"},
