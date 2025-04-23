@@ -115,12 +115,10 @@ export default function MobileSearch() {
                                                 onClick={() => setIsOpen(false)}
                                                 className="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                                             >
-                                                    <Image
+                                                    <img
                                                         src={`https://img.ophim.live/uploads/movies/${result.slug}-thumb.jpg`}
                                                         alt={result.title}
                                                         className="w-10 h-14 object-cover rounded mr-4 flex-shrink-0"
-                                                        width={160}
-                                                        height={240}
                                                     />
                                                 <div className="flex-1 min-w-0">
                                                     <div className="font-medium leading-tight">
