@@ -153,7 +153,7 @@ export default function Header() {
             )}
         >
             <div className="container flex h-16 items-center justify-between px-3 sm:px-4 xl:px-6">
-                <div className="flex items-center gap-1 sm:gap-2">
+                <div className="flex items-center gap-1 sm:gap-2 justify-between">
                     <Button
                         variant="ghost"
                         size="icon"
@@ -165,9 +165,10 @@ export default function Header() {
                         {isMenuOpen ? <X className="h-5 w-5"/> : <Menu className="h-5 w-5"/>}
                     </Button>
                     <LogoImage size={isScrolled ? "small" : "medium"} className="transition-all duration-300"/>
-                    <div className="hidden xl:block">
-                        <HeaderSearch />
-                    </div>
+
+                </div>
+                <div className="hidden xl:block">
+                    <HeaderSearch />
                 </div>
                 {isMenuOpen && (
                     <div
