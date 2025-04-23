@@ -2,7 +2,7 @@ import {useEffect, useState} from "react"
 import Link from "next/link"
 import {logout, selectAuth} from "@/store/slices/authSlice";
 import {usePathname, useRouter} from "next/navigation"
-import {Menu, Search, User, X} from "lucide-react"
+import {Menu, User, X} from "lucide-react"
 import {cn} from "@/lib/utils"
 import {
     DropdownMenu,
@@ -15,12 +15,13 @@ import {
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import ThemeToggle from "@/components/content/theme-toggle"
 import {Button} from "@/components/ui/button"
-import {Input} from "@/components/ui/input"
 import MobileSearch from "@/components/layout/search/mobile-search"
 import LogoImage from "./logo-image"
 import CategoryDropdown from "./category-dropdown"
 import NationDropdown from "./nation-dropdown"
 import {useSelector} from "react-redux";
+import { HeaderSearch } from "./search/search-header"
+
 import axios from "axios";
 
 
@@ -28,7 +29,6 @@ export default function Header() {
 
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const [searchKeyword, setSearchKeyword] = useState("")
     const pathname = usePathname()
     const router = useRouter()
     const {user_id, fullname} = useSelector(selectAuth);
@@ -55,13 +55,6 @@ export default function Header() {
             document.body.style.overflow = ""
         }
     }, [isMenuOpen])
-
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault()
-        if (searchKeyword.trim()) {
-            router.push(`/search?keyword=${encodeURIComponent(searchKeyword.trim())}`)
-        }
-    }
 
     const handleLogout = async () => {
         const token = localStorage.getItem("auth_token")
@@ -159,12 +152,12 @@ export default function Header() {
                     : "bg-transparent border-b border-transparent",
             )}
         >
-            <div className="container flex h-16 items-center justify-between px-3 sm:px-4 md:px-6">
+            <div className="container flex h-16 items-center justify-between px-3 sm:px-4 xl:px-6">
                 <div className="flex items-center gap-1 sm:gap-2">
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="md:hidden mr-1"
+                        className="xl:hidden mr-1"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                         aria-label={isMenuOpen ? "Đóng menu" : "Mở menu"}
                         aria-expanded={isMenuOpen}
@@ -172,10 +165,13 @@ export default function Header() {
                         {isMenuOpen ? <X className="h-5 w-5"/> : <Menu className="h-5 w-5"/>}
                     </Button>
                     <LogoImage size={isScrolled ? "small" : "medium"} className="transition-all duration-300"/>
+                    <div className="hidden xl:block">
+                        <HeaderSearch />
+                    </div>
                 </div>
                 {isMenuOpen && (
                     <div
-                        className="fixed inset-0 bg-black/20 dark:bg-black/50 z-40 md:hidden"
+                        className="fixed inset-0 bg-black/20 dark:bg-black/50 z-40 xl:hidden"
                         onClick={() => setIsMenuOpen(false)}
                         aria-hidden="true"
                     />
@@ -183,52 +179,42 @@ export default function Header() {
 
                 <nav
                     className={cn(
-                        "fixed inset-0 top-16 z-50 flex flex-col bg-white dark:bg-gray-900 p-4 sm:p-6 transition-all duration-300 md:static md:flex md:flex-row md:items-center md:gap-1 lg:gap-6 md:bg-transparent md:p-0 md:translate-x-0 overflow-y-auto md:overflow-visible",
+                        "fixed inset-0 top-16 z-50 flex flex-col bg-white dark:bg-gray-900 p-4 sm:p-6 transition-all duration-300 xl:static xl:flex xl:flex-row xl:items-center xl:gap-1 lg:gap-6 xl:bg-transparent xl:p-0 xl:translate-x-0 overflow-y-auto xl:overflow-visible",
                         isMenuOpen ? "translate-x-0" : "-translate-x-full",
-                        "max-w-[300px] md:max-w-none w-4/5 md:w-auto",
+                        "max-w-[300px] xl:max-w-none w-4/5 xl:w-auto",
                     )}
                 >
-                    <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 lg:space-x-6">
+                    <div className="flex flex-col space-y-4 xl:flex-row xl:space-y-0 lg:space-x-6">
                         <NavLink href="../list/phim-bo" label="Phim Bộ"/>
                         <NavLink href="../list/phim-le" label="Phim Lẻ"/>
                         <NavLink href="../list/phim-moi" label="Phim Mới"/>
                         <NavLink href="../list/hoat-hinh" label="Hoạt Hình"/>
-                        <div className="hidden md:block">
+                        <div className="hidden xl:block">
                             <CategoryDropdown/>
                         </div>
-                        <div className="hidden md:block">
+                        <div className="hidden xl:block">
                             <NationDropdown/>
                         </div>
                     </div>
 
-                    <div className="md:hidden border-t mt-4 pt-4 space-y-4">
+                    <div className="xl:hidden border-t mt-4 pt-4 space-y-4">
                         <CategoryDropdown isMobile/>
                     </div>
-                    <div className="md:hidden border-t mt-4 pt-4">
+                    <div className="xl:hidden border-t mt-4 pt-4">
                         <NationDropdown isMobile/>
                     </div>
 
-                    <div className="mt-6 flex gap-2 md:hidden">
+                    <div className="mt-6 flex gap-2 xl:hidden">
                         <AuthButtons isMobile={true}/>
                     </div>
                 </nav>
 
                 <div className="flex items-center gap-2 sm:gap-4">
-                    <form className="hidden md:block relative" onSubmit={handleSearch}>
-                        <Search
-                            className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none"/>
-                        <Input
-                            type="search"
-                            placeholder="Tìm kiếm phim..."
-                            className="w-[180px] pl-8 lg:w-[260px] bg-muted focus:ring-green-500 focus:border-green-500 transition-all h-9"
-                            value={searchKeyword}
-                            onChange={(e) => setSearchKeyword(e.target.value)}
-                        />
-                    </form>
+
                     <ThemeToggle/>
 
                     {/* Desktop auth buttons */}
-                    <div className="hidden md:flex items-center gap-2">
+                    <div className="hidden xl:flex items-center gap-2">
                         <AuthButtons/>
                     </div>
 
@@ -257,7 +243,7 @@ function NavLink({href, label}: { href: string; label: string }) {
         <Link
             href={getHref()}
             className={cn(
-                "relative py-2 text-base font-bold md:text-sm md:py-2 hover:text-green-600 transition-colors",
+                "relative py-2 text-base font-bold xl:text-sm xl:py-2 hover:text-green-600 transition-colors",
                 "after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-green-600 after:transition-all hover:after:w-full",
                 isActive && "text-green-600 after:w-full",
             )}
