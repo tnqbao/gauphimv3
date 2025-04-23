@@ -40,9 +40,9 @@ export default function HomePage() {
     const categories = [
         {name: "Hành Động", image: "https://i.imgur.com/AoTce5E.jpeg", slug: "hanh-dong"},
         {name: "Hài", image: "https://i.imgur.com/AGaIiRo.jpeg", slug: "hai-huoc"},
-        {name: "Drama", image: "https://i.imgur.com/nmdPlNK.jpeg", slug: "chinh-kich"},
+        {name: "Cổ Trang", image: "https://img.ophim.live/uploads/movies/quyen-sung-poster.jpg", slug: "co-trang"},
         {name: "Kinh Dị", image: "https://i.imgur.com/ChWVQ75.png", slug: "kinh-di"},
-        {name: "Sci-Fi", image: "https://i.imgur.com/ny54LpZ.jpeg", slug: "vien-tuong"},
+        {name: "Viễn Tưởng", image: "https://i.imgur.com/ny54LpZ.jpeg", slug: "vien-tuong"},
         {name: "Gia Đình", image: "https://i.imgur.com/thnZiRO.jpeg", slug: "gia-dinh"},
     ]
 

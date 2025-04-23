@@ -8,6 +8,7 @@ import {GetServerSideProps} from "next"
 import Head from "next/head"
 import axios from "axios";
 import {parse} from "cookie";
+import {useEffect, useState} from "react";
 
 interface MoviePageProps {
     movieData: MovieDetailType | null
@@ -60,13 +61,17 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
     if (!movieData) {
         notFound()
     }
-
+    const [showWarning, setShowWarning] = useState(true);
     const episodes = movieData.item.episodes && movieData.item.episodes.length > 0 ? movieData.item.episodes[0].server_data : []
 
     if (episodes.length === 0) {
         notFound()
     }
 
+    useEffect(() => {
+        const timer = setTimeout(() => setShowWarning(false), 30000);
+        return () => clearTimeout(timer);
+    }, []);
 
     const movieItemData = movieData.item
     const currentEpisode = episodes.find((ep) => ep.name === episodeNumber) || episodes[0]
@@ -150,7 +155,6 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                         </h1>
                     </div>
                     <div className="relative mx-0 md:w-full">
-
                         <PandaVideoPlayer
                             title={`${movieItemData.name} - Tập ${currentEpisode.name}`}
                             poster={movieItemData.poster_url}
@@ -167,6 +171,12 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                         />
                     </div>
                 </div>
+                {showWarning && (
+                    <div className=" my-4 px-4 py-3 border-l-4 text-sm md:text-base rounded shadow-lg bg-green-500 dark:bg-green-700 text-white dark:text-green-200 opacity-100 animate-pulse md:mx-2">
+                        <strong>⚠️ Cảnh báo:</strong> Hiện nay khi xem phim ở một số bộ phim có hiển thị đường dẫn không rõ nguồn gốc chạy ngang qua, mọi người tuyệt đối không truy cập vào các đường link lạ đó nhen. Gấu đang nỗ lực khắc phục vấn đề này, cảm ơn các bạn iu của Gấu ^^.
+                    </div>
+                )}
+
             </main>
 
             <Footer/>
