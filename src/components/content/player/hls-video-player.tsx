@@ -50,6 +50,10 @@ const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
                     if (videoRef.current && time >= 2429 && time < 2466) {
                         videoRef.current.currentTime = 2466
                     }
+
+                if (videoRef.current && time >= 4862 && time < 4899) {
+                    videoRef.current.currentTime = 4899;
+                }
             }, 500)
 
             return () => clearInterval(interval)
