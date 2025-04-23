@@ -7,7 +7,6 @@ import { useDebounce } from "@/hooks/use-debounce"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import axios from "axios";
-import Image from "next/image";
 
 interface SearchResult {
     id: number

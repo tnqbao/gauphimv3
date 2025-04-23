@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import axios from "axios"
 import { useDebounce } from "@/hooks/use-debounce"
-import Image from "next/image";
 
 interface SearchResult {
     id: number
