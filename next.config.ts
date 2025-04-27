@@ -1,6 +1,6 @@
 import withPWA from 'next-pwa';
 
-const nextConfig = withPWA({
+const nextConfig = {
   images: {
     remotePatterns: [
       {
@@ -25,12 +25,10 @@ const nextConfig = withPWA({
     domains: ["img.ophim.live"],
     minimumCacheTTL: 60,
   },
-  pwa: {
-    dest: 'public',
-    register: true,
-    skipWaiting: true,
-    disable: process.env.NODE_ENV === 'development',
-  }
-});
+};
 
-export default nextConfig;
+export default withPWA({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+})(nextConfig);
