@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.daudoo.gauflix",
+      "sha256_cert_fingerprints": [
+        "FD:95:E4:DD:1A:0C:FE:B4:89:6D:88:D3:26:99:3B:5C:ED:16:47:2C:67:B8:C1:07:D6:79:49:8F:61:39:03:A2"
+      ]
+    }
+  }
+]
