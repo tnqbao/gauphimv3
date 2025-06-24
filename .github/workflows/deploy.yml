@@ -32,6 +32,16 @@ jobs:
           push: true
           tags: iamqbao/gau_phim_frontend:latest
 
+      - name: Install Tailscale
+        run: |
+          curl -fsSL https://tailscale.com/install.sh | sh
+
+      - name: Start Tailscale and authenticate
+        run: |
+          sudo tailscaled &
+          sudo tailscale up --authkey ${{ secrets.TAILSCALE_AUTH_KEY }}
+          sleep 5  # đợi Tailscale kết nối
+
       - name: Trigger deployment via SSH
         uses: appleboy/ssh-action@master
         with:
@@ -39,5 +49,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ~/docker-services/gauphim-application
+            cd ~/gau_platform/docker/gauphim-application
             sh restart_gau_phim_frontend.sh
