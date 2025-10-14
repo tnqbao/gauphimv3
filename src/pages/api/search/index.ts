@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(response.status).json({ error: "Lỗi khi gọi API" });
         }
 
-        res.status(200).json(response.data);
+        res.status(200).json(response.data.data);
     } catch (error) {
         console.error("Lỗi API:", error);
         res.status(500).json({ e: "Lỗi server", error });
