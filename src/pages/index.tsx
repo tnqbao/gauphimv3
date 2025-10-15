@@ -22,6 +22,7 @@ const Footer = lazy(() => import("@/components/layout/footer"))
 const FloatingLeaves = lazy(() => import("@/components/content/floating-leaves"))
 
 interface Movie {
+    title: string
     name: string
     year: string
     slug: string
@@ -63,7 +64,7 @@ export default function HomePage() {
 
                 setNewReleases(
                     data.release.map((movie: Movie) => ({
-                        title: movie.name,
+                        title: movie.title,
                         year: movie.year,
                         slug: movie.slug,
                         rating: "N/A",
@@ -74,7 +75,7 @@ export default function HomePage() {
 
                 setSingleMovies(
                     data.single.map((movie: Movie) => ({
-                        title: movie.name,
+                        title: movie.title,
                         year: movie.year,
                         slug: movie.slug,
                         rating: "N/A",
@@ -85,7 +86,7 @@ export default function HomePage() {
 
                 setSeries(
                     data.series.map((movie: Movie) => ({
-                        title: movie.name,
+                        title: movie.title,
                         year: movie.year,
                         slug: movie.slug,
                         rating: "N/A",
@@ -96,7 +97,7 @@ export default function HomePage() {
 
                 setCatoons(
                     data.cartoon.map((movie: Movie) => ({
-                        title: movie.name,
+                        title: movie.title,
                         year: movie.year,
                         slug: movie.slug,
                         rating: "N/A",

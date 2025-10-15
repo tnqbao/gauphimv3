@@ -19,19 +19,18 @@ import MobileSearch from "@/components/layout/search/mobile-search"
 import LogoImage from "./logo-image"
 import CategoryDropdown from "./category-dropdown"
 import NationDropdown from "./nation-dropdown"
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import { HeaderSearch } from "./search/search-header"
-
 import axios from "axios";
 
 
 export default function Header() {
-
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const pathname = usePathname()
     const router = useRouter()
-    const {user_id, fullname} = useSelector(selectAuth);
+    const dispatch = useDispatch();
+    const {user_id, fullname, isInitialized} = useSelector(selectAuth);
     const isAuthed = user_id !== null
 
     useEffect(() => {
@@ -57,16 +56,16 @@ export default function Header() {
     }, [isMenuOpen])
 
     const handleLogout = async () => {
-        const token = localStorage.getItem("auth_token")
-        const response = await axios.post("/api/auth/logout", {
-            header: {
-                Authorization: token
-            }
-        })
+        try {
+            const response = await axios.post("/api/auth/logout");
 
-        if (response.status == 200) {
-            localStorage.removeItem("auth_token")
-            logout();
+            if (response.status === 200) {
+                dispatch(logout());
+                router.refresh();
+            }
+        } catch (error) {
+            console.error("Logout error:", error);
+            dispatch(logout());
             router.refresh();
         }
     }
@@ -111,12 +110,14 @@ export default function Header() {
         </DropdownMenu>
     )
 
-    const AuthButtons = ({isMobile = false}) => (
-        <>
-            {isAuthed ? (
-                <UserProfileDropdown fullname={fullname}/>
-            ) : (
-                <>
+    const AuthButtons = ({isMobile = false}) => {
+        if (!isInitialized) {
+            return (
+                <div className={cn(
+                    "flex gap-2",
+                    isMobile ? "flex-1" : ""
+                )}>
+                    {/* Placeholder buttons with same structure to maintain layout */}
                     <Button
                         variant="outline"
                         className={cn(
@@ -124,9 +125,9 @@ export default function Header() {
                             isMobile ? "flex-1" : "hidden lg:flex",
                             !isMobile && "size-sm",
                         )}
-                        asChild
+                        disabled
                     >
-                        <Link href="../auth/register">Đăng ký</Link>
+                        Đăng ký
                     </Button>
                     <Button
                         className={cn(
@@ -134,14 +135,46 @@ export default function Header() {
                             isMobile ? "flex-1" : "",
                             !isMobile && "size-sm",
                         )}
-                        asChild
+                        disabled
                     >
-                        <Link href="../auth/login">Đăng nhập</Link>
+                        Đăng nhập
                     </Button>
-                </>
-            )}
-        </>
-    )
+                </div>
+            )
+        }
+
+        return (
+            <>
+                {isAuthed ? (
+                    <UserProfileDropdown fullname={fullname}/>
+                ) : (
+                    <>
+                        <Button
+                            variant="outline"
+                            className={cn(
+                                "border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950 transition-colors",
+                                isMobile ? "flex-1" : "hidden lg:flex",
+                                !isMobile && "size-sm",
+                            )}
+                            asChild
+                        >
+                            <Link href="../auth/register">Đăng ký</Link>
+                        </Button>
+                        <Button
+                            className={cn(
+                                "bg-green-600 hover:bg-green-700 transition-colors",
+                                isMobile ? "flex-1" : "",
+                                !isMobile && "size-sm",
+                            )}
+                            asChild
+                        >
+                            <Link href="../auth/login">Đăng nhập</Link>
+                        </Button>
+                    </>
+                )}
+            </>
+        )
+    }
 
     return (
         <header
@@ -253,4 +286,3 @@ function NavLink({href, label}: { href: string; label: string }) {
         </Link>
     )
 }
-

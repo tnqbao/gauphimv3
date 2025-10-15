@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { logout } from '@/store/slices/authSlice';
 import { store } from '@//store';
+import { getDeviceId } from './deviceId';
 
 const createUserApiInstance = (): AxiosInstance => {
     const instance = axios.create({
@@ -11,6 +12,20 @@ const createUserApiInstance = (): AxiosInstance => {
         },
         timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '10000', 10),
     });
+
+    // Add request interceptor to include device ID
+    instance.interceptors.request.use(
+        (config) => {
+            const deviceId = getDeviceId();
+            if (deviceId) {
+                config.headers['X-Device-ID'] = deviceId;
+            }
+            return config;
+        },
+        (error) => {
+            return Promise.reject(error);
+        }
+    );
 
     instance.interceptors.response.use(
         (response) => response,

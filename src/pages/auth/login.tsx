@@ -13,6 +13,7 @@ import AuthFormFooter from "@/components/content/auth/auth-form-footer"
 import {useRouter} from "next/router";
 import {useDispatch} from "react-redux";
 import {loginSuccess} from "@/store/slices/authSlice";
+import { getDeviceId } from "@/utils/deviceId";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("")
@@ -29,6 +30,10 @@ export default function LoginPage() {
     const router = useRouter();
     const dispatch = useDispatch();
     useEffect(() => {
+        // Initialize device ID when component mounts
+        getDeviceId();
+
+
         const handleClick = (e: MouseEvent) => {
             const target = e.target as HTMLElement
             if (!target) return
@@ -74,12 +79,16 @@ export default function LoginPage() {
 
         try {
             setIsLoading(true)
+
+            const deviceId = getDeviceId();
+            console.log("Device ID for login:", deviceId);
+
             const response = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email, password, keepLogin }),
+                body: JSON.stringify({ email, password, keepLogin, deviceId }),
             });
 
             if (!response.ok) {

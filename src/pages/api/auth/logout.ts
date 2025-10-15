@@ -29,5 +29,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json({ status: 200, message: "Logged out successfully" });
     } catch (error) {
         console.error("Logout error:" , error);
+        return res.status(500).json({ status: 500, message: "Internal server error" });
     }
 }
