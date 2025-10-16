@@ -4,14 +4,29 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { checkAuth } from "@/store/slices/authSlice";
 import { AppDispatch } from "@/store";
+import { useRouter } from "next/router";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch<AppDispatch>();
+    const router = useRouter();
 
     useEffect(() => {
-        // ✅ Re-enabled auth checking with new flow
+        // Check auth on initial load
         dispatch(checkAuth());
     }, [dispatch]);
+
+    useEffect(() => {
+        // Check auth when navigating between pages
+        const handleRouteChange = () => {
+            dispatch(checkAuth());
+        };
+
+        router.events.on('routeChangeComplete', handleRouteChange);
+
+        return () => {
+            router.events.off('routeChangeComplete', handleRouteChange);
+        };
+    }, [dispatch, router.events]);
 
     return <>{children}</>;
 };

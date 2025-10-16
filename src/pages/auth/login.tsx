@@ -12,7 +12,7 @@ import PandaWindow from "@/components/content/auth/panda-window"
 import AuthFormFooter from "@/components/content/auth/auth-form-footer"
 import {useRouter} from "next/router";
 import {useDispatch} from "react-redux";
-import {loginSuccess} from "@/store/slices/authSlice";
+import {loginSuccess, setAccessTokenToStorage} from "@/store/slices/authSlice";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("")
@@ -87,7 +87,15 @@ export default function LoginPage() {
                 throw new Error(data.message)
             }
             const data = await response.json();
+
+            // Store the access token properly
+            if (data.access_token) {
+                setAccessTokenToStorage(data.access_token, data.expires_in);
+            }
+
+            // Dispatch login success with user data
             dispatch(loginSuccess(data.user));
+
             router.push("../")
         } catch (err: unknown) {
             if (err instanceof Error) {

@@ -1,5 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { getDeviceId } from "@/utils/device";
+import {NextApiRequest, NextApiResponse} from "next";
+import {getDeviceId} from "@/utils/device";
+import {userApiInstance} from "@/utils/axios.config";
 
 // Utility function to get access token from cookies or localStorage (client-side)
 function getAccessToken(req: NextApiRequest): string | null {
@@ -18,13 +19,12 @@ function getAccessToken(req: NextApiRequest): string | null {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'GET') {
-        return res.status(405).json({ error: 'Method not allowed' });
+        return res.status(405).json({error: 'Method not allowed'});
     }
 
     const PRIVATE_KEY = process.env.PRIVATE_KEY;
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-    if (!PRIVATE_KEY || !API_BASE_URL) {
+    if (!PRIVATE_KEY) {
         return res.status(500).json({
             authenticated: false,
             error: 'Server configuration error'
@@ -32,10 +32,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        // Get access token from request
         const accessToken = getAccessToken(req);
 
-        // If no access token, user is not authenticated
         if (!accessToken) {
             return res.status(200).json({
                 authenticated: false,
@@ -43,40 +41,58 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             });
         }
 
-        // Step 1: Validate the access token
         try {
-            const validateResponse = await fetch(
-                `${API_BASE_URL}/api/v2/authorization/token/validate?token=${accessToken}`,
+            const validateResponse = await userApiInstance.get(
+                `/api/v2/authorization/token/validate?token=${accessToken}`,
                 {
-                    method: 'GET',
                     headers: {
                         'Private-Key': PRIVATE_KEY,
-                        'Authorization': `Bearer ${accessToken}`,
+                        'Authorization': accessToken,
                         'Content-Type': 'application/json'
                     }
                 }
             );
 
-            const validateData = await validateResponse.json();
+            const validateData = await validateResponse.data;
 
-            // If token is valid
             if (validateResponse.status === 200 && validateData.status === 200) {
-                return res.status(200).json({
-                    authenticated: true,
-                    message: 'Access token is valid'
-                });
+                try {
+                    const userResponse = await userApiInstance.get("api/v2/account/profile/basic", {
+                        headers: {
+                            "Authorization": `Bearer ${accessToken}`
+                        }
+                    });
+
+                    const userInfo = userResponse.data.user_info;
+
+                    return res.status(200).json({
+                        authenticated: true,
+                        message: 'Access token is valid',
+                        user: {
+                            user_id: userInfo.user_id,
+                            fullname: userInfo.fullname,
+                            email: userInfo.email,
+                            is_email_verified: userInfo.is_email_verified,
+                            is_phone_verified: userInfo.is_phone_verified,
+                            date_of_birth: userInfo.date_of_birth
+                        }
+                    });
+                } catch (profileError) {
+                    console.error('Profile fetch error:', profileError);
+                    return res.status(200).json({
+                        authenticated: true,
+                        message: 'Access token is valid'
+                    });
+                }
             }
 
-            // If token is invalid or expired (401 status)
             if (validateResponse.status === 401 || validateData.status === 401) {
-                // Step 2: Try to renew the token
                 const deviceId = getDeviceId();
 
                 try {
-                    const renewResponse = await fetch(
-                        `${API_BASE_URL}/api/v2/authorization/token/renew`,
+                    const renewResponse = await userApiInstance.get(
+                        `/api/v2/authorization/token/renew`,
                         {
-                            method: 'GET',
                             headers: {
                                 'X-Old-Access-Token': accessToken,
                                 'X-Device-ID': deviceId,
@@ -86,28 +102,51 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         }
                     );
 
-                    const renewData = await renewResponse.json();
+                    const renewData = await renewResponse.data;
 
-                    // Token renewal successful
                     if (renewResponse.status === 200 && renewData.status === 200) {
-                        // Set new token in cookie
-                        const maxAge = renewData.expires_in || 36288000; // Default 420 days
+                        const maxAge = renewData.expires_in || 3600 * 24 * 7;
                         res.setHeader('Set-Cookie', [
                             `access_token=${renewData.access_token}; Max-Age=${maxAge}; Path=/; HttpOnly; SameSite=Strict`
                         ]);
 
-                        return res.status(200).json({
-                            authenticated: true,
-                            renewed: true,
-                            access_token: renewData.access_token,
-                            expires_in: renewData.expires_in,
-                            message: 'Token renewed successfully'
-                        });
+                        try {
+                            const userResponse = await userApiInstance.get("api/v2/account/profile/basic", {
+                                headers: {
+                                    "Authorization": `Bearer ${renewData.access_token}`
+                                }
+                            });
+
+                            const userInfo = userResponse.data.user_info;
+
+                            return res.status(200).json({
+                                authenticated: true,
+                                renewed: true,
+                                access_token: renewData.access_token,
+                                expires_in: renewData.expires_in,
+                                message: 'Token renewed successfully',
+                                user: {
+                                    user_id: userInfo.user_id,
+                                    fullname: userInfo.fullname,
+                                    email: userInfo.email,
+                                    is_email_verified: userInfo.is_email_verified,
+                                    is_phone_verified: userInfo.is_phone_verified,
+                                    date_of_birth: userInfo.date_of_birth
+                                }
+                            });
+                        } catch (profileError) {
+                            console.error('Profile fetch error after renewal:', profileError);
+                            return res.status(200).json({
+                                authenticated: true,
+                                renewed: true,
+                                access_token: renewData.access_token,
+                                expires_in: renewData.expires_in,
+                                message: 'Token renewed successfully'
+                            });
+                        }
                     }
 
-                    // Token renewal failed
                     if (renewResponse.status === 400 || renewData.error === "Refresh token is required") {
-                        // Clear the invalid token from cookies
                         res.setHeader('Set-Cookie', [
                             'access_token=; Max-Age=0; Path=/; HttpOnly; SameSite=Strict'
                         ]);
@@ -119,7 +158,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         });
                     }
 
-                    // Other renewal errors
                     res.setHeader('Set-Cookie', [
                         'access_token=; Max-Age=0; Path=/; HttpOnly; SameSite=Strict'
                     ]);

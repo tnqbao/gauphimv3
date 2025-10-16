@@ -4,16 +4,24 @@ import axios from "axios";
 import { clearDeviceId } from "@/utils/device";
 
 interface UserState {
-    user_id: number | null;
+    user_id: string | null;
     fullname: string | null;
+    email: string | null;
     permission: string | null;
+    is_email_verified: boolean;
+    is_phone_verified: boolean;
+    date_of_birth: string | null;
     isLoading: boolean;
 }
 
 const initialState: UserState = {
     user_id: null,
     fullname: null,
+    email: null,
     permission: null,
+    is_email_verified: false,
+    is_phone_verified: false,
+    date_of_birth: null,
     isLoading: false,
 };
 
@@ -52,10 +60,7 @@ export const setAccessTokenToStorage = (token: string, expiresIn?: number): void
 export const clearAccessTokenFromStorage = (): void => {
     if (typeof window === 'undefined') return;
 
-    // Clear from localStorage
     localStorage.removeItem('access_token');
-
-    // Clear from cookies
     document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Strict';
 };
 
@@ -63,12 +68,10 @@ export const checkAuth = createAsyncThunk("auth/checkAuth", async (_, { rejectWi
     try {
         const accessToken = getAccessTokenFromStorage();
 
-        // If no access token, user is not authenticated - no need to call API
         if (!accessToken) {
             return rejectWithValue("No access token found");
         }
 
-        // Call the status API with the token in header
         const { data } = await axios.get(`/api/auth/status`, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -77,20 +80,21 @@ export const checkAuth = createAsyncThunk("auth/checkAuth", async (_, { rejectWi
         });
 
         if (data.authenticated) {
-            // If token was renewed, update it in storage
             if (data.renewed && data.access_token) {
                 setAccessTokenToStorage(data.access_token, data.expires_in);
             }
 
-
             return {
-                user_id: 1, // Replace with actual user data
-                fullname: "User", // Replace with actual user data
-                permission: "user"
+                user_id: data.user?.user_id || null,
+                fullname: data.user?.fullname || null,
+                email: data.user?.email || null,
+                permission: data.user?.permission || "member",
+                is_email_verified: data.user?.is_email_verified || false,
+                is_phone_verified: data.user?.is_phone_verified || false,
+                date_of_birth: data.user?.date_of_birth || null,
             };
         }
 
-        // If authentication failed or token needs to be cleared
         if (data.clearToken) {
             clearAccessTokenFromStorage();
         }
@@ -100,7 +104,6 @@ export const checkAuth = createAsyncThunk("auth/checkAuth", async (_, { rejectWi
     } catch (error) {
         console.log("Auth check failed:", error);
 
-        // If it's a 401 or token-related error, clear the token
         if (error instanceof Error || (error && typeof error === 'object' && 'response' in error)) {
             const axiosError = error as { response?: { status?: number } };
             if (axiosError.response?.status === 401) {
@@ -112,26 +115,6 @@ export const checkAuth = createAsyncThunk("auth/checkAuth", async (_, { rejectWi
     }
 });
 
-export const handleLogin = createAsyncThunk(
-    "auth/handleLogin",
-    async ({ token, expiresIn, userInfo }: {
-        token: string;
-        expiresIn?: number;
-        userInfo?: Partial<UserState>
-    }, { dispatch }) => {
-        // Store the token
-        setAccessTokenToStorage(token, expiresIn);
-
-        if (userInfo) {
-            return userInfo;
-        } else {
-            // Trigger auth check to get user info
-            dispatch(checkAuth());
-            return null;
-        }
-    }
-);
-
 const authSlice = createSlice({
     name: "auth",
     initialState,
@@ -139,13 +122,21 @@ const authSlice = createSlice({
         loginSuccess: (state, action: PayloadAction<Omit<UserState, 'isLoading'>>) => {
             state.user_id = action.payload.user_id;
             state.fullname = action.payload.fullname;
+            state.email = action.payload.email;
             state.permission = action.payload.permission;
+            state.is_email_verified = action.payload.is_email_verified;
+            state.is_phone_verified = action.payload.is_phone_verified;
+            state.date_of_birth = action.payload.date_of_birth;
             state.isLoading = false;
         },
         logout: (state) => {
             state.user_id = null;
             state.fullname = null;
+            state.email = null;
             state.permission = null;
+            state.is_email_verified = false;
+            state.is_phone_verified = false;
+            state.date_of_birth = null;
             state.isLoading = false;
             clearAccessTokenFromStorage();
             clearDeviceId();
@@ -162,22 +153,22 @@ const authSlice = createSlice({
             .addCase(checkAuth.fulfilled, (state, action) => {
                 state.user_id = action.payload.user_id;
                 state.fullname = action.payload.fullname;
+                state.email = action.payload.email;
                 state.permission = action.payload.permission;
+                state.is_email_verified = action.payload.is_email_verified;
+                state.is_phone_verified = action.payload.is_phone_verified;
+                state.date_of_birth = action.payload.date_of_birth;
                 state.isLoading = false;
             })
             .addCase(checkAuth.rejected, (state) => {
                 state.user_id = null;
                 state.fullname = null;
+                state.email = null;
                 state.permission = null;
+                state.is_email_verified = false;
+                state.is_phone_verified = false;
+                state.date_of_birth = null;
                 state.isLoading = false;
-            })
-            .addCase(handleLogin.fulfilled, (state, action) => {
-                if (action.payload) {
-                    state.user_id = action.payload.user_id || null;
-                    state.fullname = action.payload.fullname || null;
-                    state.permission = action.payload.permission || null;
-                    state.isLoading = false;
-                }
             });
     },
 });

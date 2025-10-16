@@ -28,10 +28,9 @@ export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({re
         }
     }
     const cookies = parse(req.headers.cookie || "");
-    const auth_token = cookies.auth_token
-    if (auth_token) {
+    const access_token = cookies.access_token;
+    if (access_token) {
         try {
-
             await axios.post(`${process.env.SERVERSIDE_API}/api/gauflix/history`, {
                 title: movieData.item.name,
                 slug: movieData.item.slug,
@@ -39,7 +38,7 @@ export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({re
                 movie_episode: episodeNumber,
             }, {
                 headers: {
-                    Authorization: `${auth_token}`,
+                    Authorization: `Bearer ${access_token}`,
                 },
             });
         } catch (error) {

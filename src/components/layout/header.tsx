@@ -19,7 +19,7 @@ import MobileSearch from "@/components/layout/search/mobile-search"
 import LogoImage from "./logo-image"
 import CategoryDropdown from "./category-dropdown"
 import NationDropdown from "./nation-dropdown"
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import { HeaderSearch } from "./search/search-header"
 
 import axios from "axios";
@@ -31,6 +31,7 @@ export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const pathname = usePathname()
     const router = useRouter()
+    const dispatch = useDispatch()
     const {user_id, fullname} = useSelector(selectAuth);
     const isAuthed = user_id !== null
 
@@ -57,17 +58,31 @@ export default function Header() {
     }, [isMenuOpen])
 
     const handleLogout = async () => {
-        const token = localStorage.getItem("auth_token")
-        const response = await axios.post("/api/auth/logout", {
-            header: {
-                Authorization: token
-            }
-        })
+        try {
+            const token = localStorage.getItem("access_token")
 
-        if (response.status == 200) {
-            localStorage.removeItem("auth_token")
-            logout();
-            router.refresh();
+            if (token) {
+                const response = await axios.post("/api/auth/logout", {}, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+
+                if (response.status === 200) {
+                    // Dispatch Redux logout action
+                    dispatch(logout());
+                    router.push("/");
+                }
+            } else {
+                // If no token, just clear Redux state
+                dispatch(logout());
+                router.push("/");
+            }
+        } catch (error) {
+            console.error("Logout error:", error);
+            // Even if logout API fails, clear local state
+            dispatch(logout());
+            router.push("/");
         }
     }
 
@@ -253,4 +268,3 @@ function NavLink({href, label}: { href: string; label: string }) {
         </Link>
     )
 }
-

@@ -5,7 +5,7 @@ import axios from "axios";
 const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
     const {title, slug, poster_url, movie_episode} = req.body;
     const cookies = parse(req.headers.cookie || '');
-    const token = cookies.auth_token;
+    const token = cookies.access_token || req.headers.authorization;
     if (!token) {
         return res.status(401).json({error: 'Unauthorized'});
     }
@@ -13,7 +13,7 @@ const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
         const response = await axios.post(`${process.env.SERVERSIDE_API}/api/gauflix/history`, {
             data: {title, slug, poster_url, movie_episode},
             headers: {
-                Authorization: `${token}`,
+                Authorization: `Bearer ${token}`,
             },
         });
         if (response.status != 200) {
