@@ -93,6 +93,10 @@ export default function LoginPage() {
                 setAccessTokenToStorage(data.access_token, data.expires_in);
             }
 
+            if (data.device_id) {
+                localStorage.setItem("device_id", data.device_id);
+            }
+
             // Dispatch login success with user data
             dispatch(loginSuccess(data.user));
 

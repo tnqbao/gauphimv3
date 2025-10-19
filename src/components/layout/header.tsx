@@ -60,11 +60,12 @@ export default function Header() {
     const handleLogout = async () => {
         try {
             const token = localStorage.getItem("access_token")
-
+            const deviceId = localStorage.getItem("device_id")
             if (token) {
                 const response = await axios.post("/api/auth/logout", {}, {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${token}`,
+                        'device_id' : deviceId || ''
                     }
                 })
 
@@ -91,7 +92,7 @@ export default function Header() {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                        <AvatarImage src="/placeholder.svg" alt="User avatar"/>
+                        <AvatarImage src={ "https://cdn.gauas.online/images/avatar/default_image.jpg" } alt="User avatar"/>
                         <AvatarFallback>
                             <User className="h-4 w-4"/>
                         </AvatarFallback>

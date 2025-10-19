@@ -76,7 +76,7 @@ export default function CategoryPage({ slug, listType, movies, pagination }: Cat
                 <meta property="og:image" content={ogImage}/>
                 <meta property="og:image:width" content="1200"/>
                 <meta property="og:image:height" content="630"/>
-                <meta property="og:url" content={`https://gauphim.daudoo.com/category/${slug}`}/>
+                <meta property="og:url" content={`https://xemphim.gauas.online/category/${slug}`}/>
 
                 <meta name="twitter:card" content="summary_large_image"/>
                 <meta name="twitter:title" content={`Top phim ${title} hay nhất - Vietsub Full HD miễn phí`}/>
@@ -90,13 +90,13 @@ export default function CategoryPage({ slug, listType, movies, pagination }: Cat
                         "@type": "ItemList",
                         "name": `Phim ${title}`,
                         "description": `Danh sách phim ${title} hấp dẫn, Vietsub Full HD miễn phí tại Gấu Phim.`,
-                        "url": `https://gauphim.daudoo.com/category/${slug}`,
+                        "url": `https://xemphim.gauas.online/category/${slug}`,
                         "numberOfItems": movies.length,
                         "itemListElement": movies.slice(0, 5).map((movie, index) => ({
                             "@type": "Movie",
                             "position": index + 1,
                             "name": movie.title,
-                            "url": `https://gauphim.daudoo.com/detail/${movie.slug}`,
+                            "url": `https://xemphim.gauas.online/detail/${movie.slug}`,
                             "image": movie.poster_url ? `https://img.ophim.live/uploads/movies/${movie.poster_url}` : "https://i.imgur.com/sACJNuE.png",
                             "datePublished": movie.year || "2024",
                             "genre": movie.category?.map(cat => cat.name) || []

@@ -39,7 +39,8 @@ const HistoryClientPage: React.FC = () => {
                         page: current,
                     }
                 })
-                const {history, total_page, current_page} = res.data
+
+                const {history, total_page, current_page} = res.data.data
 
                 setMovies(history)
                 setTotalPages(total_page)

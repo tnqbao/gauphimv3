@@ -42,7 +42,7 @@ export default function MoviePage({movieData}: MoviePageProps) {
             <Head>
                 <title>{`${title} (${movieData?.item.year || "N/A"}) | Xem Full HD Vietsub miễn phí - Gấu Phim`}</title>
                 <meta name="robots" content="index, follow"/>
-                <link rel="canonical" href={`https://gauphim.daudoo.com/detail/${slug}`}/>
+                <link rel="canonical" href={`https://xemphim.gauas.online/detail/${slug}`}/>
                 <meta name="description"
                       content={`Xem ${title} (${movieData?.item.year || "N/A"}) Vietsub Full HD miễn phí tại Gấu Phim. Xem trailer, lịch chiếu và đánh giá mới nhất!`}/>
                 <meta name="keywords"
@@ -52,7 +52,7 @@ export default function MoviePage({movieData}: MoviePageProps) {
                       content={`Xem phim ${title} tại Gấu Flix. Cập nhật thông tin mới nhất về bộ phim, đánh giá, trailer, và các thông tin chi tiết khác.`}/>
                 <meta property="og:image"
                       content={poster_url ? `https://img.ophim.live/uploads/movies/${poster_url}` : "https://i.imgur.com/sACJNuE.png"}/>
-                <meta property="og:url" content={`https://gauphim.daudoo.com/detail/${slug}`}/>
+                <meta property="og:url" content={`https://xemphim.gauas.online/detail/${slug}`}/>
                 <meta name="twitter:card" content="summary_large_image"/>
                 <meta name="twitter:title" content={`${title} - Xem phim tại Gấu Flix`}/>
                 <meta name="twitter:description"
@@ -65,7 +65,7 @@ export default function MoviePage({movieData}: MoviePageProps) {
                         "@context": "https://schema.org",
                         "@type": "Movie",
                         "name": title,
-                        "url": `https://gauphim.daudoo.com/detail/${slug}`,
+                        "url": `https://xemphim.gauas.online/detail/${slug}`,
                         "image": poster_url ? `https://img.ophim.live/uploads/movies/${poster_url}` : "/default-thumbnail.jpg",
                         "datePublished": movieData?.item.year?.toString() || "2024",
                         "duration": movieData?.item.time || "N/A",

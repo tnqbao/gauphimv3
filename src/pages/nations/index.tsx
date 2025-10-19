@@ -47,7 +47,7 @@ export default function NationsPage({ nations }: NationsPageProps) {
                 <meta property="og:title" content="Chọn quốc gia phim - Xem phim miễn phí, chất lượng cao" />
                 <meta property="og:description" content="Khám phá các quốc gia phim hấp dẫn tại đây. Chọn quốc gia yêu thích và xem các bộ phim miễn phí, chất lượng cao." />
                 <meta property="og:image" content="URL_to_image_for_nations_page" />
-                <meta property="og:url" content="https://gauphim.daudoo.com/nations" />
+                <meta property="og:url" content="https://xemphim.gauas.online/nations" />
                 <meta name="twitter:card" content="https://i.imgur.com/aMY5YTJ.png" />
                 <meta name="twitter:title" content="Chọn quốc gia phim - Xem phim miễn phí, chất lượng cao" />
                 <meta name="twitter:description" content="Khám phá các quốc gia phim hấp dẫn tại đây. Chọn quốc gia yêu thích và xem các bộ phim miễn phí, chất lượng cao." />

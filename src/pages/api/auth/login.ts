@@ -75,8 +75,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 permission: userInfo.permission || "member",
                 is_email_verified: userInfo.is_email_verified,
                 is_phone_verified: userInfo.is_phone_verified,
-                date_of_birth: userInfo.date_of_birth
-            }
+                date_of_birth: userInfo.date_of_birth,
+            },
+            device_id : deviceId
         });
     } catch (error) {
         console.error("Login error:", error);

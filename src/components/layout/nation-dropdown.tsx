@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button"
 
 export const nations = [
     { name: "Mỹ", slug: "au-my ", flag: "🇺🇸" },
-    {name: "Việt Nam", slug: "viet-nam", flag: "🇻🇳"},
+    // {name: "Việt Nam", slug: "viet-nam", flag: "🇻🇳"},
     { name: "Hàn Quốc", slug: "han-quoc", flag: "🇰🇷" },
     { name: "Nhật Bản", slug: "nhat-ban", flag: "🇯🇵" },
     { name: "Trung Quốc", slug: "trung-quoc", flag: "🇨🇳" },

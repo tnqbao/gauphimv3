@@ -22,6 +22,7 @@ const Footer = lazy(() => import("@/components/layout/footer"))
 const FloatingLeaves = lazy(() => import("@/components/content/floating-leaves"))
 
 interface Movie {
+    title: string
     name: string
     year: string
     slug: string
@@ -63,7 +64,8 @@ export default function HomePage() {
 
                 setNewReleases(
                     data.release.map((movie: Movie) => ({
-                        title: movie.name,
+                        title: movie.title,
+                        // name: movie.
                         year: movie.year,
                         slug: movie.slug,
                         rating: "N/A",
@@ -74,7 +76,7 @@ export default function HomePage() {
 
                 setSingleMovies(
                     data.single.map((movie: Movie) => ({
-                        title: movie.name,
+                        title: movie.title,
                         year: movie.year,
                         slug: movie.slug,
                         rating: "N/A",
@@ -85,7 +87,7 @@ export default function HomePage() {
 
                 setSeries(
                     data.series.map((movie: Movie) => ({
-                        title: movie.name,
+                        title: movie.title,
                         year: movie.year,
                         slug: movie.slug,
                         rating: "N/A",
@@ -96,7 +98,7 @@ export default function HomePage() {
 
                 setCatoons(
                     data.cartoon.map((movie: Movie) => ({
-                        title: movie.name,
+                        title: movie.title,
                         year: movie.year,
                         slug: movie.slug,
                         rating: "N/A",
@@ -108,6 +110,7 @@ export default function HomePage() {
                 setPandaPicks(
                     data.hero.map((movie: Movie) => ({
                         title: movie.name,
+                        name: movie.name,
                         description: movie.description,
                         year: movie.year,
                         poster: `${movie.slug}-thumb.jpg`,
@@ -138,21 +141,21 @@ export default function HomePage() {
                 <meta property="og:description" content="Xem phim online miễn phí, cập nhật phim mới nhanh nhất!"/>
                 <meta property="og:image" content="https://i.imgur.com/sACJNuE.png"/>
                 <meta property="og:type" content="website"/>
-                <meta property="og:url" content="https://gauphim.daudoo.com/"/>
+                <meta property="og:url" content="https://xemphim.gauas.online/"/>
 
                 <meta name="twitter:card" content="summary_large_image"/>
                 <meta name="twitter:title" content="Gấu Phim - Xem Phim Online Chất Lượng Cao"/>
                 <meta name="twitter:description" content="Cập nhật nhanh phim chiếu rạp hot nhất!"/>
                 <meta name="twitter:image" content="https://i.imgur.com/YvZjVti.png"/>
 
-                <link rel="canonical" href="https://gauphim.daudoo.com/"/>
+                <link rel="canonical" href="https://xemphim.gauas.online/"/>
 
                 <script type="application/ld+json">
                     {JSON.stringify({
                         "@context": "https://schema.org",
                         "@type": "VideoStreamingService",
                         "name": "Gấu Phim",
-                        "url": "https://gauphim.daudoo.com/",
+                        "url": "https://xemphim.gauas.online/",
                         "description": "Xem phim online miễn phí với chất lượng cao, phim hành động, kinh dị, tình cảm hấp dẫn nhất.",
                         "image": "https://i.imgur.com/sACJNuE.png",
                         "publisher": {
@@ -165,7 +168,7 @@ export default function HomePage() {
                         },
                         "potentialAction": {
                             "@type": "SearchAction",
-                            "target": "https://gauphim.daudoo.com/search?q={search_term_string}",
+                            "target": "https://xemphim.gauas.online/search?q={search_term_string}",
                             "query-input": "required name=search_term_string"
                         }
                     })}

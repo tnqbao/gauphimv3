@@ -128,10 +128,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                                 user: {
                                     user_id: userInfo.user_id,
                                     fullname: userInfo.fullname,
-                                    email: userInfo.email,
-                                    is_email_verified: userInfo.is_email_verified,
-                                    is_phone_verified: userInfo.is_phone_verified,
-                                    date_of_birth: userInfo.date_of_birth
+                                    // email: userInfo.email,
+                                    // is_email_verified: userInfo.is_email_verified,
+                                    // is_phone_verified: userInfo.is_phone_verified,
+                                    // date_of_birth: userInfo.date_of_birth
                                 }
                             });
                         } catch (profileError) {

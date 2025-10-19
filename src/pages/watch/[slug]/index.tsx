@@ -7,18 +7,17 @@ import {fetchMovieBySlug, MovieDetailType} from "@/utils/api"
 import {GetServerSideProps} from "next"
 import Head from "next/head"
 import axios from "axios";
-import {parse} from "cookie";
 import {useEffect, useState} from "react";
+import {getAccessTokenFromStorage} from "@/store/slices/authSlice";
 
 interface MoviePageProps {
     movieData: MovieDetailType | null
     episodeNumber: string
 }
 
-export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({req, params, query}) => {
+export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({params, query}) => {
     const slug = params?.slug as string
     const episodeNumber = query.ep ? (query.ep as string) : "1";
-
 
     const movieData = await fetchMovieBySlug(slug)
 
@@ -27,27 +26,7 @@ export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({re
             notFound: true,
         }
     }
-    const cookies = parse(req.headers.cookie || "");
-    const access_token = cookies.access_token;
-    if (access_token) {
-        try {
-            await axios.post(`${process.env.SERVERSIDE_API}/api/gauflix/history`, {
-                title: movieData.item.name,
-                slug: movieData.item.slug,
-                poster_url: movieData.item.poster_url,
-                movie_episode: episodeNumber,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${access_token}`,
-                },
-            });
-        } catch (error) {
-            console.error('Failed to update history:', {
-                    error
-                }
-            );
-        }
-    }
+
     return {
         props: {
             movieData,
@@ -68,6 +47,31 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
     }
 
     useEffect(() => {
+        const updateHistory = async () => {
+            const access_token = getAccessTokenFromStorage();
+            if (!access_token) return;
+
+            try {
+                await axios.post(`/api/history`, {
+                    title: movieData.item.name,
+                    slug: movieData.item.slug,
+                    poster_url: movieData.item.poster_url,
+                    movie_episode: episodeNumber,
+                }, {
+                    headers: {
+                        Authorization: `${access_token}`,
+                    },
+                    withCredentials: true
+                });
+            } catch (error) {
+                console.error('Failed to update history:', error);
+            }
+        };
+
+        updateHistory();
+    }, [movieData.item.name, movieData.item.slug, movieData.item.poster_url, episodeNumber]);
+
+    useEffect(() => {
         const timer = setTimeout(() => setShowWarning(false), 30000);
         return () => clearTimeout(timer);
     }, []);
@@ -85,7 +89,7 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                       content={`Xem phim ${title} tập ${episodeNumber} Vietsub, Full HD, ${title} ${episodeNumber}, ${title} online miễn phí, Gấu Flix`}/>
                 <meta name="robots" content="index, follow"/>
                 {episodeNumber === "1" && (
-                    <link rel="canonical" href={`https://gauphim.daudoo.com/watch/${slug}`}/>
+                    <link rel="canonical" href={`https://xemphim.gauas.online/watch/${slug}`}/>
                 )}
 
                 <meta property="og:title" content={`${title} - Tập ${episodeNumber} - Xem phim tại Gấu Flix`}/>
@@ -106,7 +110,7 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                         <meta property="og:video:height" content="720"/>
                     </>
                 )}
-                <meta property="og:url" content={`https://gauphim.daudoo.com/watch/${slug}?ep=${episodeNumber}`}/>
+                <meta property="og:url" content={`https://xemphim.gauas.online/watch/${slug}?ep=${episodeNumber}`}/>
 
                 <meta name="twitter:card" content="summary_large_image"/>
                 <meta name="twitter:title" content={`${title} - Tập ${episodeNumber} - Xem phim tại Gấu Flix`}/>
@@ -123,7 +127,7 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                         "thumbnailUrl": `https://img.ophim.live/uploads/movies/${poster_url}`,
                         "uploadDate": new Date().toISOString(),
                         "contentUrl": currentEpisode.link_m3u8,
-                        "embedUrl": `https://gauphim.daudoo.com/watch/${slug}?ep=${episodeNumber}`,
+                        "embedUrl": `https://xemphim.gauas.online/watch/${slug}?ep=${episodeNumber}`,
                         "publisher": {
                             "@type": "Organization",
                             "name": "Gấu Flix",
