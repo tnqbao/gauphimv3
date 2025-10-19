@@ -1,7 +1,6 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {userApiInstance} from "@/utils/axios.config";
 import {serialize} from "cookie";
-import {getDeviceId} from "@/utils/device";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== "POST") {
@@ -10,14 +9,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        // Get access token from cookies or authorization header
         const accessToken =
             req.cookies.access_token ||
             (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")
                 ? req.headers.authorization.substring(7)
                 : null);
+        const refreshToken = req.cookies.refresh_token || null;
+
+        if (!accessToken && !refreshToken) {
+            return res.status(400).json({status: 400, message: "No access or refresh token provided"});
+        }
         const deviceId = req.headers.device_id;
-        // Call external logout API if token exists
         if (accessToken) {
             try {
                 await userApiInstance.post(
@@ -26,7 +28,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
-                            "X-Device-ID": deviceId
+                            "X-Device-ID": deviceId,
+                            "X-Refresh-Token": refreshToken || "",
                         },
                     }
                 );

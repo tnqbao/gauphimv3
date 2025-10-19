@@ -50,7 +50,6 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
         const updateHistory = async () => {
             const access_token = getAccessTokenFromStorage();
             if (!access_token) return;
-
             try {
                 await axios.post(`/api/history`, {
                     title: movieData.item.name,
@@ -61,7 +60,6 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                     headers: {
                         Authorization: `${access_token}`,
                     },
-                    withCredentials: true
                 });
             } catch (error) {
                 console.error('Failed to update history:', error);
