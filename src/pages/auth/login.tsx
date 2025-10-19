@@ -10,6 +10,7 @@ import { Eye, EyeOff } from "lucide-react"
 import AuthLayout from "@/components/content/auth/auth-layout"
 import PandaWindow from "@/components/content/auth/panda-window"
 import AuthFormFooter from "@/components/content/auth/auth-form-footer"
+import GoogleAuthButton from "@/components/content/auth/google-auth-button"
 import {useRouter} from "next/router";
 import {useDispatch} from "react-redux";
 import {loginSuccess, setAccessTokenToStorage} from "@/store/slices/authSlice";
@@ -24,6 +25,7 @@ export default function LoginPage() {
     const [error, setError] = useState<{ email?: boolean; password?: boolean }>({})
     const [errorMessage, setErrorMessage] = useState<{ email?: string; password?: string }>({})
     const [keepLogin, setKeepLogin] = useState(false)
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false)
     const emailInputRef = useRef<HTMLInputElement>(null)
     const passwordInputRef = useRef<HTMLInputElement>(null)
     const router = useRouter();
@@ -192,7 +194,7 @@ export default function LoginPage() {
                         <Button
                             type="submit"
                             className="w-full bg-green-600 hover:bg-green-700 transition-colors"
-                            disabled={isLoading}
+                            disabled={isLoading || isGoogleLoading}
                         >
                             {isLoading ? (
                                 <div className="flex items-center">
@@ -229,6 +231,24 @@ export default function LoginPage() {
                             </Link>
                         </div>
                     </form>
+
+                    {/* Divider */}
+                    <div className="relative my-6">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-white px-2 text-muted-foreground">
+                                Hoặc
+                            </span>
+                        </div>
+                    </div>
+
+                    <GoogleAuthButton
+                        mode="login"
+                        isLoading={isGoogleLoading}
+                        onLoadingChange={setIsGoogleLoading}
+                    />
                 </CardContent>
 
                 <CardFooter>

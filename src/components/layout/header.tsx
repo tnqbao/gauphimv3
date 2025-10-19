@@ -92,7 +92,7 @@ export default function Header() {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                        <AvatarImage src={ "https://cdn.gauas.online/images/avatar/default_image.jpg" } alt="User avatar"/>
+                        <AvatarImage src={`https://cdn.gauas.online/images/avatar/${user_id}.jpg` || "https://cdn.gauas.online/images/avatar/default_image.jpg" } alt="User avatar"/>
                         <AvatarFallback>
                             <User className="h-4 w-4"/>
                         </AvatarFallback>
