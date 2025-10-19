@@ -21,7 +21,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({
     const dispatch = useDispatch()
 
     const loading = isLoading || localLoading
-
+    console.log(mode)
     const googleLogin = useGoogleLogin({
         flow: "implicit",
         onSuccess: async (tokenResponse) => {
