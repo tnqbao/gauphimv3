@@ -1,6 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {parse} from "cookie";
-import axios from "axios";
 import {userApiInstance} from "@/utils/axios.config";
 
 
