@@ -114,8 +114,9 @@ export default function ProfilePage() {
                 setIsEditing(false)
                 await fetchProfile()
             }
-        } catch (err: any) {
-            setError(err.response?.data?.message || "Có lỗi xảy ra khi cập nhật thông tin")
+        } catch (err) {
+            const error = err as { response?: { data?: { message?: string } } }
+            setError(error.response?.data?.message || "Có lỗi xảy ra khi cập nhật thông tin")
         } finally {
             setIsLoading(false)
         }
@@ -232,7 +233,7 @@ export default function ProfilePage() {
                                 <button
                                     onClick={handleAvatarClick}
                                     disabled={isUploadingAvatar}
-                                    className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer disabled:cursor-not-allowed"
+                                    className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer disabled:cursor-not-allowed"
                                 >
                                     {isUploadingAvatar ? (
                                         <Loader2 className="h-8 w-8 text-white animate-spin" />
@@ -254,7 +255,7 @@ export default function ProfilePage() {
                                 <span className={cn(
                                     "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium",
                                     profile.permission === "admin"
-                                        ? "bg-yellow-600 text-white dark:bg-yellow-600 dark:text-white"
+                                        ? "bg-yellow-600 text-white"
                                         : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                                 )}>
                                     {profile.permission === "admin" ? (
@@ -341,10 +342,7 @@ export default function ProfilePage() {
                             <CardContent className="space-y-6">
                                 {/* Full Name */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="fullname" className="flex items-center gap-2">
-                                        <User className="h-4 w-4" />
-                                        Họ và tên
-                                    </Label>
+                                    <Label htmlFor="fullname">Họ và tên</Label>
                                     {isEditing ? (
                                         <Input
                                             id="fullname"
@@ -361,10 +359,7 @@ export default function ProfilePage() {
 
                                 {/* Username */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="username" className="flex items-center gap-2">
-                                        <User className="h-4 w-4" />
-                                        Tên người dùng
-                                    </Label>
+                                    <Label htmlFor="username">Tên người dùng</Label>
                                     {isEditing ? (
                                         <Input
                                             id="username"
@@ -381,10 +376,7 @@ export default function ProfilePage() {
 
                                 {/* Email */}
                                 <div className="space-y-2">
-                                    <Label className="flex items-center gap-2">
-                                        <Mail className="h-4 w-4" />
-                                        Email
-                                    </Label>
+                                    <Label>Email</Label>
                                     <p className="text-lg">{profile.email}</p>
                                     <p className="text-sm text-muted-foreground">Email không thể chỉnh sửa</p>
                                 </div>
