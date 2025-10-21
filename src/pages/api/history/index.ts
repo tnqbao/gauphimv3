@@ -47,8 +47,6 @@ const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
                 },
             });
 
-
-        console.log("History updated:", response.data);
         return res.status(200).json(response.data);
 
     } catch (error) {

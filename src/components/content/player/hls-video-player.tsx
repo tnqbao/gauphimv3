@@ -9,12 +9,13 @@ interface HLSVideoPlayerProps {
     onTimeUpdate?: () => void
     onTouchStart: () => void
     onTouchEnd: () => void
-    onDoubleClick: () => void
+    onDoubleClick: (event: React.MouseEvent<HTMLDivElement>) => void
+    onClick: (event: React.MouseEvent<HTMLDivElement>) => void
 }
 
 const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
     function HLSVideoPlayerComponent(
-        { src, poster, className, onLoadedMetadata, onTimeUpdate, onTouchStart, onTouchEnd, onDoubleClick },
+        { src, poster, className, onLoadedMetadata, onTimeUpdate, onTouchStart, onTouchEnd, onDoubleClick, onClick },
         ref
     ) {
         const videoRef = useRef<HTMLVideoElement | null>(null)
@@ -23,8 +24,10 @@ const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
             const video = videoRef.current
             if (!video) return
 
+            let hls: Hls | null = null
+
             if (Hls.isSupported()) {
-                const hls = new Hls()
+                hls = new Hls()
                 hls.loadSource(src)
                 hls.attachMedia(video)
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -32,6 +35,12 @@ const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
                 })
             } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
                 video.src = src
+            }
+
+            return () => {
+                if (hls) {
+                    hls.destroy()
+                }
             }
         }, [src])
 
@@ -61,23 +70,25 @@ const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
 
 
         return (
-            <video
-                ref={(el) => {
-                    videoRef.current = el
-                    if (typeof ref === "function") ref(el)
-                    else if (ref) ref.current = el
-                }}
-                className={className}
-                poster={poster}
-                onLoadedMetadata={onLoadedMetadata}
-                onTimeUpdate={onTimeUpdate}
-                onTouchStart={() => videoRef.current && onTouchStart()}
-                onTouchEnd={() => videoRef.current && onTouchEnd()}
-                onDoubleClick={() => videoRef.current && onDoubleClick()}
+            <div
+                className="relative w-full h-full"
+                onDoubleClick={onDoubleClick}
+                onClick={onClick}
             >
-                <source src={src} type="application/x-mpegURL" />
-                Your browser does not support the video tag.
-            </video>
+                <video
+                    ref={(el) => {
+                        videoRef.current = el
+                        if (typeof ref === "function") ref(el)
+                        else if (ref) ref.current = el
+                    }}
+                    className={className}
+                    poster={poster}
+                    onLoadedMetadata={onLoadedMetadata}
+                    onTimeUpdate={onTimeUpdate}
+                    onTouchStart={() => videoRef.current && onTouchStart()}
+                    onTouchEnd={() => videoRef.current && onTouchEnd()}
+                />
+            </div>
         )
     }
 )
