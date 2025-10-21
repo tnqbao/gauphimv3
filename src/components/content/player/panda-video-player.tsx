@@ -218,8 +218,8 @@ export default function PandaVideoPlayer({
 
     return (
         <div ref={containerRef} className={cn("transition-colors duration-300", lightsOff ? "" : "")}>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
+            <div className="flex flex-col gap-6">
+                <div className="w-full">
                     <div
                         ref={playerRef}
                         className="relative w-full h-[50vh] md:h-auto md:aspect-video bg-black md:rounded-lg overflow-hidden group"
@@ -278,26 +278,31 @@ export default function PandaVideoPlayer({
                     </div>
 
                     <MovieInfoDisplay {...movieInfo} lightsOff={lightsOff}/>
-                    <AnimatePresence>
-                        {showEpisodeList && (
-                            <EpisodeList
-                                episodes={episodes}
-                                currentEpisode={currentEpisode}
-                                movieSlug={movieSlug}
-                                isVisible={showEpisodeList}
-                                onClose={toggleEpisodeList}
-                                isMobile={true}
-                                movieName={movieInfo.name}
-                            />
-                        )}
-                    </AnimatePresence>
                 </div>
 
-                <div className="lg:col-span-1 hidden lg:block">
-                    <EpisodeList episodes={episodes} currentEpisode={currentEpisode} movieSlug={movieSlug} isVisible
-                                 movieName={movieInfo.name}
+                {/* Episode list now appears below player on all screen sizes */}
+                <div className="w-full">
+                    <EpisodeList
+                        episodes={episodes}
+                        currentEpisode={currentEpisode}
+                        movieSlug={movieSlug}
+                        isVisible
                     />
                 </div>
+
+                {/* Mobile episode list overlay */}
+                <AnimatePresence>
+                    {showEpisodeList && (
+                        <EpisodeList
+                            episodes={episodes}
+                            currentEpisode={currentEpisode}
+                            movieSlug={movieSlug}
+                            isVisible={showEpisodeList}
+                            onClose={toggleEpisodeList}
+                            isMobile={true}
+                        />
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     )
