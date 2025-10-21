@@ -23,6 +23,7 @@ interface PandaVideoPlayerProps {
     currentEpisode: string
     movieSlug: string
     movieInfo: MovieInfo
+    onLightsOffChange?: (lightsOff: boolean) => void
 }
 
 export default function PandaVideoPlayer({
@@ -33,6 +34,7 @@ export default function PandaVideoPlayer({
                                              currentEpisode,
                                              movieSlug,
                                              movieInfo,
+                                             onLightsOffChange,
                                          }: PandaVideoPlayerProps) {
     const [isEmbedVideo, setIsEmbedVideo] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
@@ -251,8 +253,18 @@ export default function PandaVideoPlayer({
         }
     }, [])
 
+    // Notify parent component when lightsOff changes
+    useEffect(() => {
+        if (onLightsOffChange) {
+            onLightsOffChange(lightsOff)
+        }
+    }, [lightsOff, onLightsOffChange])
+
     return (
-        <div ref={containerRef} className={cn("transition-colors duration-300", lightsOff ? "" : "")}>
+        <div ref={containerRef} className={cn(
+            "transition-colors duration-500",
+            lightsOff ? "bg-black" : "bg-[#f8f9fa] dark:bg-gray-900"
+        )}>
             <div className="flex flex-col gap-6">
                 <div className="w-full">
                     <div
@@ -317,7 +329,10 @@ export default function PandaVideoPlayer({
                 </div>
 
                 {/* Episode list now appears below player on all screen sizes */}
-                <div className="w-full">
+                <div className={cn(
+                    "w-full transition-all duration-500",
+                    lightsOff ? "opacity-0 invisible h-0 overflow-hidden" : "opacity-100 visible"
+                )}>
                     <EpisodeList
                         episodes={episodes}
                         currentEpisode={currentEpisode}
