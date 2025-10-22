@@ -14,7 +14,10 @@ interface MovieInfoDisplayProps {
 
 export default function MovieInfoDisplay({  year, categories, description, lightsOff }: MovieInfoDisplayProps) {
     return (
-        <div className={cn("mt-6 transition-colors duration-300 mx-4 md:mx-0 ", lightsOff ? "" : "")}>
+        <div className={cn(
+            "mt-6 transition-all duration-500 mx-4 md:mx-0",
+            lightsOff ? "opacity-0 invisible h-0 overflow-hidden" : "opacity-100 visible"
+        )}>
             <div className="flex flex-wrap gap-2 mb-4">
                 <Badge variant="outline" className="bg-green-600 border-none">
                     {year}
@@ -38,4 +41,3 @@ export default function MovieInfoDisplay({  year, categories, description, light
         </div>
     )
 }
-

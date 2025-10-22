@@ -7,9 +7,8 @@ import {fetchMovieBySlug, MovieDetailType} from "@/utils/api"
 import {GetServerSideProps} from "next"
 import Head from "next/head"
 import axios from "axios";
-import {useEffect, useState, useCallback} from "react";
+import {useEffect, useState} from "react";
 import {getAccessTokenFromStorage} from "@/store/slices/authSlice";
-import {cn} from "@/lib/utils";
 
 interface MoviePageProps {
     movieData: MovieDetailType | null
@@ -41,17 +40,11 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
         notFound()
     }
     const [showWarning, setShowWarning] = useState(true);
-    const [lightsOff, setLightsOff] = useState(false);
     const episodes = movieData.item.episodes && movieData.item.episodes.length > 0 ? movieData.item.episodes[0].server_data : []
 
     if (episodes.length === 0) {
         notFound()
     }
-
-    // Memoize callback để tránh re-render không cần thiết
-    const handleLightsOffChange = useCallback((value: boolean) => {
-        setLightsOff(value);
-    }, []);
 
     useEffect(() => {
         const updateHistory = async () => {
@@ -84,15 +77,8 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
     const movieItemData = movieData.item
     const currentEpisode = episodes.find((ep) => ep.name === episodeNumber) || episodes[0]
     const {name: title, poster_url, slug} = movieItemData
-
-    // Tạo class ẩn hiện một lần để tái sử dụng
-    const hiddenClass = lightsOff ? "opacity-0 invisible h-0 overflow-hidden" : "opacity-100 visible";
-
     return (
-        <div className={cn(
-            "flex min-h-screen flex-col transition-colors duration-500",
-            lightsOff ? "bg-black" : "bg-[#f8f9fa] dark:bg-gray-900"
-        )}>
+        <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
             <Head>
                 <title>{`${title} Tập ${episodeNumber} - Vietsub Full HD | Gấu Flix`}</title>
                 <meta name="description"
@@ -151,18 +137,9 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                     })}
                 </script>
             </Head>
-
-            {/* Header - Ẩn khi tắt đèn */}
-            <div className={cn("transition-all duration-500", hiddenClass)}>
-                <Header/>
-            </div>
-
+            <Header/>
             <main className="flex-1">
-                {/* Breadcrumb - Ẩn khi tắt đèn */}
-                <div className={cn(
-                    "container px-4 md:px-6 py-4 text-sm sm:text-xl md:text-2xl transition-all duration-500",
-                    hiddenClass
-                )}>
+                <div className="container px-4 md:px-6 py-4 text-sm sm:text-xl md:text-2xl">
                     <Breadcrumb
                         items={[
                             {label: "Phim", href: "../list/phim-moi"},
@@ -173,13 +150,11 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                 </div>
 
                 <div className="container px-0 md:px-6 py-4">
-                    {/* Title - Ẩn khi tắt đèn */}
-                    <div className={cn("px-4 md:px-0 transition-all duration-500", hiddenClass)}>
+                    <div className="px-4 md:px-0">
                         <h1 className="text-xl md:text-2xl font-bold mb-4">
                             {movieItemData.name} - Tập {currentEpisode.name}
                         </h1>
                     </div>
-
                     <div className="relative mx-0 md:w-full">
                         <PandaVideoPlayer
                             title={`${movieItemData.name} - Tập ${currentEpisode.name}`}
@@ -194,26 +169,18 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                                 categories: movieItemData.category,
                                 description: movieItemData.content,
                             }}
-                            onLightsOffChange={handleLightsOffChange}
                         />
                     </div>
                 </div>
-
-                {/* Warning - Ẩn khi tắt đèn */}
                 {showWarning && (
-                    <div className={cn(
-                        "my-4 px-4 py-3 border-l-4 text-sm md:text-base rounded shadow-lg bg-green-500 dark:bg-green-700 text-white dark:text-green-200 animate-pulse md:mx-2 transition-all duration-500",
-                        hiddenClass
-                    )}>
+                    <div className=" my-4 px-4 py-3 border-l-4 text-sm md:text-base rounded shadow-lg bg-green-500 dark:bg-green-700 text-white dark:text-green-200 opacity-100 animate-pulse md:mx-2">
                         <strong>⚠️ Cảnh báo:</strong> Hiện nay khi xem phim ở một số bộ phim có hiển thị đường dẫn không rõ nguồn gốc chạy ngang qua, mọi người tuyệt đối không truy cập vào các đường link lạ đó nhen. Gấu đang nỗ lực khắc phục vấn đề này, cảm ơn các bạn iu của Gấu ^^.
                     </div>
                 )}
+
             </main>
 
-            {/* Footer - Ẩn khi tắt đèn */}
-            <div className={cn("transition-all duration-500", hiddenClass)}>
-                <Footer/>
-            </div>
+            <Footer/>
         </div>
     )
 }
