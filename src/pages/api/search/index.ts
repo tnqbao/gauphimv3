@@ -7,7 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     try {
         const keyword = req.query.keyword;
-        const response = await axios.post(`${process.env.SERVERSIDE_API}/api/gauflix/search?keyword=${encodeURIComponent(keyword as string)}`, {
+        const response = await axios.get(`${process.env.SERVERSIDE_API}/api/gauflix/search?keyword=${encodeURIComponent(keyword as string)}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(response.status).json({ error: "Lỗi khi gọi API" });
         }
 
-        res.status(200).json(response.data);
+        res.status(200).json(response.data.data);
     } catch (error) {
         console.error("Lỗi API:", error);
         res.status(500).json({ e: "Lỗi server", error });

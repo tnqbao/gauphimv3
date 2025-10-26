@@ -75,7 +75,7 @@ const ListPage = ({slug, listType, movies, pagination}: ListPageProps) => {
                       content={movies?.length ? `https://img.ophim.live/uploads/movies/${movies[0].thumb_url}` : "https://i.imgur.com/sACJNuE.png"}/>
                 <meta property="og:type" content="website"/>
                 <meta property="og:url"
-                      content={`https://gauphim.daudoo.com/list/${slug}?page=${pagination.currentPage}`}/>
+                      content={`https://xemphim.gauas.online/list/${slug}?page=${pagination.currentPage}`}/>
 
                 <meta name="twitter:card" content="summary_large_image"/>
                 <meta name="twitter:title" content={`Phim thể loại ${title} - Xem phim miễn phí, chất lượng cao`}/>
@@ -85,7 +85,7 @@ const ListPage = ({slug, listType, movies, pagination}: ListPageProps) => {
                       content={movies?.length ? `https://img.ophim.live/uploads/movies/${movies[0].thumb_url}` : "https://i.imgur.com/sACJNuE.png"}/>
 
                 {pagination.currentPage === 1 && (
-                    <link rel="canonical" href={`https://gauphim.daudoo.com/list/${slug}`}/>
+                    <link rel="canonical" href={`https://xemphim.gauas.online/list/${slug}`}/>
                 )}
 
                 <script type="application/ld+json">
@@ -93,14 +93,14 @@ const ListPage = ({slug, listType, movies, pagination}: ListPageProps) => {
                         "@context": "https://schema.org",
                         "@type": "ItemList",
                         "name": `Phim thể loại ${title}`,
-                        "url": `https://gauphim.daudoo.com/list/${slug}?page=${pagination.currentPage}`,
+                        "url": `https://xemphim.gauas.online/list/${slug}?page=${pagination.currentPage}`,
                         "itemListElement": movies?.slice(0, 10).map((movie, index) => ({
                             "@type": "ListItem",
                             "position": index + 1,
                             "item": {
                                 "@type": "Movie",
                                 "name": movie.title,
-                                "url": `https://gauphim.daudoo.com/detail/${movie.slug}`,
+                                "url": `https://xemphim.gauas.online/detail/${movie.slug}`,
                                 "image": `https://img.ophim.live/uploads/movies/${movie.thumb_url}`,
                                 "datePublished": movie.year?.toString() || "2024",
                                 "genre": title,

@@ -1,40 +1,21 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {parse} from "cookie";
-import axios from "axios";
+import {userApiInstance} from "@/utils/axios.config";
 
-const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
-    const {title, slug, poster_url, movie_episode} = req.body;
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies.auth_token;
-    if (!token) {
-        return res.status(401).json({error: 'Unauthorized'});
-    }
-    try {
-        const response = await axios.post(`${process.env.SERVERSIDE_API}/api/gauflix/history`, {
-            data: {title, slug, poster_url, movie_episode},
-            headers: {
-                Authorization: `${token}`,
-            },
-        });
-        if (response.status != 200) {
-            res.status(response.status).json({error: response.data.error});
-        }
-        res.status(200).json(response.data);
-    } catch (error) {
-        res.status(500).json({message: "Error update history data", error});
-    }
-};
+
+
 
 const handleGet = async (req: NextApiRequest, res: NextApiResponse) => {
     const cookies = parse(req.headers.cookie || '');
-    const token = cookies.auth_token;
+    const token = cookies.access_token || req.headers.authorization;
     if (!token) {
         return res.status(401).json({error: 'Unauthorized'});
     }
+    console.log("ping GET history API");
     try {
-        const response = await axios.get(`${process.env.SERVERSIDE_API}/api/gauflix/history`, {
+        const response = await userApiInstance.get(`api/gauflix/history`, {
             headers: {
-                Authorization: `${token}`,
+                Authorization: `Bearer ${token}`,
             },
         });
 
@@ -47,16 +28,43 @@ const handleGet = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 }
 
+const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
+    const { title, slug, poster_url, movie_episode } = req.body;
+    const cookies = parse(req.headers.cookie || '');
+    const token = cookies.access_token || req.headers.authorization;
+
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    try {
+        const response = await userApiInstance.post(`api/gauflix/history`,
+            {
+                title, slug, poster_url, movie_episode },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+        return res.status(200).json(response.data);
+
+    } catch (error) {
+        console.error("POST history error:", error);
+        return res.status(500).json({ message: "Faild to update history" });
+    }
+};
+
 const handleDelete = async (req: NextApiRequest, res: NextApiResponse) => {
     const cookies = parse(req.headers.cookie || '');
-    const token = cookies.auth_token;
+    const token = cookies.access_token;
     if (!token) {
         return res.status(401).json({error: 'Unauthorized'});
     }
     try {
-        const response = await axios.delete(`${process.env.SERVERSIDE_API}/api/gauflix/history`, {
+        const response = await userApiInstance.delete(`api/gauflix/history`, {
             headers: {
-                Authorization: `${token}`,
+                Authorization: `Bearer ${token}`,
             },
         });
         res.status(200).json(response.data);

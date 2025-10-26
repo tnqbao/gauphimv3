@@ -234,12 +234,12 @@ export const listNation: Record<string, ListType> = {
         breadcrumb: "Âu Mỹ",
         endpoint: "api/gauflix/nation/au-my",
     },
-    "viet-nam": {
-        title: "Việt Nam",
-        description: "Phim Việt Nam đầy ý nghĩa và gần gũi",
-        breadcrumb: "Việt Nam",
-        endpoint: "api/gauflix/nation/viet-nam",
-    },
+    // "viet-nam": {
+    //     title: "Việt Nam",
+    //     description: "Phim Việt Nam đầy ý nghĩa và gần gũi",
+    //     breadcrumb: "Việt Nam",
+    //     endpoint: "api/gauflix/nation/viet-nam",
+    // },
     "anh": {
         title: "Anh",
         description: "Phim Anh lịch lãm và cuốn hút",

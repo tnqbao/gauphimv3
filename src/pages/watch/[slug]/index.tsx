@@ -7,18 +7,18 @@ import {fetchMovieBySlug, MovieDetailType} from "@/utils/api"
 import {GetServerSideProps} from "next"
 import Head from "next/head"
 import axios from "axios";
-import {parse} from "cookie";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useCallback} from "react";
+import {getAccessTokenFromStorage} from "@/store/slices/authSlice";
+import {cn} from "@/lib/utils";
 
 interface MoviePageProps {
     movieData: MovieDetailType | null
     episodeNumber: string
 }
 
-export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({req, params, query}) => {
+export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({params, query}) => {
     const slug = params?.slug as string
     const episodeNumber = query.ep ? (query.ep as string) : "1";
-
 
     const movieData = await fetchMovieBySlug(slug)
 
@@ -27,28 +27,7 @@ export const getServerSideProps: GetServerSideProps<MoviePageProps> = async ({re
             notFound: true,
         }
     }
-    const cookies = parse(req.headers.cookie || "");
-    const auth_token = cookies.auth_token
-    if (auth_token) {
-        try {
 
-            await axios.post(`${process.env.SERVERSIDE_API}/api/gauflix/history`, {
-                title: movieData.item.name,
-                slug: movieData.item.slug,
-                poster_url: movieData.item.poster_url,
-                movie_episode: episodeNumber,
-            }, {
-                headers: {
-                    Authorization: `${auth_token}`,
-                },
-            });
-        } catch (error) {
-            console.error('Failed to update history:', {
-                    error
-                }
-            );
-        }
-    }
     return {
         props: {
             movieData,
@@ -62,11 +41,40 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
         notFound()
     }
     const [showWarning, setShowWarning] = useState(true);
+    const [lightsOff, setLightsOff] = useState(false);
     const episodes = movieData.item.episodes && movieData.item.episodes.length > 0 ? movieData.item.episodes[0].server_data : []
 
     if (episodes.length === 0) {
         notFound()
     }
+
+    // Memoize callback để tránh re-render không cần thiết
+    const handleLightsOffChange = useCallback((value: boolean) => {
+        setLightsOff(value);
+    }, []);
+
+    useEffect(() => {
+        const updateHistory = async () => {
+            const access_token = getAccessTokenFromStorage();
+            if (!access_token) return;
+            try {
+                await axios.post(`/api/history`, {
+                    title: movieData.item.name,
+                    slug: movieData.item.slug,
+                    poster_url: movieData.item.poster_url,
+                    movie_episode: episodeNumber,
+                }, {
+                    headers: {
+                        Authorization: `${access_token}`,
+                    },
+                });
+            } catch (error) {
+                console.error('Failed to update history:', error);
+            }
+        };
+
+        updateHistory();
+    }, [movieData.item.name, movieData.item.slug, movieData.item.poster_url, episodeNumber]);
 
     useEffect(() => {
         const timer = setTimeout(() => setShowWarning(false), 30000);
@@ -76,8 +84,15 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
     const movieItemData = movieData.item
     const currentEpisode = episodes.find((ep) => ep.name === episodeNumber) || episodes[0]
     const {name: title, poster_url, slug} = movieItemData
+
+    // Tạo class ẩn hiện một lần để tái sử dụng
+    const hiddenClass = lightsOff ? "opacity-0 invisible h-0 overflow-hidden" : "opacity-100 visible";
+
     return (
-        <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
+        <div className={cn(
+            "flex min-h-screen flex-col transition-colors duration-500",
+            lightsOff ? "bg-black" : "bg-[#f8f9fa] dark:bg-gray-900"
+        )}>
             <Head>
                 <title>{`${title} Tập ${episodeNumber} - Vietsub Full HD | Gấu Flix`}</title>
                 <meta name="description"
@@ -86,7 +101,7 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                       content={`Xem phim ${title} tập ${episodeNumber} Vietsub, Full HD, ${title} ${episodeNumber}, ${title} online miễn phí, Gấu Flix`}/>
                 <meta name="robots" content="index, follow"/>
                 {episodeNumber === "1" && (
-                    <link rel="canonical" href={`https://gauphim.daudoo.com/watch/${slug}`}/>
+                    <link rel="canonical" href={`https://xemphim.gauas.online/watch/${slug}`}/>
                 )}
 
                 <meta property="og:title" content={`${title} - Tập ${episodeNumber} - Xem phim tại Gấu Flix`}/>
@@ -107,7 +122,7 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                         <meta property="og:video:height" content="720"/>
                     </>
                 )}
-                <meta property="og:url" content={`https://gauphim.daudoo.com/watch/${slug}?ep=${episodeNumber}`}/>
+                <meta property="og:url" content={`https://xemphim.gauas.online/watch/${slug}?ep=${episodeNumber}`}/>
 
                 <meta name="twitter:card" content="summary_large_image"/>
                 <meta name="twitter:title" content={`${title} - Tập ${episodeNumber} - Xem phim tại Gấu Flix`}/>
@@ -124,7 +139,7 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                         "thumbnailUrl": `https://img.ophim.live/uploads/movies/${poster_url}`,
                         "uploadDate": new Date().toISOString(),
                         "contentUrl": currentEpisode.link_m3u8,
-                        "embedUrl": `https://gauphim.daudoo.com/watch/${slug}?ep=${episodeNumber}`,
+                        "embedUrl": `https://xemphim.gauas.online/watch/${slug}?ep=${episodeNumber}`,
                         "publisher": {
                             "@type": "Organization",
                             "name": "Gấu Flix",
@@ -136,9 +151,18 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                     })}
                 </script>
             </Head>
-            <Header/>
+
+            {/* Header - Ẩn khi tắt đèn */}
+            <div className={cn("transition-all duration-500", hiddenClass)}>
+                <Header/>
+            </div>
+
             <main className="flex-1">
-                <div className="container px-4 md:px-6 py-4 text-sm sm:text-xl md:text-2xl">
+                {/* Breadcrumb - Ẩn khi tắt đèn */}
+                <div className={cn(
+                    "container px-4 md:px-6 py-4 text-sm sm:text-xl md:text-2xl transition-all duration-500",
+                    hiddenClass
+                )}>
                     <Breadcrumb
                         items={[
                             {label: "Phim", href: "../list/phim-moi"},
@@ -149,11 +173,13 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                 </div>
 
                 <div className="container px-0 md:px-6 py-4">
-                    <div className="px-4 md:px-0">
+                    {/* Title - Ẩn khi tắt đèn */}
+                    <div className={cn("px-4 md:px-0 transition-all duration-500", hiddenClass)}>
                         <h1 className="text-xl md:text-2xl font-bold mb-4">
                             {movieItemData.name} - Tập {currentEpisode.name}
                         </h1>
                     </div>
+
                     <div className="relative mx-0 md:w-full">
                         <PandaVideoPlayer
                             title={`${movieItemData.name} - Tập ${currentEpisode.name}`}
@@ -168,18 +194,26 @@ export default function WatchPage({movieData, episodeNumber}: MoviePageProps) {
                                 categories: movieItemData.category,
                                 description: movieItemData.content,
                             }}
+                            onLightsOffChange={handleLightsOffChange}
                         />
                     </div>
                 </div>
+
+                {/* Warning - Ẩn khi tắt đèn */}
                 {showWarning && (
-                    <div className=" my-4 px-4 py-3 border-l-4 text-sm md:text-base rounded shadow-lg bg-green-500 dark:bg-green-700 text-white dark:text-green-200 opacity-100 animate-pulse md:mx-2">
+                    <div className={cn(
+                        "my-4 px-4 py-3 border-l-4 text-sm md:text-base rounded shadow-lg bg-green-500 dark:bg-green-700 text-white dark:text-green-200 animate-pulse md:mx-2 transition-all duration-500",
+                        hiddenClass
+                    )}>
                         <strong>⚠️ Cảnh báo:</strong> Hiện nay khi xem phim ở một số bộ phim có hiển thị đường dẫn không rõ nguồn gốc chạy ngang qua, mọi người tuyệt đối không truy cập vào các đường link lạ đó nhen. Gấu đang nỗ lực khắc phục vấn đề này, cảm ơn các bạn iu của Gấu ^^.
                     </div>
                 )}
-
             </main>
 
-            <Footer/>
+            {/* Footer - Ẩn khi tắt đèn */}
+            <div className={cn("transition-all duration-500", hiddenClass)}>
+                <Footer/>
+            </div>
         </div>
     )
 }

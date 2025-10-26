@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion"
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, Lightbulb, ChevronLeft, ChevronRight, PictureInPicture } from "lucide-react"
 import { Slider } from "@/components/ui/slider"
@@ -75,10 +74,10 @@ export default function VideoControls({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0 flex flex-col justify-between p-4 bg-gradient-to-t from-black/80 via-transparent to-black/40 z-20"
+            className="absolute inset-0 flex flex-col justify-between p-4 bg-gradient-to-t from-black/80 via-transparent to-black/40 z-20 pointer-events-none"
         >
             {/* Top controls */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pointer-events-auto">
                 <h2 className="text-white text-lg font-medium truncate max-w-[80%]">{title}</h2>
 
                 <Button
@@ -91,22 +90,10 @@ export default function VideoControls({
                 </Button>
             </div>
 
-            {/* Center play/pause button */}
-            {!isEmbedVideo && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <motion.button
-                        className="h-16 w-16 rounded-full bg-green-600/80 flex items-center justify-center pointer-events-auto"
-                        onClick={togglePlay}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                    >
-                        {isPlaying ? <Pause className="h-8 w-8 text-white" /> : <Play className="h-8 w-8 text-white ml-1" />}
-                    </motion.button>
-                </div>
-            )}
+            {/* Center play/pause button - REMOVED to avoid blocking clicks */}
 
             {/* Bottom controls */}
-            <div className="space-y-2">
+            <div className="space-y-2 pointer-events-auto">
                 {/* Progress bar */}
                 {!isEmbedVideo && (
                     <div className="flex items-center gap-2">
@@ -208,4 +195,3 @@ export default function VideoControls({
         </motion.div>
     )
 }
-

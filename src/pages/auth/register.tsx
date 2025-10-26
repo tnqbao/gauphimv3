@@ -10,6 +10,7 @@ import { Eye, EyeOff } from "lucide-react"
 import AuthLayout from "@/components/content/auth/auth-layout"
 import PandaWindow from "@/components/content/auth/panda-window"
 import AuthFormFooter from "@/components/content/auth/auth-form-footer"
+import GoogleAuthButton from "@/components/content/auth/google-auth-button"
 import {useRouter} from "next/router";
 
 export default function RegisterPage() {
@@ -23,6 +24,7 @@ export default function RegisterPage() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState("")
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
     const nameInputRef = useRef<HTMLInputElement>(null)
     const emailInputRef = useRef<HTMLInputElement>(null)
@@ -100,8 +102,8 @@ export default function RegisterPage() {
         <AuthLayout>
             <Card className="border-green-100 shadow-lg">
                 <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl font-bold text-center">Create Account</CardTitle>
-                    <CardDescription className="text-center">Enter your information to create an account</CardDescription>
+                    <CardTitle className="text-2xl font-bold text-center">Tạo tài khoản mới</CardTitle>
+                    <CardDescription className="text-center">Hãy tạo tài khoản để bắt đầu hành trình khám phá những bộ phim tuyệt vời</CardDescription>
                 </CardHeader>
 
                 <CardContent>
@@ -222,7 +224,7 @@ export default function RegisterPage() {
                         <Button
                             type="submit"
                             className="w-full bg-green-600 hover:bg-green-700 transition-colors"
-                            disabled={isLoading}
+                            disabled={isLoading || isGoogleLoading}
                         >
                             {isLoading ? (
                                 <div className="flex items-center">
@@ -253,6 +255,27 @@ export default function RegisterPage() {
                             )}
                         </Button>
                     </form>
+
+                    {/* Divider */}
+                    <div className="relative my-6">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-white px-2 text-muted-foreground">
+                                Hoặc
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Google Register Button */}
+                    <div className="mb-4">
+                        <GoogleAuthButton
+                            mode="register"
+                            isLoading={isGoogleLoading}
+                            onLoadingChange={setIsGoogleLoading}
+                        />
+                    </div>
                 </CardContent>
 
                 <CardFooter>

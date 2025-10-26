@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             throw new Error("API không trả về dữ liệu hợp lệ");
         }
 
-        res.status(200).json(data);
+        res.status(200).json(data.data);
     } catch (error) {
         console.error("Lỗi API:", error);
         res.status(500).json({ e: "Lỗi server", error });

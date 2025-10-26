@@ -19,7 +19,12 @@ const HistoryClientPage: React.FC = () => {
 
     const handlerDeleteButtonClick = async () => {
         try {
-            const response = await axios.delete(`/api/history`)
+            const response = await axios.delete(`/api/history`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization : `${localStorage.getItem('access_token')}`,
+                }
+            })
             if (response.status != 200) {
                 console.log("Error deleting history")
             }
@@ -39,6 +44,7 @@ const HistoryClientPage: React.FC = () => {
                         page: current,
                     }
                 })
+
                 const {history, total_page, current_page} = res.data
 
                 setMovies(history)

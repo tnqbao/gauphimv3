@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gau-phim-frontend-deployment
+  namespace: bao-${DEPLOY_ENV}-env
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gau-phim-frontend-service
+  template:
+    metadata:
+      labels:
+        app: gau-phim-frontend-service
+    spec:
+      containers:
+        - name: gau-phim-frontend-service
+          image: iamqbao/gau_phim_frontend:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: bao-phim-frontend-${DEPLOY_ENV}-config
+            - secretRef:
+                name: bao-phim-frontend-${DEPLOY_ENV}-secret
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+---

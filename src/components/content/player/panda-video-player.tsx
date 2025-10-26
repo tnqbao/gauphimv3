@@ -23,6 +23,7 @@ interface PandaVideoPlayerProps {
     currentEpisode: string
     movieSlug: string
     movieInfo: MovieInfo
+    onLightsOffChange?: (lightsOff: boolean) => void
 }
 
 export default function PandaVideoPlayer({
@@ -33,6 +34,7 @@ export default function PandaVideoPlayer({
                                              currentEpisode,
                                              movieSlug,
                                              movieInfo,
+                                             onLightsOffChange,
                                          }: PandaVideoPlayerProps) {
     const [isEmbedVideo, setIsEmbedVideo] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
@@ -157,6 +159,8 @@ export default function PandaVideoPlayer({
     const toggleEpisodeList = () => setShowEpisodeList(!showEpisodeList)
     const [showControls, setShowControls] = useState(true)
     const controlsTimeout = useRef<NodeJS.Timeout | null>(null)
+    const clickTimeout = useRef<NodeJS.Timeout | null>(null)
+    const clickCount = useRef(0)
 
     const hideControls = () => {
         setShowControls(false)
@@ -194,16 +198,49 @@ export default function PandaVideoPlayer({
         videoRef.current.playbackRate = 1
     }
 
-    const handleDoubleClick = () => {
+    const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         if (!videoRef.current) return
 
-        const clickX = window.innerWidth / 2
-        const screenWidth = window.innerWidth
+        clickCount.current = 0
+        if (clickTimeout.current) {
+            clearTimeout(clickTimeout.current)
+        }
+
+        const rect = playerRef.current?.getBoundingClientRect()
+        if (!rect) return
+
+        const clickX = event.clientX - rect.left
+        const screenWidth = rect.width
 
         if (clickX < screenWidth / 2) {
-            videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - seekAmount) // Tua lùi
+            // Click bên trái - tua lùi
+            videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - seekAmount)
         } else {
-            videoRef.current.currentTime = Math.min(videoRef.current.duration, videoRef.current.currentTime + seekAmount) // Tua nhanh
+            // Click bên phải - tua tới
+            videoRef.current.currentTime = Math.min(videoRef.current.duration, videoRef.current.currentTime + seekAmount)
+        }
+
+        // Show controls khi double click
+        setShowControls(true)
+        resetControlsTimeout()
+    }
+
+    const handleVideoClick = () => {
+        if (isEmbedVideo) return
+
+        clickCount.current++
+
+        if (clickCount.current === 1) {
+            // Chờ để xem có phải double click không
+            clickTimeout.current = setTimeout(() => {
+                if (clickCount.current === 1) {
+                    // Single click - toggle play/pause
+                    togglePlay()
+                    setShowControls(true)
+                    resetControlsTimeout()
+                }
+                clickCount.current = 0
+            }, 250)
         }
     }
 
@@ -216,10 +253,20 @@ export default function PandaVideoPlayer({
         }
     }, [])
 
+    // Notify parent component when lightsOff changes
+    useEffect(() => {
+        if (onLightsOffChange) {
+            onLightsOffChange(lightsOff)
+        }
+    }, [lightsOff, onLightsOffChange])
+
     return (
-        <div ref={containerRef} className={cn("transition-colors duration-300", lightsOff ? "" : "")}>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
+        <div ref={containerRef} className={cn(
+            "transition-colors duration-500",
+            lightsOff ? "bg-black" : "bg-[#f8f9fa] dark:bg-gray-900"
+        )}>
+            <div className="flex flex-col gap-6">
+                <div className="w-full">
                     <div
                         ref={playerRef}
                         className="relative w-full h-[50vh] md:h-auto md:aspect-video bg-black md:rounded-lg overflow-hidden group"
@@ -243,6 +290,7 @@ export default function PandaVideoPlayer({
                                 onTouchStart={handleTouchStart}
                                 onTouchEnd={handleTouchEnd}
                                 onDoubleClick={handleDoubleClick}
+                                onClick={handleVideoClick}
                                 className="w-full h-full object-contain"
                             />
                         )}
@@ -278,26 +326,34 @@ export default function PandaVideoPlayer({
                     </div>
 
                     <MovieInfoDisplay {...movieInfo} lightsOff={lightsOff}/>
-                    <AnimatePresence>
-                        {showEpisodeList && (
-                            <EpisodeList
-                                episodes={episodes}
-                                currentEpisode={currentEpisode}
-                                movieSlug={movieSlug}
-                                isVisible={showEpisodeList}
-                                onClose={toggleEpisodeList}
-                                isMobile={true}
-                                movieName={movieInfo.name}
-                            />
-                        )}
-                    </AnimatePresence>
                 </div>
 
-                <div className="lg:col-span-1 hidden lg:block">
-                    <EpisodeList episodes={episodes} currentEpisode={currentEpisode} movieSlug={movieSlug} isVisible
-                                 movieName={movieInfo.name}
+                {/* Episode list now appears below player on all screen sizes */}
+                <div className={cn(
+                    "w-full transition-all duration-500",
+                    lightsOff ? "opacity-0 invisible h-0 overflow-hidden" : "opacity-100 visible"
+                )}>
+                    <EpisodeList
+                        episodes={episodes}
+                        currentEpisode={currentEpisode}
+                        movieSlug={movieSlug}
+                        isVisible
                     />
                 </div>
+
+                {/* Mobile episode list overlay */}
+                <AnimatePresence>
+                    {showEpisodeList && (
+                        <EpisodeList
+                            episodes={episodes}
+                            currentEpisode={currentEpisode}
+                            movieSlug={movieSlug}
+                            isVisible={showEpisodeList}
+                            onClose={toggleEpisodeList}
+                            isMobile={true}
+                        />
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     )
