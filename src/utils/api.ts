@@ -57,8 +57,9 @@ interface ServerSideListResponse {
         movies: Movie[]
         pagination: {
             totalItems: number
-            totalItemPerPage: number
+            totalItemsPerPage: number
             currentPage: number
+            totalPages: number
         },
     }
     message: string,
@@ -110,7 +111,7 @@ async function fetchMovies(
         console.error("Error fetching movies:", error);
         return {
             movies: [],
-            pagination: { totalItems: 0, totalItemPerPage: 0, currentPage: 1 },
+            pagination: { totalItems: 0, totalItemsPerPage: 0, currentPage: 1, totalPages: 0 },
         };
     }
 }
@@ -208,4 +209,3 @@ export async function fetchHomeData(): Promise<Record<string, unknown> | null> {
         return null
     }
 }
-

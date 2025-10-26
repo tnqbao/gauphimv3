@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+﻿import { useState, useEffect } from "react"
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import Header from "@/components/layout/header"
@@ -17,7 +17,8 @@ interface CategoryPageProps {
     pagination: {
         currentPage: number
         totalItems: number
-        totalItemPerPage: number
+        totalItemsPerPage: number
+        totalPages: number
     }
 }
 
@@ -58,30 +59,30 @@ export default function CategoryPage({ slug, listType, movies, pagination }: Cat
         ? `https://img.ophim.live/uploads/movies/${movies[0].poster_url}`
         : defaultImage;
     const title = listType.title.toString()
-    const totalPages = Math.ceil(pagination.totalItems / pagination.totalItemPerPage) || 1
+    const totalPages = pagination.totalPages || 1
 
     return (
         <div className="flex min-h-screen flex-col bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
             <Head>
-                <title>{`Phim ${title} hay nhất | Xem phim ${title} Full HD Vietsub miễn phí`}</title>
+                <title>{`Phim ${title} hay nháº¥t | Xem phim ${title} Full HD Vietsub miá»…n phÃ­`}</title>
                 <meta name="description"
-                      content={`Tổng hợp phim ${title} hot nhất. Xem ngay các bộ phim ${title} hấp dẫn, Vietsub Full HD miễn phí tại Gấu Phim. Cập nhật liên tục!`}/>
+                      content={`Tá»•ng há»£p phim ${title} hot nháº¥t. Xem ngay cÃ¡c bá»™ phim ${title} háº¥p dáº«n, Vietsub Full HD miá»…n phÃ­ táº¡i Gáº¥u Phim. Cáº­p nháº­t liÃªn tá»¥c!`}/>
                 <meta name="robots" content="index, follow"/>
                 <meta name="keywords"
-                      content={`phim ${title}, xem phim ${title} online, phim ${title} hay, phim ${title} miễn phí, phim ${title} vietsub, xem phim ${title} Full HD, phim ${title} mới nhất, top phim ${title}`}/>
+                      content={`phim ${title}, xem phim ${title} online, phim ${title} hay, phim ${title} miá»…n phÃ­, phim ${title} vietsub, xem phim ${title} Full HD, phim ${title} má»›i nháº¥t, top phim ${title}`}/>
 
-                <meta property="og:title" content={`Top phim ${title} hay nhất - Vietsub Full HD miễn phí`}/>
+                <meta property="og:title" content={`Top phim ${title} hay nháº¥t - Vietsub Full HD miá»…n phÃ­`}/>
                 <meta property="og:description"
-                      content={`Xem ngay danh sách phim ${title} hot nhất, Vietsub Full HD miễn phí. Cập nhật phim mới liên tục!`}/>
+                      content={`Xem ngay danh sÃ¡ch phim ${title} hot nháº¥t, Vietsub Full HD miá»…n phÃ­. Cáº­p nháº­t phim má»›i liÃªn tá»¥c!`}/>
                 <meta property="og:image" content={ogImage}/>
                 <meta property="og:image:width" content="1200"/>
                 <meta property="og:image:height" content="630"/>
                 <meta property="og:url" content={`https://xemphim.gauas.online/category/${slug}`}/>
 
                 <meta name="twitter:card" content="summary_large_image"/>
-                <meta name="twitter:title" content={`Top phim ${title} hay nhất - Vietsub Full HD miễn phí`}/>
+                <meta name="twitter:title" content={`Top phim ${title} hay nháº¥t - Vietsub Full HD miá»…n phÃ­`}/>
                 <meta name="twitter:description"
-                      content={`Xem ngay danh sách phim ${title} hot nhất, Vietsub Full HD miễn phí. Cập nhật phim mới liên tục!`}/>
+                      content={`Xem ngay danh sÃ¡ch phim ${title} hot nháº¥t, Vietsub Full HD miá»…n phÃ­. Cáº­p nháº­t phim má»›i liÃªn tá»¥c!`}/>
                 <meta name="twitter:image" content={ogImage}/>
 
                 <script type="application/ld+json">
@@ -89,7 +90,7 @@ export default function CategoryPage({ slug, listType, movies, pagination }: Cat
                         "@context": "https://schema.org",
                         "@type": "ItemList",
                         "name": `Phim ${title}`,
-                        "description": `Danh sách phim ${title} hấp dẫn, Vietsub Full HD miễn phí tại Gấu Phim.`,
+                        "description": `Danh sÃ¡ch phim ${title} háº¥p dáº«n, Vietsub Full HD miá»…n phÃ­ táº¡i Gáº¥u Phim.`,
                         "url": `https://xemphim.gauas.online/category/${slug}`,
                         "numberOfItems": movies.length,
                         "itemListElement": movies.slice(0, 5).map((movie, index) => ({
@@ -109,7 +110,7 @@ export default function CategoryPage({ slug, listType, movies, pagination }: Cat
             <Header/>
 
             <main className="flex-1 container px-4 md:px-6 py-4">
-            <Breadcrumb items={[{label: "Thể Loại", href: "/categories"}, {label: listType.breadcrumb}]}/>
+            <Breadcrumb items={[{label: "Thá»ƒ Loáº¡i", href: "/categories"}, {label: listType.breadcrumb}]}/>
 
                 <div className="py-4">
                 <h1 className="text-3xl font-bold mb-2">{listType.title}</h1>
