@@ -32,11 +32,18 @@ jobs:
         run: |
           sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/tnqbao/.enviroment/gau-phim-frontend/clientside.env .env
 
-      - name: Source .env file
+      - name: Load environment variables
+        id: env
         run: |
-          set -a
-          source .env
-          set +a
+          # Load .env file and export as GitHub output
+          while IFS='=' read -r key value; do
+            # Skip comments and empty lines
+            [[ $key =~ ^#.*$ ]] && continue
+            [[ -z $key ]] && continue
+            # Remove quotes if present
+            value=$(echo "$value" | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//")
+            echo "${key}=${value}" >> $GITHUB_OUTPUT
+          done < .env
         shell: bash
 
       - name: Login to DockerHub
@@ -57,4 +64,8 @@ jobs:
           context: .
           push: true
           tags: iamqbao/gau_phim_frontend:latest
-
+          build-args: |
+            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ steps.env.outputs.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+            NEXT_PUBLIC_USER_API=${{ steps.env.outputs.NEXT_PUBLIC_USER_API }}
+            NEXT_PUBLIC_MOVIE_API=${{ steps.env.outputs.NEXT_PUBLIC_MOVIE_API }}
+            NEXT_PUBLIC_API_TIMEOUT=${{ steps.env.outputs.NEXT_PUBLIC_API_TIMEOUT }}

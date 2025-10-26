@@ -7,8 +7,12 @@ metadata:
     app: bao-platform
     env: ${DEPLOY_ENV}
 data:
+  NODE_ENV: "production"
+  PORT: "3000"
+  # Server-side API for Next.js API routes
   SERVERSIDE_API: "${SERVERSIDE_API}"
-  JWT_SECRET: "${JWT_SECRET}"
-  PRIVATE_KEY: "${PRIVATE_KEY}"
-  PORT: "${PORT}"
-
+  # Client-side public variables (embedded at build time, but also available at runtime)
+  NEXT_PUBLIC_GOOGLE_CLIENT_ID: "${NEXT_PUBLIC_GOOGLE_CLIENT_ID}"
+  NEXT_PUBLIC_USER_API: "${NEXT_PUBLIC_USER_API}"
+  NEXT_PUBLIC_MOVIE_API: "${NEXT_PUBLIC_MOVIE_API}"
+  NEXT_PUBLIC_API_TIMEOUT: "${NEXT_PUBLIC_API_TIMEOUT}"

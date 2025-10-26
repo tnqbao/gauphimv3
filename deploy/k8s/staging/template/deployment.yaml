@@ -17,6 +17,9 @@ spec:
         - name: gau-phim-frontend-service
           image: iamqbao/gau_phim_frontend:latest
           imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+              protocol: TCP
           envFrom:
             - configMapRef:
                 name: bao-phim-frontend-${DEPLOY_ENV}-config
@@ -29,4 +32,15 @@ spec:
             limits:
               cpu: "1"
               memory: "1Gi"
----
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 5
