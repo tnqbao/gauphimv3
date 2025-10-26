@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gau-phim-deployment
+  namespace: bao-${DEPLOY_ENV}-env
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gau-phim-service
+  template:
+    metadata:
+      labels:
+        app: gau-phim-service
+    spec:
+      containers:
+        - name: gau-phim-service
+          image: iamqbao/gau_phim_service:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: bao-phim-${DEPLOY_ENV}-config
+            - secretRef:
+                name: bao-phim-${DEPLOY_ENV}-secret
+          resources:
+            requests:
+              cpu: "300m"
+              memory: "100Mi"
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gau-phim-consumer-deployment
+  namespace: bao-${DEPLOY_ENV}-env
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gau-phim-consumer
+  template:
+    metadata:
+      labels:
+        app: gau-phim-consumer
+    spec:
+      containers:
+        - name: gau-phim-consumer
+          image: iamqbao/gau_phim_service:latest
+          imagePullPolicy: Always
+          command: ["./entrypoint.sh", "consumer"]
+          envFrom:
+            - configMapRef:
+                name: bao-phim-${DEPLOY_ENV}-config
+            - secretRef:
+                name: bao-phim-${DEPLOY_ENV}-secret
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "100Mi"
+            limits:
+              cpu: "300m"
+              memory: "300Mi"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-phim-deployment
+  namespace: bao-${DEPLOY_ENV}-env
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-phim-service
+  template:
+    metadata:
+      labels:
+        app: redis-phim-service
+    spec:
+      containers:
+        - name: redis-phim-service
+          envFrom:
+            - configMapRef:
+                name: bao-phim-${DEPLOY_ENV}-config
+            - secretRef:
+                name: bao-phim-${DEPLOY_ENV}-secret
+          image: redis:7.2-alpine
+          command: ["redis-server"]
+          args: ["--requirepass", "$(REDIS_PASSWORD)"]
+          ports:
+            - containerPort: 6379
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "200m"
+              memory: "512Mi"
