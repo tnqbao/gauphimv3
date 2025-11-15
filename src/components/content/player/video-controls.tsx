@@ -1,7 +1,13 @@
 import { motion } from "framer-motion"
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, Lightbulb, ChevronLeft, ChevronRight, PictureInPicture } from "lucide-react"
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, Lightbulb, ChevronLeft, ChevronRight, PictureInPicture, Gauge } from "lucide-react"
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import type { Episode } from "@/components/content/episode-card"
@@ -20,6 +26,7 @@ interface VideoControlsProps {
     currentEpisode: string
     movieSlug: string
     episodes: Episode[]
+    playbackRate: number
     togglePlay: () => void
     toggleMute: () => void
     toggleFullscreen: () => void
@@ -29,6 +36,7 @@ interface VideoControlsProps {
     toggleEpisodeList: () => void
     togglePiP: () => void
     isPiP: boolean
+    setPlaybackRate: (rate: number) => void
 }
 
 export default function VideoControls({
@@ -45,6 +53,7 @@ export default function VideoControls({
                                           currentEpisode,
                                           movieSlug,
                                           episodes,
+                                          playbackRate,
                                           togglePlay,
                                           toggleMute,
                                           toggleFullscreen,
@@ -53,7 +62,8 @@ export default function VideoControls({
                                           setLightsOff,
                                           toggleEpisodeList,
                                           togglePiP,
-                                            isPiP
+                                          isPiP,
+                                          setPlaybackRate
                                       }: VideoControlsProps) {
     const formatTime = (time: number) => {
         if (!time || isNaN(time)) return "0:00"
@@ -67,6 +77,8 @@ export default function VideoControls({
     const currentEpisodeIndex = episodes.findIndex((ep) => ep.name === currentEpisode)
     const prevEpisode = currentEpisodeIndex > 0 ? episodes[currentEpisodeIndex - 1] : null
     const nextEpisode = currentEpisodeIndex < episodes.length - 1 ? episodes[currentEpisodeIndex + 1] : null
+
+    const speedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4, 5]
 
     return (
         <motion.div
@@ -143,6 +155,30 @@ export default function VideoControls({
                                         onValueChange={handleVolumeChange}
                                     />
                                 </div>
+
+                                {/* Playback speed dropdown */}
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 hidden sm:flex items-center gap-1">
+                                            <Gauge className="h-4 w-4" />
+                                            <span className="text-xs">{playbackRate}x</span>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="start" className="bg-black/90 border-white/20">
+                                        {speedOptions.map((speed) => (
+                                            <DropdownMenuItem
+                                                key={speed}
+                                                onClick={() => setPlaybackRate(speed)}
+                                                className={cn(
+                                                    "text-white hover:bg-white/20 cursor-pointer",
+                                                    playbackRate === speed && "bg-white/30"
+                                                )}
+                                            >
+                                                {speed}x {speed === 1 && "(Bình thường)"}
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </>
                         )}
 
