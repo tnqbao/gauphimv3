@@ -11,11 +11,12 @@ interface HLSVideoPlayerProps {
     onTouchEnd: () => void
     onDoubleClick: (event: React.MouseEvent<HTMLDivElement>) => void
     onClick: (event: React.MouseEvent<HTMLDivElement>) => void
+    playbackRate?: number
 }
 
 const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
     function HLSVideoPlayerComponent(
-        { src, poster, className, onLoadedMetadata, onTimeUpdate, onTouchStart, onTouchEnd, onDoubleClick, onClick },
+        { src, poster, className, onLoadedMetadata, onTimeUpdate, onTouchStart, onTouchEnd, onDoubleClick, onClick, playbackRate = 1 },
         ref
     ) {
         const videoRef = useRef<HTMLVideoElement | null>(null)
@@ -44,8 +45,15 @@ const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
             }
         }, [src])
 
+        // Update playback rate when it changes
         useEffect(() => {
+            if (videoRef.current) {
+                videoRef.current.playbackRate = playbackRate
+            }
+        }, [playbackRate])
 
+        useEffect(() => {
+            // Điều chỉnh interval theo playbackRate để logic skip ads hoạt động đúng
             const interval = setInterval(() => {
                 const time = videoRef.current?.currentTime || 0
                 const duration = videoRef.current?.duration || 0
@@ -63,10 +71,10 @@ const HLSVideoPlayer = forwardRef<HTMLVideoElement, HLSVideoPlayerProps>(
                 if (videoRef.current && time >= 4862 && time < 4899) {
                     videoRef.current.currentTime = 4899;
                 }
-            }, 500)
+            }, 500 / playbackRate) // Chia interval cho playbackRate
 
             return () => clearInterval(interval)
-        }, [])
+        }, [playbackRate])
 
 
         return (

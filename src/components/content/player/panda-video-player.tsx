@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react"
+import {useEffect, useRef, useState, useCallback} from "react"
 import {AnimatePresence} from "framer-motion"
 import {cn} from "@/lib/utils"
 import VideoControls from "./video-controls"
@@ -48,6 +48,7 @@ export default function PandaVideoPlayer({
     const [volume, setVolume] = useState(1)
     const [lightsOff, setLightsOff] = useState(false)
     const [isPiP, setIsPiP] = useState(false)
+    const [playbackRate, setPlaybackRate] = useState(1)
 
     const playerRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
@@ -67,6 +68,7 @@ export default function PandaVideoPlayer({
             document.removeEventListener("fullscreenchange", handleFullscreenChange)
         }
     }, [])
+
     const seekAmount = 10
 
     const handleLoadedMetadata = () => {
@@ -83,7 +85,7 @@ export default function PandaVideoPlayer({
         }
     }
 
-    const togglePlay = () => {
+    const togglePlay = useCallback(() => {
         if (!isEmbedVideo && videoRef.current) {
             if (isPlaying) {
                 videoRef.current.pause()
@@ -92,7 +94,64 @@ export default function PandaVideoPlayer({
             }
             setIsPlaying(!isPlaying)
         }
-    }
+    }, [isEmbedVideo, isPlaying])
+
+    // Keyboard shortcuts - moved after togglePlay definition
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Không xử lý khi đang focus vào input/textarea
+            if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+                return
+            }
+
+            switch (e.key) {
+                case "ArrowLeft":
+                    e.preventDefault()
+                    if (videoRef.current) {
+                        videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10)
+                    }
+                    break
+                case "ArrowRight":
+                    e.preventDefault()
+                    if (videoRef.current) {
+                        videoRef.current.currentTime = Math.min(videoRef.current.duration, videoRef.current.currentTime + 10)
+                    }
+                    break
+                case " ":
+                case "Backspace":
+                    e.preventDefault()
+                    togglePlay()
+                    break
+                case "1":
+                    e.preventDefault()
+                    setPlaybackRate(1)
+                    break
+                case "2":
+                    e.preventDefault()
+                    setPlaybackRate(2)
+                    break
+                case "3":
+                    e.preventDefault()
+                    setPlaybackRate(3)
+                    break
+                case "4":
+                    e.preventDefault()
+                    setPlaybackRate(4)
+                    break
+                case "5":
+                    e.preventDefault()
+                    setPlaybackRate(5)
+                    break
+                default:
+                    break
+            }
+        }
+
+        document.addEventListener("keydown", handleKeyDown)
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown)
+        }
+    }, [togglePlay])
 
     const toggleMute = () => {
         if (!isEmbedVideo && videoRef.current) {
@@ -113,8 +172,7 @@ export default function PandaVideoPlayer({
 
     const handleSeek = (value: number[]) => {
         if (videoRef.current) {
-            const seekTime = (value[0] / 100) * videoRef.current.duration
-            videoRef.current.currentTime = seekTime
+            videoRef.current.currentTime = (value[0] / 100) * videoRef.current.duration
             setProgress(value[0])
         }
     }
@@ -166,23 +224,23 @@ export default function PandaVideoPlayer({
         setShowControls(false)
     }
 
-    const resetControlsTimeout = () => {
+    const resetControlsTimeout = useCallback(() => {
         if (controlsTimeout.current) {
             clearTimeout(controlsTimeout.current)
         }
         controlsTimeout.current = setTimeout(hideControls, 3000)
-    }
+    }, [])
 
-    const handleMouseMove = () => {
+    const handleMouseMove = useCallback(() => {
         setShowControls(true)
         resetControlsTimeout()
-    }
+    }, [resetControlsTimeout])
 
-    const handleVideoPlayPause = () => {
+    const handleVideoPlayPause = useCallback(() => {
         if (isPlaying) {
             resetControlsTimeout()
         }
-    }
+    }, [isPlaying, resetControlsTimeout])
 
     const speedMultiplier = 2
 
@@ -195,7 +253,7 @@ export default function PandaVideoPlayer({
     const handleTouchEnd = () => {
         if (!videoRef.current) return
 
-        videoRef.current.playbackRate = 1
+        videoRef.current.playbackRate = playbackRate
     }
 
     const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -251,7 +309,7 @@ export default function PandaVideoPlayer({
             document.removeEventListener("mousemove", handleMouseMove)
             document.removeEventListener("play", handleVideoPlayPause)
         }
-    }, [])
+    }, [handleMouseMove, handleVideoPlayPause])
 
     // Notify parent component when lightsOff changes
     useEffect(() => {
@@ -292,6 +350,7 @@ export default function PandaVideoPlayer({
                                 onDoubleClick={handleDoubleClick}
                                 onClick={handleVideoClick}
                                 className="w-full h-full object-contain"
+                                playbackRate={playbackRate}
                             />
                         )}
 
@@ -311,6 +370,7 @@ export default function PandaVideoPlayer({
                                     currentEpisode={currentEpisode}
                                     movieSlug={movieSlug}
                                     episodes={episodes}
+                                    playbackRate={playbackRate}
                                     togglePlay={togglePlay}
                                     toggleMute={toggleMute}
                                     toggleFullscreen={toggleFullscreen}
@@ -320,6 +380,7 @@ export default function PandaVideoPlayer({
                                     toggleEpisodeList={toggleEpisodeList}
                                     togglePiP={togglePiP}
                                     isPiP={isPiP}
+                                    setPlaybackRate={setPlaybackRate}
                                 />
                             )}
                         </AnimatePresence>
