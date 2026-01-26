@@ -22,6 +22,8 @@ COPY . .
 
 RUN yarn build
 
+#note
+
 FROM node:20-alpine AS runner
 WORKDIR /app
 
